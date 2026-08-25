@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acersense-linux"
+version = "1.0.0"
+description = "Open Source Hardware Control Suite for Acer Nitro, Predator, and Aspire Laptops on Linux"
+authors = [
+    { name = "Rodrigo", email = "rodrigo47363@users.noreply.github.com" }
+]
+license = { text = "GPL-3.0" }
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "psutil>=5.9.0",
+    "customtkinter>=5.2.0"
+]
+
+[project.scripts]
+acersense = "acersense.cli.main:main"
+acersense-gui = "acersense.gui.app:main"
+acersense-daemon = "acersense.daemon.daemon:main"

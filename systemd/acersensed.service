@@ -1,0 +1,15 @@
+[Unit]
+Description=AcerSense Hardware Management Daemon
+Documentation=https://github.com/rodrigo47363/acersense-linux
+After=multi-user.target suspend.target hibernate.target hybrid-sleep.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/acersense-daemon
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target suspend.target hibernate.target

@@ -1,0 +1,16 @@
+# AcerSense Udev Rules
+# Grants non-root user permissions to control Acer hardware interfaces
+
+# Acer WMI Battery health_mode (80% limiter)
+ACTION=="add|change", SUBSYSTEM=="drivers", DRIVERS=="acer-wmi-battery", ATTR{health_mode}+="rw", MODE="0666"
+ACTION=="add|change", KERNEL=="BAT[0-9]*", SUBSYSTEM=="power_supply", ATTR{charge_control_end_threshold}+="rw", MODE="0666"
+
+# Acer Keyboard Backlight
+ACTION=="add|change", SUBSYSTEM=="leds", KERNEL=="*kbd_backlight*", ATTR{brightness}+="rw", MODE="0666"
+
+# Platform profile
+ACTION=="add|change", SUBSYSTEM=="platform", ATTR{platform_profile}+="rw", MODE="0666"
+
+# ACPI Call module interface (if loaded)
+ACTION=="add|change", DEVPATH=="/module/acpi_call", MODE="0666"
+KERNEL=="acpi_call", MODE="0666"

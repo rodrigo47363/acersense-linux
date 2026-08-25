@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=AcerSense
+GenericName=Hardware Control Center
+Comment=Control Fan Speeds, Power Modes, 80% Battery Limiter, and 4-Zone RGB Lighting for Acer Nitro & Predator
+Exec=acersense-gui
+Icon=acersense
+Terminal=false
+Type=Application
+Categories=Settings;HardwareSettings;System;
+Keywords=acer;nitro;predator;fans;rgb;battery;nitrosense;carecenter;
+StartupNotify=true
