@@ -26,11 +26,28 @@ def launch_web_ui(port: int = 18888):
     user_data_dir = os.path.expanduser("~/.config/acersense/browser_profile")
     os.makedirs(user_data_dir, exist_ok=True)
 
+    # Common security/isolation flags to avoid loading obsolete system distro extensions
+    chrome_flags = [
+        f"--app={url}",
+        f"--user-data-dir={user_data_dir}",
+        "--window-size=1080,780",
+        "--class=acersense-gui",
+        "--disable-extensions",
+        "--disable-default-apps",
+        "--disable-component-extensions-with-background-pages",
+        "--no-first-run",
+        "--no-default-browser-check",
+        "--disable-background-networking",
+        "--disable-sync",
+        "--disable-translate",
+        "--hide-scrollbars=false"
+    ]
+
     # 2. Check for Chromium / Google Chrome / Brave for standalone App Window mode
     browsers = [
-        ("chromium", ["chromium", f"--app={url}", f"--user-data-dir={user_data_dir}", "--window-size=1060,760", "--class=acersense-gui"]),
-        ("google-chrome", ["google-chrome", f"--app={url}", f"--user-data-dir={user_data_dir}", "--window-size=1060,760", "--class=acersense-gui"]),
-        ("brave-browser", ["brave-browser", f"--app={url}", f"--user-data-dir={user_data_dir}", "--window-size=1060,760", "--class=acersense-gui"]),
+        ("chromium", ["chromium"] + chrome_flags),
+        ("google-chrome", ["google-chrome"] + chrome_flags),
+        ("brave-browser", ["brave-browser"] + chrome_flags),
         ("firefox", ["firefox", "--new-window", url])
     ]
 
@@ -38,7 +55,8 @@ def launch_web_ui(port: int = 18888):
     for name, cmd in browsers:
         if shutil.which(name):
             try:
-                proc = subprocess.Popen(cmd)
+                # Suppress distro extension warnings in terminal output
+                proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 launched = True
                 proc.wait()
                 break
