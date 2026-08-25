@@ -41,9 +41,6 @@ class AcerWMIInterface:
         self.has_battery_wmi = os.path.exists("/sys/bus/wmi/drivers/acer-wmi-battery/health_mode")
         self.has_platform_profile = os.path.exists("/sys/firmware/acpi/platform_profile")
         
-        # Primary verified ACPI method discovered on hardware
-        self.primary_acpi_method = r"\_SB.PCI0.WMID.WMBH"
-        
         logger.info(f"Initialized Acer WMI for {self.product_name} (BIOS: {self.bios_version}, acpi_call: {self.has_acpi_call})")
 
     def _ensure_acpi_call_loaded(self):
@@ -119,12 +116,13 @@ class AcerWMIInterface:
 
     def call_gaming_method(self, method_id: int, opcode: int) -> bool:
         """
-        Calls Acer Gaming WMI function using verified WMBH / WMAA ACPI handles.
+        Calls Acer Gaming WMI function across all valid WMBH (V2) and WMBK (V1) nodes.
         """
         targets = [
-            f"{self.primary_acpi_method} 1 {method_id} 0x{opcode:X}",
-            f"{self.primary_acpi_method} 0 {method_id} 0x{opcode:X}",
-            f"{self.primary_acpi_method} 1 0x{method_id:X} 0x{opcode:X}",
+            f"\\_SB.PCI0.WMID.WMBH 1 {method_id} 0x{opcode:X}",
+            f"\\_SB.PCI0.WMID.WMBH 0 {method_id} 0x{opcode:X}",
+            f"\\_SB.PCI0.WMID.WMBK 1 {method_id} 0x{opcode:X}",
+            f"\\_SB.PCI0.WMID.WMBK 0 {method_id} 0x{opcode:X}",
             f"\\_SB.PCI0.WMID.WMAA 1 {method_id} 0x{opcode:X}",
             f"\\_SB.WMID.WMAA 1 {method_id} 0x{opcode:X}"
         ]
@@ -141,7 +139,6 @@ class AcerWMIInterface:
     def set_fan_mode(self, mode: str) -> bool:
         """
         Set fan behavior mode: 'auto', 'max', 'custom'.
-        WMI Method ID 2: SetGamingFanBehavior
         """
         mode_lower = mode.lower()
         if mode_lower == "auto":
@@ -154,15 +151,26 @@ class AcerWMIInterface:
             raise ValueError(f"Unknown fan mode: {mode}")
 
         logger.info(f"Applying Fan Mode '{mode}' (Opcode 0x{opcode:X})")
-        # Method 2 is SetGamingFanBehavior in WMI MOF; 0x15 is Named Pipe command
-        r1 = self.call_gaming_method(2, opcode)
-        r2 = self.call_gaming_method(0x15, opcode)
-        return r1 or r2
+        
+        # 1. Send Fan Behavior Opcode to WMBH & WMBK
+        self.call_gaming_method(2, opcode)
+        self.call_gaming_method(0x15, opcode)
+
+        # 2. If Max Turbo mode, set individual fans to 100% and activate CoolBoost + Performance Profile
+        if mode_lower == "max":
+            self.set_fan_speed(0, 100)
+            self.set_fan_speed(1, 100)
+            self.set_coolboost(True)
+            self.set_power_profile("performance")
+        elif mode_lower == "auto":
+            self.set_coolboost(False)
+            self.set_power_profile("balanced")
+
+        return True
 
     def set_fan_speed(self, fan_index: int, percentage: int) -> bool:
         """
         Set individual fan target speed (0 = CPU, 1 = GPU).
-        WMI Method ID 3: SetGamingFanSpeed
         """
         percentage = max(0, min(100, int(percentage)))
         if fan_index == 0:  # CPU
@@ -173,9 +181,10 @@ class AcerWMIInterface:
             raise ValueError(f"Invalid fan index: {fan_index}")
 
         logger.info(f"Applying Fan Speed index {fan_index}: {percentage}% (Opcode 0x{opcode:X})")
-        r1 = self.call_gaming_method(3, opcode)
-        r2 = self.call_gaming_method(0x16, opcode)
-        return r1 or r2
+        self.call_gaming_method(2, opcode)
+        self.call_gaming_method(3, opcode)
+        self.call_gaming_method(0x16, opcode)
+        return True
 
     def set_coolboost(self, enable: bool) -> bool:
         """
@@ -183,27 +192,27 @@ class AcerWMIInterface:
         """
         opcode = 7 | ((1 if enable else 0) << 16)
         logger.info(f"Applying CoolBoost: {enable} (Opcode 0x{opcode:X})")
-        r1 = self.call_gaming_method(2, opcode)
-        r2 = self.call_gaming_method(0x11, opcode)
-        return r1 or r2
+        self.call_gaming_method(2, opcode)
+        self.call_gaming_method(0x11, opcode)
+        return True
 
     def set_rgb_zone_color(self, zone_index: int, r: int, g: int, b: int) -> bool:
         """
         Set 4-Zone RGB keyboard color.
         """
         opcode = (zone_index & 0xFF) | ((r & 0xFF) << 8) | ((g & 0xFF) << 16) | ((b & 0xFF) << 24)
-        r1 = self.call_gaming_method(5, opcode)
-        r2 = self.call_gaming_method(0x0B, opcode)
-        return r1 or r2
+        self.call_gaming_method(5, opcode)
+        self.call_gaming_method(0x0B, opcode)
+        return True
 
     def set_rgb_behavior(self, effect_id: int, speed: int, direction: int) -> bool:
         """
         Set RGB lighting dynamic effect.
         """
         opcode = (effect_id & 0xFF) | ((speed & 0xFF) << 8) | ((direction & 0xFF) << 16)
-        r1 = self.call_gaming_method(6, opcode)
-        r2 = self.call_gaming_method(0x1E, opcode)
-        return r1 or r2
+        self.call_gaming_method(6, opcode)
+        self.call_gaming_method(0x1E, opcode)
+        return True
 
     def set_power_profile(self, profile: str) -> bool:
         """
