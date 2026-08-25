@@ -88,11 +88,9 @@ class RGBKeyboardController:
                 except Exception as e:
                     logger.debug(f"Failed to set sysfs brightness: {e}")
 
-        # 2. WMI Gaming KB Backlight opcode
-        # Reverse-engineered: SetAcerGamingKBBacklight(1 | (percentage << 8))
-        if self.wmi.has_acpi_call:
-            opcode = 1 | (percentage << 8)
-            self.wmi.call_acpi_method(r"\_SB.WMID.WMAA", 0x1C, opcode)
+        # 2. WMI Gaming KB Backlight opcode (Method ID 0x1C)
+        opcode = 1 | (percentage << 8)
+        self.wmi.call_gaming_method(0x1C, opcode)
 
         logger.info(f"Keyboard brightness set to {percentage}%")
         return True
@@ -100,19 +98,13 @@ class RGBKeyboardController:
     def set_zone_color(self, zone_index: int, color_hex: str) -> bool:
         """
         Set color for a specific zone (1 to 4).
-        Reverse-engineered formula: SetAcerGamingLEDGroupColor(zone_idx | (R<<8) | (G<<16) | (B<<24))
         """
         if zone_index < 1 or zone_index > 4:
             raise ValueError(f"Zone index must be 1, 2, 3, or 4. Got {zone_index}")
 
         r, g, b = self.hex_to_rgb(color_hex)
         self.zone_colors[zone_index - 1] = (r, g, b)
-
-        # Build WMI opcode: zone | (R << 8) | (G << 16) | (B << 24)
-        opcode = (zone_index & 0xFF) | ((r & 0xFF) << 8) | ((g & 0xFF) << 16) | ((b & 0xFF) << 24)
-
-        if self.wmi.has_acpi_call:
-            self.wmi.call_acpi_method(r"\_SB.WMID.WMAA", 0x0B, opcode)
+        self.wmi.set_rgb_zone_color(zone_index, r, g, b)
 
         logger.info(f"Zone {zone_index} color set to RGB({r},{g},{b}) / {color_hex}")
         return True
@@ -151,23 +143,18 @@ class RGBKeyboardController:
                 self.set_zone_color(z, self.rgb_to_hex(rgb))
             return True
 
-        # Dynamic WMI Effect opcode: SetGamingLEDBehavior(effect_id | (speed << 8) | (direction << 16))
-        opcode = (effect_id & 0xFF) | ((speed & 0xFF) << 8) | ((direction & 0xFF) << 16)
-        if self.wmi.has_acpi_call:
-            self.wmi.call_acpi_method(r"\_SB.WMID.WMAA", 0x1E, opcode)
-
+        # Dynamic WMI Effect opcode (Method ID 0x1E)
+        self.wmi.set_rgb_behavior(effect_id, speed, direction)
         logger.info(f"Applied RGB Effect '{effect_name}' (Speed: {speed}, Dir: {direction})")
         return True
 
     def set_backlight_timeout(self, enable_30s_timeout: bool) -> bool:
         """
         Enable/disable 30-second keyboard backlight automatic timeout.
-        Reverse-engineered formula: SetGamingKBBacklight(0x01 | (timeout_val << 8))
         """
         self.timeout_30s = enable_30s_timeout
         opcode = 1 | ((30 if enable_30s_timeout else 0) << 8)
-        if self.wmi.has_acpi_call:
-            self.wmi.call_acpi_method(r"\_SB.WMID.WMAA", 0x1C, opcode)
+        self.wmi.call_gaming_method(0x1C, opcode)
         logger.info(f"Backlight 30s timeout set to: {enable_30s_timeout}")
         return True
 

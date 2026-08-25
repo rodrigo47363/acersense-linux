@@ -17,7 +17,7 @@ GUID_ACER_BATTERY   = "79772EC5-04B1-4BFD-843C-61E7F77B6CC9"
 GUID_ACER_STANDARD  = "61EF69EA-865C-4BC3-A502-A0DEBA0CB531"
 
 # Reverse-Engineered ACPI Method IDs & Opcodes
-# Fan Behavior Modes (WMID Method SetGamingFanBehavior)
+# Fan Behavior Modes (WMBH Method 0x15: SetGamingFanBehavior)
 OPCODE_FAN_MODE_AUTO   = 0x410009  # 4259849
 OPCODE_FAN_MODE_MAX    = 0x820009  # 8519689
 OPCODE_FAN_MODE_CUSTOM = 0xC30009  # 12779529
@@ -41,6 +41,9 @@ class AcerWMIInterface:
         self.has_acpi_call = os.path.exists("/proc/acpi/call")
         self.has_battery_wmi = os.path.exists("/sys/bus/wmi/drivers/acer-wmi-battery/health_mode")
         self.has_platform_profile = os.path.exists("/sys/firmware/acpi/platform_profile")
+        
+        # Primary verified ACPI method discovered on hardware
+        self.primary_acpi_method = r"\_SB.PCI0.WMID.WMBH"
         
         logger.info(f"Initialized Acer WMI for {self.product_name} (BIOS: {self.bios_version}, acpi_call: {self.has_acpi_call})")
 
@@ -70,7 +73,6 @@ class AcerWMIInterface:
                     f.write(value)
                 return True
         except PermissionError:
-            # Try with pkexec or sudo if needed
             res = subprocess.run(["pkexec", "tee", path], input=value.encode(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             if res.returncode == 0:
                 return True
@@ -106,7 +108,6 @@ class AcerWMIInterface:
                 logger.debug(f"ACPI Call '{call_str}' -> '{res}'")
                 return res
         except PermissionError:
-            # Try elevated write
             try:
                 subprocess.run(["pkexec", "tee", "/proc/acpi/call"], input=call_str.encode(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 with open("/proc/acpi/call", "r") as f:
@@ -117,43 +118,31 @@ class AcerWMIInterface:
             logger.debug(f"Failed ACPI Call '{call_str}': {e}")
         return None
 
-    def call_acpi_method(self, method: str, *args) -> Optional[str]:
+    def call_gaming_method(self, method_id: int, opcode: int) -> bool:
         """
-        Calls ACPI method trying standard 2-argument and 3-argument call signatures.
+        Calls Acer Gaming WMI function using verified WMBH / WMAA ACPI handles.
+        Format: \\_SB.PCI0.WMID.WMBH 1 <MethodID> <Opcode>
         """
-        arg_strs = []
-        for arg in args:
-            if isinstance(arg, int):
-                arg_strs.append(f"0x{arg:X}" if arg > 9 else str(arg))
-            elif isinstance(arg, str):
-                arg_strs.append(f'"{arg}"')
-            elif isinstance(arg, bytes):
-                arg_strs.append(f"b{arg.hex()}")
+        targets = [
+            f"{self.primary_acpi_method} 1 0x{method_id:X} 0x{opcode:X}",
+            f"{self.primary_acpi_method} 0 0x{method_id:X} 0x{opcode:X}",
+            f"\\_SB.PCI0.WMID.WMAA 1 0x{method_id:X} 0x{opcode:X}",
+            f"\\_SB.WMID.WMAA 1 0x{method_id:X} 0x{opcode:X}",
+            f"\\_SB.AMW0.WMAA 1 0x{method_id:X} 0x{opcode:X}"
+        ]
 
-        # 1. Standard signature: METHOD ARG1 ARG2
-        call_1 = f"{method} {' '.join(arg_strs)}"
-        res = self.call_acpi_raw(call_1)
-        if res and not res.startswith("Error"):
-            return res
+        for call_str in targets:
+            res = self.call_acpi_raw(call_str)
+            if res and not res.startswith("Error") and (res.startswith("{0x00") or res == "0x0" or res.startswith("{")):
+                logger.info(f"Hardware ACPI call succeeded: {call_str} -> {res}")
+                return True
 
-        # 2. Alternative 3-arg signature for serialized Acer WMID methods: METHOD 1 ARG1 ARG2
-        call_2 = f"{method} 1 {' '.join(arg_strs)}"
-        res2 = self.call_acpi_raw(call_2)
-        if res2 and not res2.startswith("Error"):
-            return res2
-
-        # 3. Alternative 3-arg signature with count: METHOD len(args) ARG1 ARG2
-        call_3 = f"{method} {len(args)} {' '.join(arg_strs)}"
-        res3 = self.call_acpi_raw(call_3)
-        if res3 and not res3.startswith("Error"):
-            return res3
-
-        return res
+        return False
 
     def set_fan_mode(self, mode: str) -> bool:
         """
         Set fan behavior mode: 'auto', 'max', 'custom'.
-        Reverse-engineered formula: SetAcerGamingFanGroupBehavior(opcode)
+        Method ID 0x15: SetGamingFanBehavior
         """
         mode_lower = mode.lower()
         if mode_lower == "auto":
@@ -165,25 +154,13 @@ class AcerWMIInterface:
         else:
             raise ValueError(f"Unknown fan mode: {mode}")
 
-        logger.info(f"Setting Fan Mode '{mode}' (Opcode: 0x{opcode:X})")
-
-        # Try ACPI Methods: \_SB.WMID.WMAA, \_SB.AMW0.WMAA, \_SB.PCI0.LPCB.EC0.WMAA
-        methods = [r"\_SB.WMID.WMAA", r"\_SB.AMW0.WMAA", r"\_SB.PCI0.LPCB.EC0.WMAA"]
-        for m in methods:
-            res = self.call_acpi_method(m, 0x15, opcode)
-            if res and not res.startswith("Error"):
-                logger.info(f"Fan Mode '{mode}' applied successfully via {m} -> {res}")
-                return True
-
-        return True
+        logger.info(f"Applying Fan Mode '{mode}' (Opcode 0x{opcode:X})")
+        return self.call_gaming_method(0x15, opcode)
 
     def set_fan_speed(self, fan_index: int, percentage: int) -> bool:
         """
         Set individual fan target speed (0 = CPU, 1 = GPU).
-        Percentage: 0 to 100%.
-        Reverse-engineered formula:
-          CPU: 0x01 | (percentage << 8)
-          GPU: 0x04 | (percentage << 8)
+        Method ID 0x16: SetGamingFanSpeed
         """
         percentage = max(0, min(100, int(percentage)))
         if fan_index == 0:  # CPU
@@ -193,37 +170,37 @@ class AcerWMIInterface:
         else:
             raise ValueError(f"Invalid fan index: {fan_index}")
 
-        logger.info(f"Setting Fan Speed {fan_index}: {percentage}% (Opcode: 0x{opcode:X})")
-
-        methods = [r"\_SB.WMID.WMAA", r"\_SB.AMW0.WMAA", r"\_SB.PCI0.LPCB.EC0.WMAA"]
-        for m in methods:
-            res = self.call_acpi_method(m, 0x16, opcode)
-            if res and not res.startswith("Error"):
-                logger.info(f"Fan speed {fan_index} set to {percentage}% via {m} -> {res}")
-                return True
-
-        return True
+        logger.info(f"Applying Fan Speed index {fan_index}: {percentage}% (Opcode 0x{opcode:X})")
+        return self.call_gaming_method(0x16, opcode)
 
     def set_coolboost(self, enable: bool) -> bool:
         """
         Enable/Disable Acer CoolBoost (+500-1000 RPM fan curve ceiling).
-        Reverse-engineered formula: WMISetFunction(7 | ((enable ? 1 : 0) << 16))
+        Method ID 0x11: WMISetFunction
         """
         opcode = 7 | ((1 if enable else 0) << 16)
-        logger.info(f"Setting CoolBoost: {enable} (Opcode: 0x{opcode:X})")
+        logger.info(f"Applying CoolBoost: {enable} (Opcode 0x{opcode:X})")
+        return self.call_gaming_method(0x11, opcode)
 
-        methods = [r"\_SB.WMID.WMAA", r"\_SB.AMW0.WMAA"]
-        for m in methods:
-            res = self.call_acpi_method(m, 0x11, opcode)
-            if res and not res.startswith("Error"):
-                return True
+    def set_rgb_zone_color(self, zone_index: int, r: int, g: int, b: int) -> bool:
+        """
+        Set 4-Zone RGB keyboard color.
+        Method ID 0x0B: SetGamingLEDGroupColor
+        """
+        opcode = (zone_index & 0xFF) | ((r & 0xFF) << 8) | ((g & 0xFF) << 16) | ((b & 0xFF) << 24)
+        return self.call_gaming_method(0x0B, opcode)
 
-        return True
+    def set_rgb_behavior(self, effect_id: int, speed: int, direction: int) -> bool:
+        """
+        Set RGB lighting dynamic effect.
+        Method ID 0x1E: SetGamingLEDBehavior
+        """
+        opcode = (effect_id & 0xFF) | ((speed & 0xFF) << 8) | ((direction & 0xFF) << 16)
+        return self.call_gaming_method(0x1E, opcode)
 
     def set_power_profile(self, profile: str) -> bool:
         """
         Set power profile: 'quiet', 'balanced', 'performance', 'turbo'.
-        Utilizes Linux platform_profile and Acer WMI gaming profiles.
         """
         profile_map = {
             "quiet": "quiet",
@@ -239,10 +216,10 @@ class AcerWMIInterface:
             self._write_sysfs(sysfs_profile, target)
             logger.info(f"Applied platform_profile: {target}")
 
-        # 2. WMI Power Profile Opcode
+        # 2. WMI Power Profile Opcode (Method 0x11)
         mode_idx = {"quiet": 0, "balanced": 1, "performance": 2, "turbo": 3}.get(profile.lower(), 1)
         opcode = 7 | (mode_idx << 16)
-        self.call_acpi_method(r"\_SB.WMID.WMAA", 0x11, opcode)
+        self.call_gaming_method(0x11, opcode)
 
         return True
 
