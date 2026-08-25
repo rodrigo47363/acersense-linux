@@ -10,25 +10,23 @@ from typing import Optional, Dict
 
 logger = logging.getLogger("acersense.wmi")
 
-# Verified WMI Method IDs from Acer DSDT / WMI mapping:
-# Method 0x0F (Decimal 15) -> SetGamingFanBehavior: 1=Auto, 2=Max, 3=Custom
-# Method 0x10 (Decimal 16) -> SetGamingFanSpeed: (FanID | (Pct << 8))
-# Method 0x11 (Decimal 17) -> WMISetFunction: (FunctionID | (Value << 16))
-# Method 0x0B (Decimal 11) -> SetGamingLEDGroupColor: (Zone | (R<<8) | (G<<16) | (B<<24))
-# Method 0x1E (Decimal 30) -> SetGamingLEDBehavior: (Effect | (Speed<<8) | (Dir<<16))
-# Method 0x1C (Decimal 28) -> SetGamingKBBacklight: (1 | (Timeout<<8))
+# Exact Verified WMI Method IDs on Acer DSDT / WMI mapping:
+# Method 1 -> WMISetFunction: CoolBoost (7 | (1<<16)), Power Profile (7 | (Mode<<16))
+# Method 2 -> SetGamingFanBehavior: Max (0x820009), Auto (0x410009), Custom (0xC30009)
+# Method 7 -> SetGamingFanSpeed: CPU (0x01 | (Pct<<8)), GPU (0x04 | (Pct<<8))
+# Method 5 -> SetGamingLEDGroupColor: 4-Zone RGB
+# Method 6 -> SetGamingLEDBehavior: Dynamic RGB Effects
 
-WMI_METHOD_FAN_BEHAVIOR = 0x0F
-WMI_METHOD_FAN_SPEED    = 0x10
-WMI_METHOD_WMI_FUNCTION = 0x11
-WMI_METHOD_RGB_COLOR    = 0x0B
-WMI_METHOD_RGB_EFFECT   = 0x1E
-WMI_METHOD_KB_TIMEOUT   = 0x1C
+WMI_METHOD_SET_FUNCTION = 1
+WMI_METHOD_FAN_BEHAVIOR = 2
+WMI_METHOD_FAN_SPEED    = 7
+WMI_METHOD_RGB_COLOR    = 5
+WMI_METHOD_RGB_EFFECT   = 6
 
-# Reverse-Engineered Fan Behavior Opcodes
-FAN_OPCODE_AUTO   = 1
-FAN_OPCODE_MAX    = 2
-FAN_OPCODE_CUSTOM = 3
+# Verified Opcodes from Windows NitroSense
+OPCODE_FAN_MODE_AUTO   = 0x410009
+OPCODE_FAN_MODE_MAX    = 0x820009
+OPCODE_FAN_MODE_CUSTOM = 0xC30009
 
 
 class AcerWMIInterface:
@@ -107,12 +105,19 @@ class AcerWMIInterface:
         return None
 
     def call_gaming_method(self, method_id: int, opcode: int) -> bool:
-        """Calls verified Acer Gaming ACPI WMBH method."""
-        call_str = f"{self.primary_acpi_method} 1 0x{method_id:X} 0x{opcode:X}"
-        res = self.call_acpi_raw(call_str)
-        if res and not res.startswith("Error") and (res.startswith("{0x00") or res == "0x0" or res.startswith("{")):
-            return True
-        return False
+        """Calls verified Acer Gaming ACPI WMBH & WMBK methods across multiple instances."""
+        targets = [
+            f"\\_SB.PCI0.WMID.WMBH 1 {method_id} 0x{opcode:X}",
+            f"\\_SB.PCI0.WMID.WMBH 0 {method_id} 0x{opcode:X}",
+            f"\\_SB.PCI0.WMID.WMBK 1 {method_id} 0x{opcode:X}",
+            f"\\_SB.PCI0.WMID.WMBK 0 {method_id} 0x{opcode:X}",
+        ]
+        success = False
+        for call_str in targets:
+            res = self.call_acpi_raw(call_str)
+            if res and not res.startswith("Error") and (res.startswith("{0x00") or res == "0x0" or res.startswith("{")):
+                success = True
+        return success
 
     def set_fan_mode(self, mode: str) -> bool:
         """
@@ -120,35 +125,32 @@ class AcerWMIInterface:
         """
         mode_lower = mode.lower()
         if mode_lower == "auto":
-            logger.info("Applying Fan Mode: AUTO")
-            self.call_gaming_method(WMI_METHOD_FAN_BEHAVIOR, FAN_OPCODE_AUTO)
-            self.call_gaming_method(WMI_METHOD_FAN_BEHAVIOR, 0x410009)
+            logger.info("Applying Fan Mode: AUTO (0x410009)")
+            self.call_gaming_method(WMI_METHOD_FAN_BEHAVIOR, OPCODE_FAN_MODE_AUTO)
             self.set_coolboost(False)
             self.set_power_profile("balanced")
             return True
         elif mode_lower == "max":
-            logger.info("Applying Fan Mode: MAX TURBO (100% ~5500 RPM)")
-            # 1. Set mode to MAX in EC
-            self.call_gaming_method(WMI_METHOD_FAN_BEHAVIOR, FAN_OPCODE_MAX)
-            self.call_gaming_method(WMI_METHOD_FAN_BEHAVIOR, 0x820009)
-            # 2. Lock CPU and GPU fan speed targets to 100%
+            logger.info("Applying Fan Mode: MAX TURBO (0x820009 + 100% Speeds + CoolBoost)")
+            # 1. Engage MAX Fan Behavior
+            self.call_gaming_method(WMI_METHOD_FAN_BEHAVIOR, OPCODE_FAN_MODE_MAX)
+            # 2. Lock CPU and GPU fan speeds to 100% on Method 7
             self.set_fan_speed(0, 100)
             self.set_fan_speed(1, 100)
-            # 3. Enable CoolBoost ceiling
+            # 3. Engage CoolBoost and Performance Profile
             self.set_coolboost(True)
             self.set_power_profile("performance")
             return True
         elif mode_lower == "custom":
-            logger.info("Applying Fan Mode: CUSTOM")
-            self.call_gaming_method(WMI_METHOD_FAN_BEHAVIOR, FAN_OPCODE_CUSTOM)
-            self.call_gaming_method(WMI_METHOD_FAN_BEHAVIOR, 0xC30009)
+            logger.info("Applying Fan Mode: CUSTOM (0xC30009)")
+            self.call_gaming_method(WMI_METHOD_FAN_BEHAVIOR, OPCODE_FAN_MODE_CUSTOM)
             return True
         else:
             raise ValueError(f"Unknown fan mode: {mode}")
 
     def set_fan_speed(self, fan_index: int, percentage: int) -> bool:
         """
-        Set individual fan target speed (0 = CPU, 1 = GPU).
+        Set individual fan target speed (0 = CPU, 1 = GPU) on Method 7.
         """
         percentage = max(0, min(100, int(percentage)))
         if fan_index == 0:  # CPU
@@ -158,16 +160,16 @@ class AcerWMIInterface:
         else:
             raise ValueError(f"Invalid fan index: {fan_index}")
 
-        logger.info(f"Applying Fan Speed index {fan_index}: {percentage}% (Opcode 0x{opcode:X})")
+        logger.info(f"Applying Fan Speed index {fan_index}: {percentage}% (Opcode 0x{opcode:X}) on Method {WMI_METHOD_FAN_SPEED}")
         return self.call_gaming_method(WMI_METHOD_FAN_SPEED, opcode)
 
     def set_coolboost(self, enable: bool) -> bool:
         """
-        Enable/Disable Acer CoolBoost (+500-1000 RPM fan curve ceiling).
+        Enable/Disable Acer CoolBoost (+500-1000 RPM fan curve ceiling) on Method 1.
         """
         opcode = 7 | ((1 if enable else 0) << 16)
-        logger.info(f"Applying CoolBoost: {enable} (Opcode 0x{opcode:X})")
-        return self.call_gaming_method(WMI_METHOD_WMI_FUNCTION, opcode)
+        logger.info(f"Applying CoolBoost: {enable} (Opcode 0x{opcode:X}) on Method {WMI_METHOD_SET_FUNCTION}")
+        return self.call_gaming_method(WMI_METHOD_SET_FUNCTION, opcode)
 
     def set_rgb_zone_color(self, zone_index: int, r: int, g: int, b: int) -> bool:
         """
@@ -200,10 +202,10 @@ class AcerWMIInterface:
         if os.path.exists(sysfs_profile):
             self._write_sysfs(sysfs_profile, target)
 
-        # 2. WMI Power Profile Opcode
+        # 2. WMI Power Profile Opcode on Method 1
         mode_idx = {"quiet": 0, "balanced": 1, "performance": 2, "turbo": 3}.get(profile.lower(), 1)
         opcode = 7 | (mode_idx << 16)
-        self.call_gaming_method(WMI_METHOD_WMI_FUNCTION, opcode)
+        self.call_gaming_method(WMI_METHOD_SET_FUNCTION, opcode)
         return True
 
     def get_power_profile(self) -> str:
