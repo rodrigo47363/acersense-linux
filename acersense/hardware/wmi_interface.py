@@ -6,7 +6,7 @@ Directly communicates with Acer ACPI/WMI methods reverse-engineered from Windows
 import os
 import subprocess
 import logging
-from typing import Optional, Tuple, Dict, Any
+from typing import Optional, Tuple, Dict, Any, List
 
 logger = logging.getLogger("acersense.wmi")
 
@@ -37,11 +37,20 @@ class AcerWMIInterface:
         self.bios_version = self._read_sysfs("/sys/class/dmi/id/bios_version", "Unknown")
         
         self.available_guids = self._discover_wmi_devices()
+        self._ensure_acpi_call_loaded()
         self.has_acpi_call = os.path.exists("/proc/acpi/call")
         self.has_battery_wmi = os.path.exists("/sys/bus/wmi/drivers/acer-wmi-battery/health_mode")
         self.has_platform_profile = os.path.exists("/sys/firmware/acpi/platform_profile")
         
-        logger.info(f"Initialized Acer WMI for {self.product_name} (BIOS: {self.bios_version})")
+        logger.info(f"Initialized Acer WMI for {self.product_name} (BIOS: {self.bios_version}, acpi_call: {self.has_acpi_call})")
+
+    def _ensure_acpi_call_loaded(self):
+        """Attempts to ensure acpi_call kernel module is loaded."""
+        if not os.path.exists("/proc/acpi/call"):
+            try:
+                subprocess.run(["modprobe", "acpi_call"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            except Exception:
+                pass
 
     @staticmethod
     def _read_sysfs(path: str, default: str = "") -> str:
@@ -82,14 +91,36 @@ class AcerWMIInterface:
                         devices[guid] = os.path.join(wmi_base, entry)
         return devices
 
+    def call_acpi_raw(self, call_str: str) -> Optional[str]:
+        """Executes a single raw string command to /proc/acpi/call."""
+        if not os.path.exists("/proc/acpi/call"):
+            self._ensure_acpi_call_loaded()
+        if not os.path.exists("/proc/acpi/call"):
+            return None
+
+        try:
+            with open("/proc/acpi/call", "w") as f:
+                f.write(call_str)
+            with open("/proc/acpi/call", "r") as f:
+                res = f.read().strip().rstrip("\x00")
+                logger.debug(f"ACPI Call '{call_str}' -> '{res}'")
+                return res
+        except PermissionError:
+            # Try elevated write
+            try:
+                subprocess.run(["pkexec", "tee", "/proc/acpi/call"], input=call_str.encode(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                with open("/proc/acpi/call", "r") as f:
+                    return f.read().strip().rstrip("\x00")
+            except Exception:
+                pass
+        except Exception as e:
+            logger.debug(f"Failed ACPI Call '{call_str}': {e}")
+        return None
+
     def call_acpi_method(self, method: str, *args) -> Optional[str]:
         """
-        Calls an ACPI method using /proc/acpi/call if available.
-        Format: call_acpi_method('\\_SB.WMID.WMAA', 1, 0x410009)
+        Calls ACPI method trying standard 2-argument and 3-argument call signatures.
         """
-        if not self.has_acpi_call:
-            return None
-        
         arg_strs = []
         for arg in args:
             if isinstance(arg, int):
@@ -98,18 +129,26 @@ class AcerWMIInterface:
                 arg_strs.append(f'"{arg}"')
             elif isinstance(arg, bytes):
                 arg_strs.append(f"b{arg.hex()}")
-        
-        call_str = f"{method} {len(args)} {' '.join(arg_strs)}".strip()
-        try:
-            with open("/proc/acpi/call", "w") as f:
-                f.write(call_str)
-            with open("/proc/acpi/call", "r") as f:
-                res = f.read().strip().rstrip("\x00")
-                logger.debug(f"ACPI Call '{call_str}' -> '{res}'")
-                return res
-        except Exception as e:
-            logger.error(f"Failed ACPI Call '{call_str}': {e}")
-            return None
+
+        # 1. Standard signature: METHOD ARG1 ARG2
+        call_1 = f"{method} {' '.join(arg_strs)}"
+        res = self.call_acpi_raw(call_1)
+        if res and not res.startswith("Error"):
+            return res
+
+        # 2. Alternative 3-arg signature for serialized Acer WMID methods: METHOD 1 ARG1 ARG2
+        call_2 = f"{method} 1 {' '.join(arg_strs)}"
+        res2 = self.call_acpi_raw(call_2)
+        if res2 and not res2.startswith("Error"):
+            return res2
+
+        # 3. Alternative 3-arg signature with count: METHOD len(args) ARG1 ARG2
+        call_3 = f"{method} {len(args)} {' '.join(arg_strs)}"
+        res3 = self.call_acpi_raw(call_3)
+        if res3 and not res3.startswith("Error"):
+            return res3
+
+        return res
 
     def set_fan_mode(self, mode: str) -> bool:
         """
@@ -126,14 +165,16 @@ class AcerWMIInterface:
         else:
             raise ValueError(f"Unknown fan mode: {mode}")
 
-        # ACPI Method \_SB.WMID.WMAA (Method ID 0x15: SetGamingFanBehavior)
-        if self.has_acpi_call:
-            res = self.call_acpi_method(r"\_SB.WMID.WMAA", 0x15, opcode)
-            if res is not None and not res.startswith("Error"):
+        logger.info(f"Setting Fan Mode '{mode}' (Opcode: 0x{opcode:X})")
+
+        # Try ACPI Methods: \_SB.WMID.WMAA, \_SB.AMW0.WMAA, \_SB.PCI0.LPCB.EC0.WMAA
+        methods = [r"\_SB.WMID.WMAA", r"\_SB.AMW0.WMAA", r"\_SB.PCI0.LPCB.EC0.WMAA"]
+        for m in methods:
+            res = self.call_acpi_method(m, 0x15, opcode)
+            if res and not res.startswith("Error"):
+                logger.info(f"Fan Mode '{mode}' applied successfully via {m} -> {res}")
                 return True
 
-        # Fallback to direct EC or WMI device if supported
-        logger.info(f"Applying Fan Mode '{mode}' (Opcode 0x{opcode:X})")
         return True
 
     def set_fan_speed(self, fan_index: int, percentage: int) -> bool:
@@ -152,12 +193,15 @@ class AcerWMIInterface:
         else:
             raise ValueError(f"Invalid fan index: {fan_index}")
 
-        if self.has_acpi_call:
-            res = self.call_acpi_method(r"\_SB.WMID.WMAA", 0x16, opcode)
-            if res is not None and not res.startswith("Error"):
+        logger.info(f"Setting Fan Speed {fan_index}: {percentage}% (Opcode: 0x{opcode:X})")
+
+        methods = [r"\_SB.WMID.WMAA", r"\_SB.AMW0.WMAA", r"\_SB.PCI0.LPCB.EC0.WMAA"]
+        for m in methods:
+            res = self.call_acpi_method(m, 0x16, opcode)
+            if res and not res.startswith("Error"):
+                logger.info(f"Fan speed {fan_index} set to {percentage}% via {m} -> {res}")
                 return True
 
-        logger.info(f"Applying Fan Speed index {fan_index}: {percentage}% (Opcode 0x{opcode:X})")
         return True
 
     def set_coolboost(self, enable: bool) -> bool:
@@ -166,12 +210,14 @@ class AcerWMIInterface:
         Reverse-engineered formula: WMISetFunction(7 | ((enable ? 1 : 0) << 16))
         """
         opcode = 7 | ((1 if enable else 0) << 16)
-        if self.has_acpi_call:
-            res = self.call_acpi_method(r"\_SB.WMID.WMAA", 0x11, opcode)
-            if res is not None and not res.startswith("Error"):
+        logger.info(f"Setting CoolBoost: {enable} (Opcode: 0x{opcode:X})")
+
+        methods = [r"\_SB.WMID.WMAA", r"\_SB.AMW0.WMAA"]
+        for m in methods:
+            res = self.call_acpi_method(m, 0x11, opcode)
+            if res and not res.startswith("Error"):
                 return True
 
-        logger.info(f"Applying CoolBoost: {enable} (Opcode 0x{opcode:X})")
         return True
 
     def set_power_profile(self, profile: str) -> bool:
@@ -181,63 +227,42 @@ class AcerWMIInterface:
         """
         profile_map = {
             "quiet": "quiet",
-            "silent": "quiet",
             "balanced": "balanced",
-            "normal": "balanced",
-            "default": "balanced",
             "performance": "performance",
-            "extreme": "performance",
             "turbo": "performance"
         }
         target = profile_map.get(profile.lower(), "balanced")
         
-        # 1. Update Linux platform_profile
-        if self.has_platform_profile:
-            self._write_sysfs("/sys/firmware/acpi/platform_profile", target)
+        # 1. Linux sysfs platform profile
+        sysfs_profile = "/sys/firmware/acpi/platform_profile"
+        if os.path.exists(sysfs_profile):
+            self._write_sysfs(sysfs_profile, target)
+            logger.info(f"Applied platform_profile: {target}")
 
-        # 2. Update Acer WMI Gaming Profile opcode if supported
-        # Opcode: 7 | (mode << 16) (0=Quiet, 1=Default, 2=Performance, 3=Turbo)
-        mode_idx = 0 if target == "quiet" else (1 if target == "balanced" else 2)
+        # 2. WMI Power Profile Opcode
+        mode_idx = {"quiet": 0, "balanced": 1, "performance": 2, "turbo": 3}.get(profile.lower(), 1)
         opcode = 7 | (mode_idx << 16)
-        if self.has_acpi_call:
-            self.call_acpi_method(r"\_SB.WMID.WMAA", 0x08, opcode)
+        self.call_acpi_method(r"\_SB.WMID.WMAA", 0x11, opcode)
 
-        logger.info(f"Applied Power Profile '{profile}' -> '{target}'")
         return True
 
     def get_power_profile(self) -> str:
-        """Read active power profile."""
-        if self.has_platform_profile:
-            val = self._read_sysfs("/sys/firmware/acpi/platform_profile", "balanced")
-            return val
-        return "balanced"
-
-    def set_battery_health_mode(self, limit_80: bool) -> bool:
-        """
-        Set Battery Health Mode (80% charge limitation).
-        Writes to /sys/bus/wmi/drivers/acer-wmi-battery/health_mode (1 = 80%, 0 = 100%).
-        """
-        path = "/sys/bus/wmi/drivers/acer-wmi-battery/health_mode"
-        val_str = "1" if limit_80 else "0"
-        if os.path.exists(path):
-            return self._write_sysfs(path, val_str)
-        
-        # Fallback to standard charge_control_end_threshold
-        charge_limit_path = "/sys/class/power_supply/BAT1/charge_control_end_threshold"
-        if os.path.exists(charge_limit_path):
-            return self._write_sysfs(charge_limit_path, "80" if limit_80 else "100")
-            
-        logger.warning("Battery health limiter sysfs node not found.")
-        return False
+        """Read current platform profile from kernel sysfs."""
+        sysfs_profile = "/sys/firmware/acpi/platform_profile"
+        return self._read_sysfs(sysfs_profile, "balanced")
 
     def get_battery_health_mode(self) -> Optional[bool]:
-        """Get 80% charge limiter status."""
-        path = "/sys/bus/wmi/drivers/acer-wmi-battery/health_mode"
-        if os.path.exists(path):
-            val = self._read_sysfs(path, "0")
-            return val.strip() == "1"
-        charge_limit_path = "/sys/class/power_supply/BAT1/charge_control_end_threshold"
-        if os.path.exists(charge_limit_path):
-            val = self._read_sysfs(charge_limit_path, "100")
-            return int(val.strip()) <= 80
+        """Check if 80% charge limiter is active."""
+        health_path = "/sys/bus/wmi/drivers/acer-wmi-battery/health_mode"
+        if os.path.exists(health_path):
+            val = self._read_sysfs(health_path, "0")
+            return val == "1"
         return None
+
+    def set_battery_health_mode(self, enable: bool) -> bool:
+        """Enable (80% charge limit) or Disable (100% full charge) battery health mode."""
+        health_path = "/sys/bus/wmi/drivers/acer-wmi-battery/health_mode"
+        if os.path.exists(health_path):
+            val = "1" if enable else "0"
+            return self._write_sysfs(health_path, val)
+        return False
