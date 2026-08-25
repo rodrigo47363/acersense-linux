@@ -97,6 +97,16 @@ def cmd_fan(args):
     wmi = AcerWMIInterface()
     fan = FanManager(wmi)
 
+    if getattr(args, "status", False) or args.mode == "status" or (not args.mode and not args.coolboost and args.cpu is None and args.gpu is None):
+        thermal = ThermalInterface()
+        stat = fan.get_status()
+        rpms = thermal.get_fan_rpm()
+        print(f"{CLR_BOLD}── Cooling & Fan Subsystem ──────────────────────────────────{CLR_RESET}")
+        print(f"  Fan Mode:       {CLR_GREEN}{stat['mode'].upper()}{CLR_RESET}  | CoolBoost: {'ON' if stat['coolboost'] else 'OFF'}")
+        print(f"  CPU Fan Target: {stat['cpu_target_percent']}%  | Real Speed: {rpms['cpu_fan_rpm']} RPM")
+        print(f"  GPU Fan Target: {stat['gpu_target_percent']}%  | Real Speed: {rpms['gpu_fan_rpm']} RPM")
+        return
+
     if args.mode:
         fan.set_mode(args.mode)
         print(f"{CLR_GREEN}[+] Fan mode set to:{CLR_RESET} {args.mode.upper()}")
@@ -211,7 +221,8 @@ def main():
 
     # Fan
     p_fan = subparsers.add_parser("fan", help="Configure fan mode and custom speeds")
-    p_fan.add_argument("--mode", choices=["auto", "max", "custom"], help="Set fan mode")
+    p_fan.add_argument("--mode", choices=["auto", "max", "custom", "status"], help="Set fan mode")
+    p_fan.add_argument("--status", action="store_true", help="Show fan status and RPMs")
     p_fan.add_argument("--coolboost", choices=["on", "off"], help="Toggle CoolBoost")
     p_fan.add_argument("--cpu", type=int, help="CPU fan speed percentage (0-100)")
     p_fan.add_argument("--gpu", type=int, help="GPU fan speed percentage (0-100)")
