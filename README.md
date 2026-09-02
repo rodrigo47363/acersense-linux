@@ -19,6 +19,10 @@
    Enterprise-Grade Linux Control Suite for Acer Nitro & Predator Laptops
 ```
 
+<p align="center">
+  <img src="assets/screenshots/acersense_gui_dashboard.png" alt="AcerSense Pro Linux GUI Dashboard" width="100%">
+</p>
+
 ---
 
 ## ⚡ Key Highlights & Breakthrough Capabilities
