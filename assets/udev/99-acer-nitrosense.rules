@@ -1,0 +1,8 @@
+# =========================================================================
+# AcerSense Pro - Udev Rules for NitroSense Input Hotkeys & ACPI
+# Ensures correct event permissions and triggers hardware db
+# =========================================================================
+
+# Provide read access to Acer WMI hotkeys device for user-session shortcuts
+KERNEL=="event*", SUBSYSTEM=="input", ATTRS{name}=="Acer WMI hotkeys", MODE="0660", TAG+="uaccess"
+KERNEL=="event*", SUBSYSTEM=="input", ATTRS{name}=="AT Translated Set 2 keyboard", MODE="0660", TAG+="uaccess"

@@ -11,5 +11,5 @@ StandardOutput=journal
 StandardError=journal
 
 [Install]
-WantedBy=multi-user.target suspend.target hibernate.target
+WantedBy=multi-user.target
 Alias=acersense.service

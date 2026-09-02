@@ -1,11 +1,32 @@
+# Rust build artifacts
+target/
+**/*.rs.bk
+
+# Debian and build outputs
+build/
+dist/
+*.deb
+
+# Logs and audits
+*.log
+*.tmp
+
+# Python legacy cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .pytest_cache/
 *.egg-info/
-build/
-dist/
+
+# System and editor files
 .DS_Store
 *.swp
 *.bak
+*.orig
+
+# Raw BIOS binary dumps (keep ACPI tables in bios_re/acpi_tables)
+bios_re/decompressed/
+bios_re/efi_modules/
+bios_re/ghidra_proj/
+

@@ -1,0 +1,35 @@
+/* AcerSense Waybar Styling (Dark Slate Unixporn) */
+
+#custom-acersense {
+    background-color: #161B22;
+    color: #58A6FF;
+    border: 1px solid #30363D;
+    border-radius: 8px;
+    padding: 0 12px;
+    margin: 4px 6px;
+    font-family: "JetBrains Mono", "Fira Code", monospace;
+    font-weight: bold;
+    font-size: 13px;
+    transition: all 0.2s ease-in-out;
+}
+
+#custom-acersense:hover {
+    background-color: #21262D;
+    border-color: #58A6FF;
+}
+
+#custom-acersense.warning {
+    color: #D29922;
+    border-color: #D29922;
+}
+
+#custom-acersense.critical {
+    color: #F85149;
+    border-color: #F85149;
+    animation: blink-critical 1s infinite alternate;
+}
+
+@keyframes blink-critical {
+    from { background-color: #161B22; }
+    to { background-color: rgba(248, 81, 73, 0.25); }
+}

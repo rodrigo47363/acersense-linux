@@ -1,0 +1,8 @@
+# Udev Rules for AcerSense Hardware Control (Fans, RGB, Battery)
+# Allows standard desktop users to interact with ACPI and hardware control nodes
+
+# ACPI Call procfs interface
+ACTION=="add", SUBSYSTEM=="module", DEVPATH=="/module/acpi_call", RUN+="/bin/chmod 0666 /proc/acpi/call"
+
+# Direct hwmon sysfs access for PWM fan nodes
+ACTION=="add|change", SUBSYSTEM=="hwmon", ATTR{name}=="coretemp|k10temp|acpitz|acer-wmi", RUN+="/bin/chmod -R 0666 /sys%p"

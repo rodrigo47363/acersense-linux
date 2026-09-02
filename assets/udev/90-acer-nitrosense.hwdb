@@ -1,0 +1,23 @@
+# =========================================================================
+# AcerSense Pro - Hardware Database Rule for Physical NitroSense Key [N]
+# Maps hardware scancodes to Linux standard KEY_PROG1 / KEY_F13
+# =========================================================================
+
+# Generic Acer Nitro / Predator AT Keyboard Matching
+evdev:atkbd:dmi:bvn*:bvr*:bd*:svn[Aa][Cc][Ee][Rr]*:pn*[Nn][Ii][Tt][Rr][Oo]*:*
+evdev:atkbd:dmi:bvn*:bvr*:bd*:svn[Aa][Cc][Ee][Rr]*:pn*[Pp][Rr][Ee][Dd][Aa][Tt][Oo][Rr]*:*
+evdev:atkbd:dmi:bvn*:bvr*:bd*:svn[Aa][Cc][Ee][Rr]*:pn*AN515*:*
+evdev:atkbd:dmi:bvn*:bvr*:bd*:svn[Aa][Cc][Ee][Rr]*:pn*AN517*:*
+evdev:atkbd:dmi:bvn*:bvr*:bd*:svn[Aa][Cc][Ee][Rr]*:pn*PH315*:*
+evdev:atkbd:dmi:bvn*:bvr*:bd*:svn[Aa][Cc][Ee][Rr]*:pn*PT315*:*
+ KEYBOARD_KEY_54=prog1                 # Scancode 0x54 -> KEY_PROG1 (XF86Launch1)
+ KEYBOARD_KEY_a8=prog1                 # Scancode 0xA8 -> KEY_PROG1
+ KEYBOARD_KEY_d5=prog1                 # Scancode 0xD5 -> KEY_PROG1
+ KEYBOARD_KEY_ec=prog1                 # Scancode 0xEC -> KEY_PROG1
+ KEYBOARD_KEY_85=prog1                 # Scancode 0x85 -> KEY_PROG1
+
+# Acer WMI Hotkeys Driver Matching
+evdev:name:Acer WMI hotkeys:*
+ KEYBOARD_KEY_54=prog1
+ KEYBOARD_KEY_a8=prog1
+ KEYBOARD_KEY_d5=prog1

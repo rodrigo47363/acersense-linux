@@ -1,0 +1,14 @@
+// Waybar Module Configuration for AcerSense Linux
+// Add "custom/acersense" to your modules-left, modules-center, or modules-right array.
+
+"custom/acersense": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 2,
+    "exec": "acersense status --waybar",
+    "on-click": "acersense-gui",
+    "on-click-right": "acersense profile --set turbo",
+    "on-click-middle": "acersense profile --set balanced",
+    "tooltip": true,
+    "signal": 8
+}
