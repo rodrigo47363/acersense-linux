@@ -70,27 +70,63 @@
 
 ## 🎨 The 19 Color Themes Suite
 
-| Theme | Type | Inspiration / Style | Color Identity |
-|:---|:---:|:---|:---|
-| **🌿 Confort Humano** | Dark | Ergonomic Human-Centric Master | Slate `#0F1219` • Coral `#F43F5E` • Sky `#38BDF8` |
-| **🌃 Tokyo Night** | Dark | `simple-tokyonight.rasi` | Indigo `#1A1B26` • Tokyo Blue `#7AA2F7` • Coral `#F7768E` |
-| **🏮 Neo Tokyo Cyber** | Dark | `neo_tokyo.rofi` by Rodrigo47363 | Dark Violet `#0F0B1E` • Neon Fuchsia `#FF007C` • Cyan `#00FFFF` |
-| **🔴 Red Audit Offensive** | Dark | `red_audit.rofi` by Rodrigo47363 | Pitch Black `#0A0A0E` • Blood Red `#FF3333` • Amber `#FF9E64` |
-| **🟢 Hacker Matrix** | Dark | `hacker_green.rofi` by Rodrigo47363 | Pure Black `#000000` • Phosphor Green CRT `#00FF00` |
-| **🌌 Stellar Void** | Dark | `stellar_void.rofi` by Rodrigo47363 | Deep Void `#030303` • Plasma Cyan `#00FFFF` • Violet `#8A2BE2` |
-| **🔮 Aurora Gradient** | Dark | Modern CSS Gradient Button | Cosmic Night `#05062D` • Purple `#AF40FF` • Cyan `#00DDEB` |
-| **💜 Kuromi Goth** | Dark | `kuromi_goth.rofi` by Rodrigo47363 | Absolute Black `#000000` • Goth Lavender `#B48EAD` • Pink `#F5C2E7` |
-| **✨ Cinnamoroll Night** | Dark | `cinnamoroll_night.rofi` by Rodrigo47363 | Midnight `#11152C` • Pastel Sky `#8AADF4` • Cheek Pink `#F5BDE6` |
-| **🌲 Everforest Soft** | Dark | `squared-everforest.rasi` | Charcoal `#2B3339` • Sage Green `#A7C080` • Aqua `#7FBBB3` |
-| **🌊 Nórdico Calmo** | Dark | `squared-nord.rasi` | Arctic Deep `#10141B` • Glacial Blue `#60A5FA` • Teal `#2DD4BF` |
-| **🍃 Salvia & Tierra** | Dark | Organic Earth Palette | Forest `#111613` • Earth Amber `#F59E0B` • Sage Mint `#34D399` |
-| **⚡ Cyber Nitro** | Dark | Original Acer Nitro Gaming | Pitch `#0A0D12` • Nitro Crimson `#E51937` • Cyan `#00E5FF` |
-| **🔷 Modern Blue** | Dark | `modern_blue.rofi` by Rodrigo47363 | Deep Dark Navy `#1A1B26` • Modern Azure `#7AA2F7` |
-| **👔 Mantec Corporate** | Dark | `mantec_corporate.rofi` by Rodrigo47363 | Charcoal `#1E1E1E` • Copper Orange `#E67E22` • Steel `#3498DB` |
-| **🔺 Material Dark Red** | Dark | `squared-material-red.rasi` | Darker `#212121` • Coral Red `#F07178` • Amber `#FFCB6B` |
-| **☁️ Cinnamoroll Cloud** | Light | `cinnamoroll_cloud.rofi` by Rodrigo47363 | Ethereal White `#F5F8FC` • Vibrant Sky Blue `#2E8FD9` |
-| **🌸 My Melody Soft** | Light | `mymelody_soft.rofi` by Rodrigo47363 | Soft Cream `#FFF8F0` • Melody Rose `#E85D75` • Apricot `#FFE8D6` |
-| **🍮 Pompompurin Café** | Light | `pompompurin_cafe.rofi` by Rodrigo47363 | Warm Vanilla `#FFFBF0` • Purin Caramel `#C97A18` • Cocoa `#4A2E21` |
+| Theme | Type | Inspiration / Style | Color Identity | Preview |
+|:---|:---:|:---|:---|:---:|
+| **🌿 Confort Humano** | Dark | Ergonomic Human-Centric Master | Slate `#0F1219` • Coral `#F43F5E` • Sky `#38BDF8` | [📸 View](assets/screenshots/01_human_comfort.png) |
+| **🌃 Tokyo Night** | Dark | `simple-tokyonight.rasi` | Indigo `#1A1B26` • Tokyo Blue `#7AA2F7` • Coral `#F7768E` | [📸 View](assets/screenshots/02_tokyo_night.png) |
+| **🏮 Neo Tokyo Cyber** | Dark | `neo_tokyo.rofi` by Rodrigo47363 | Dark Violet `#0F0B1E` • Neon Fuchsia `#FF007C` • Cyan `#00FFFF` | [📸 View](assets/screenshots/03_neo_tokyo.png) |
+| **🔴 Red Audit Offensive** | Dark | `red_audit.rofi` by Rodrigo47363 | Pitch Black `#0A0A0E` • Blood Red `#FF3333` • Amber `#FF9E64` | [📸 View](assets/screenshots/04_red_audit.png) |
+| **🟢 Hacker Matrix** | Dark | `hacker_green.rofi` by Rodrigo47363 | Pure Black `#000000` • Phosphor Green CRT `#00FF00` | [📸 View](assets/screenshots/05_hacker_matrix.png) |
+| **🌌 Stellar Void** | Dark | `stellar_void.rofi` by Rodrigo47363 | Deep Void `#030303` • Plasma Cyan `#00FFFF` • Violet `#8A2BE2` | [📸 View](assets/screenshots/06_stellar_void.png) |
+| **🔮 Aurora Gradient** | Dark | Modern CSS Gradient Button | Cosmic Night `#05062D` • Purple `#AF40FF` • Cyan `#00DDEB` | [📸 View](assets/screenshots/07_aurora_gradient.png) |
+| **💜 Kuromi Goth** | Dark | `kuromi_goth.rofi` by Rodrigo47363 | Absolute Black `#000000` • Goth Lavender `#B48EAD` • Pink `#F5C2E7` | [📸 View](assets/screenshots/08_kuromi_goth.png) |
+| **✨ Cinnamoroll Night** | Dark | `cinnamoroll_night.rofi` by Rodrigo47363 | Midnight `#11152C` • Pastel Sky `#8AADF4` • Cheek Pink `#F5BDE6` | [📸 View](assets/screenshots/09_cinnamoroll_night.png) |
+| **🌲 Everforest Soft** | Dark | `squared-everforest.rasi` | Charcoal `#2B3339` • Sage Green `#A7C080` • Aqua `#7FBBB3` | [📸 View](assets/screenshots/10_everforest_soft.png) |
+| **🌊 Nórdico Calmo** | Dark | `squared-nord.rasi` | Arctic Deep `#10141B` • Glacial Blue `#60A5FA` • Teal `#2DD4BF` | [📸 View](assets/screenshots/11_nordic_calm.png) |
+| **🍃 Salvia & Tierra** | Dark | Organic Earth Palette | Forest `#111613` • Earth Amber `#F59E0B` • Sage Mint `#34D399` | [📸 View](assets/screenshots/12_earth_sage.png) |
+| **⚡ Cyber Nitro** | Dark | Original Acer Nitro Gaming | Pitch `#0A0D12` • Nitro Crimson `#E51937` • Cyan `#00E5FF` | [📸 View](assets/screenshots/13_cyber_nitro.png) |
+| **🔷 Modern Blue** | Dark | `modern_blue.rofi` by Rodrigo47363 | Deep Dark Navy `#1A1B26` • Modern Azure `#7AA2F7` | [📸 View](assets/screenshots/14_modern_blue.png) |
+| **👔 Mantec Corporate** | Dark | `mantec_corporate.rofi` by Rodrigo47363 | Charcoal `#1E1E1E` • Copper Orange `#E67E22` • Steel `#3498DB` | [📸 View](assets/screenshots/15_mantec_corporate.png) |
+| **🔺 Material Dark Red** | Dark | `squared-material-red.rasi` | Darker `#212121` • Coral Red `#F07178` • Amber `#FFCB6B` | [📸 View](assets/screenshots/16_material_dark_red.png) |
+| **☁️ Cinnamoroll Cloud** | Light | `cinnamoroll_cloud.rofi` by Rodrigo47363 | Ethereal White `#F5F8FC` • Vibrant Sky Blue `#2E8FD9` | [📸 View](assets/screenshots/17_cinnamoroll_cloud.png) |
+| **🌸 My Melody Soft** | Light | `mymelody_soft.rofi` by Rodrigo47363 | Soft Cream `#FFF8F0` • Melody Rose `#E85D75` • Apricot `#FFE8D6` | [📸 View](assets/screenshots/18_mymelody_soft.png) |
+| **🍮 Pompompurin Café** | Light | `pompompurin_cafe.rofi` by Rodrigo47363 | Warm Vanilla `#FFFBF0` • Purin Caramel `#C97A18` • Cocoa `#4A2E21` | [📸 View](assets/screenshots/19_pompompurin_cafe.png) |
+
+### 🖼️ Visual Themes Gallery
+
+<details open>
+<summary><b>✨ Highlighted Signature Themes (Click to collapse/expand)</b></summary>
+<br>
+<p align="center">
+  <img src="assets/screenshots/07_aurora_gradient.png" width="32%" alt="Aurora Gradient">
+  <img src="assets/screenshots/02_tokyo_night.png" width="32%" alt="Tokyo Night">
+  <img src="assets/screenshots/04_red_audit.png" width="32%" alt="Red Audit Offensive">
+</p>
+<p align="center">
+  <img src="assets/screenshots/05_hacker_matrix.png" width="32%" alt="Hacker Matrix">
+  <img src="assets/screenshots/03_neo_tokyo.png" width="32%" alt="Neo Tokyo">
+  <img src="assets/screenshots/08_kuromi_goth.png" width="32%" alt="Kuromi Goth">
+</p>
+</details>
+
+<details>
+<summary><b>🎨 Complete 19-Theme Visual Gallery (Click to expand all themes)</b></summary>
+<br>
+
+| Theme | Preview | Theme | Preview |
+| :--- | :---: | :--- | :---: |
+| **01. 🌿 Confort Humano** | <img src="assets/screenshots/01_human_comfort.png" width="360" alt="Confort Humano"> | **02. 🌃 Tokyo Night** | <img src="assets/screenshots/02_tokyo_night.png" width="360" alt="Tokyo Night"> |
+| **03. 🏮 Neo Tokyo Cyber** | <img src="assets/screenshots/03_neo_tokyo.png" width="360" alt="Neo Tokyo Cyber"> | **04. 🔴 Red Audit Offensive** | <img src="assets/screenshots/04_red_audit.png" width="360" alt="Red Audit Offensive"> |
+| **05. 🟢 Hacker Matrix** | <img src="assets/screenshots/05_hacker_matrix.png" width="360" alt="Hacker Matrix"> | **06. 🌌 Stellar Void** | <img src="assets/screenshots/06_stellar_void.png" width="360" alt="Stellar Void"> |
+| **07. 🔮 Aurora Gradient** | <img src="assets/screenshots/07_aurora_gradient.png" width="360" alt="Aurora Gradient"> | **08. 💜 Kuromi Goth** | <img src="assets/screenshots/08_kuromi_goth.png" width="360" alt="Kuromi Goth"> |
+| **09. ✨ Cinnamoroll Night** | <img src="assets/screenshots/09_cinnamoroll_night.png" width="360" alt="Cinnamoroll Night"> | **10. 🌲 Everforest Soft** | <img src="assets/screenshots/10_everforest_soft.png" width="360" alt="Everforest Soft"> |
+| **11. 🌊 Nórdico Calmo** | <img src="assets/screenshots/11_nordic_calm.png" width="360" alt="Nórdico Calmo"> | **12. 🍃 Salvia & Tierra** | <img src="assets/screenshots/12_earth_sage.png" width="360" alt="Salvia y Tierra"> |
+| **13. ⚡ Cyber Nitro** | <img src="assets/screenshots/13_cyber_nitro.png" width="360" alt="Cyber Nitro"> | **14. 🔷 Modern Blue** | <img src="assets/screenshots/14_modern_blue.png" width="360" alt="Modern Blue"> |
+| **15. 👔 Mantec Corporate** | <img src="assets/screenshots/15_mantec_corporate.png" width="360" alt="Mantec Corporate"> | **16. 🔺 Material Dark Red** | <img src="assets/screenshots/16_material_dark_red.png" width="360" alt="Material Dark Red"> |
+| **17. ☁️ Cinnamoroll Cloud** | <img src="assets/screenshots/17_cinnamoroll_cloud.png" width="360" alt="Cinnamoroll Cloud"> | **18. 🌸 My Melody Soft** | <img src="assets/screenshots/18_mymelody_soft.png" width="360" alt="My Melody Soft"> |
+| **19. 🍮 Pompompurin Café** | <img src="assets/screenshots/19_pompompurin_cafe.png" width="360" alt="Pompompurin Café"> | | |
+
+</details>
 
 ---
 
