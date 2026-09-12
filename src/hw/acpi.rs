@@ -1,10 +1,14 @@
+use anyhow::{Context, Result};
 use std::fs::OpenOptions;
 use std::io::{ErrorKind, Read, Write};
 use std::path::Path;
 use std::process::Command;
-use anyhow::{Context, Result};
+
+use std::sync::Mutex;
 
 pub const ACPI_CALL_PATH: &str = "/proc/acpi/call";
+
+static ACPI_MUTEX: Mutex<()> = Mutex::new(());
 
 /// Ensures that the acpi_call kernel module is loaded and permissions are accessible.
 pub fn ensure_acpi_call_loaded() -> bool {
@@ -18,6 +22,10 @@ pub fn ensure_acpi_call_loaded() -> bool {
 
 /// Executes a raw ACPI call by writing to /proc/acpi/call and reading back the result.
 pub fn call_acpi_raw(cmd: &str) -> Result<String> {
+    let _guard = ACPI_MUTEX
+        .lock()
+        .unwrap_or_else(|poisoned| poisoned.into_inner());
+
     if !ensure_acpi_call_loaded() {
         anyhow::bail!("acpi_call kernel module is not loaded and /proc/acpi/call does not exist");
     }
@@ -28,13 +36,17 @@ pub fn call_acpi_raw(cmd: &str) -> Result<String> {
         Ok(f) => f,
         Err(e) if e.kind() == ErrorKind::PermissionDenied => {
             // Self-healing: try to fix permissions via pkexec/sudo if running in desktop
-            let _ = Command::new("sudo").args(["chmod", "666", ACPI_CALL_PATH]).status();
+            let _ = Command::new("sudo")
+                .args(["chmod", "666", ACPI_CALL_PATH])
+                .status();
             OpenOptions::new()
                 .write(true)
                 .open(ACPI_CALL_PATH)
                 .with_context(|| "Permission denied writing to /proc/acpi/call. Run: sudo chmod 666 /proc/acpi/call")?
         }
-        Err(e) => return Err(e).with_context(|| format!("Failed to open {} for writing", ACPI_CALL_PATH)),
+        Err(e) => {
+            return Err(e).with_context(|| format!("Failed to open {} for writing", ACPI_CALL_PATH))
+        }
     };
 
     file.write_all(cmd.as_bytes())
@@ -46,7 +58,7 @@ pub fn call_acpi_raw(cmd: &str) -> Result<String> {
         .read(true)
         .open(ACPI_CALL_PATH)
         .with_context(|| format!("Failed to open {} for reading", ACPI_CALL_PATH))?;
-    
+
     let mut buf = Vec::new();
     read_file.read_to_end(&mut buf)?;
 

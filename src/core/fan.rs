@@ -27,13 +27,17 @@ pub fn set_mode(mode: &str) -> Result<()> {
             cfg.mode = "auto".to_string();
             cfg.profile = "quiet".to_string();
         }
-        _ => anyhow::bail!("Invalid fan mode: '{}'. Valid: auto, max, custom, silent", mode),
+        _ => anyhow::bail!(
+            "Invalid fan mode: '{}'. Valid: auto, max, custom, silent",
+            mode
+        ),
     }
 
     save_config(&cfg);
     Ok(())
 }
 
+#[allow(dead_code)]
 pub fn toggle_mode() -> Result<String> {
     let cfg = load_config();
     if cfg.mode == "max" || cfg.mode == "turbo" {

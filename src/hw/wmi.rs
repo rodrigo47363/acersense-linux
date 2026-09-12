@@ -1,7 +1,7 @@
-use std::sync::OnceLock;
 use crate::hw::acpi::call_acpi_raw;
 use crate::hw::ec::ec_write;
 use anyhow::Result;
+use std::sync::OnceLock;
 
 pub const WMI_CANDIDATE_METHODS: &[&str] = &[
     "\\_SB.PCI0.WMID.WMAA",
@@ -13,7 +13,7 @@ static CACHED_WMI_METHOD: OnceLock<&'static str> = OnceLock::new();
 
 /// Discovers and caches the active WMI Gaming method.
 pub fn get_wmi_method() -> &'static str {
-    *CACHED_WMI_METHOD.get_or_init(|| {
+    CACHED_WMI_METHOD.get_or_init(|| {
         for &method in WMI_CANDIDATE_METHODS {
             let test_cmd = format!("{} 1 1 0x00007", method);
             if let Ok(res) = call_acpi_raw(&test_cmd) {
@@ -63,11 +63,12 @@ pub fn set_fans_max() -> Result<()> {
     let _ = call_acpi_raw("\\_SB.PCI0.WMID.WMBH 1 0x10 [0x04 0x64]");
 
     // 6. Activar Flags de Anulación en el Embedded Controller (0x10=CPU, 0x20=GPU)
+    let _ = ec_write(0x22, 0x0C); // CPU Fan Manual Gate (Manual mode lock)
+    let _ = ec_write(0x21, 0x30); // GPU Fan Manual Gate (Manual mode lock)
     let _ = ec_write(0x2D, 0x03); // QuickBoost + DSMD
     let _ = ec_write(0x5C, 0x02); // Turbo Fan Table (0x02)
     let _ = ec_write(0x10, 0x02); // CPU Force Max (Override Mode 2)
     let _ = ec_write(0x20, 0x02); // GPU Force Max (Override Mode 2)
-    let _ = ec_write(0x24, 0x02); // TKST Turbo (0x02)
     let _ = ec_write(0x25, 0x02); // GPUM Turbo (0x02)
     let _ = ec_write(0x28, 0x02); // CPOC Turbo (0x02)
     let _ = ec_write(0x29, 0x02); // GPOC Turbo (0x02)
@@ -100,6 +101,8 @@ pub fn set_fans_auto() -> Result<()> {
     let _ = call_acpi_raw("\\_SB_.PCI0.WMID.WMAA 1 1 0x00007");
 
     // 4. Restaurar registros del EC al modo BIOS
+    let _ = ec_write(0x22, 0x04); // CPU Fan Manual Gate (Auto)
+    let _ = ec_write(0x21, 0x10); // GPU Fan Manual Gate (Auto)
     let _ = ec_write(0x10, 0x00);
     let _ = ec_write(0x14, 0x00);
     let _ = ec_write(0x20, 0x00);
@@ -144,7 +147,6 @@ pub fn set_fans_custom(cpu_pct: u8, gpu_pct: u8) -> Result<()> {
 
     Ok(())
 }
-
 
 /// Toggles CoolBoost mode.
 pub fn set_coolboost(enable: bool) -> Result<()> {

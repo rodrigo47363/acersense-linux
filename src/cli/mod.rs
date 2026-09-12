@@ -40,6 +40,9 @@ pub enum Commands {
 
     /// Gaming enhancements (WinKey lock, Touchpad, Overdrive)
     Gaming(GamingArgs),
+
+    /// Restore hardware states from saved configuration (used on system boot / resume)
+    Restore,
 }
 
 #[derive(Args, Debug)]

@@ -5,13 +5,14 @@ use anyhow::Result;
 pub fn set_profile(profile: &str) -> Result<()> {
     let p_lower = profile.to_lowercase();
     wmi::set_power_profile(&p_lower)?;
-    
+
     let mut cfg = load_config();
     cfg.profile = p_lower;
     save_config(&cfg);
     Ok(())
 }
 
+#[allow(dead_code)]
 pub fn next_profile() -> Result<String> {
     let cfg = load_config();
     let next = match cfg.profile.as_str() {

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=AcerSense Pro
+GenericName=Hardware & Fan Control Center
+Comment=Advanced Hardware, Fan Curve, RGB & Battery Control for Acer Nitro & Predator
+Exec=acersense-gui
+Icon=acersense
+Terminal=false
+Type=Application
+Categories=System;Settings;HardwareSettings;Utility;
+Keywords=acer;nitro;predator;fans;cooling;rgb;battery;undervolt;hardware;nitrosense;
+StartupNotify=true
+StartupWMClass=acersense-gui
