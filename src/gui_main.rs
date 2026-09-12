@@ -803,7 +803,14 @@ fn draw_shaded_curve(
 impl AcerSenseApp {
     fn new(cc: &eframe::CreationContext<'_>) -> Self {
         let cfg = load_config();
-        let theme_mode = ThemeMode::from_str(&cfg.theme);
+        let theme_arg = std::env::args()
+            .position(|a| a == "--theme" || a == "-t")
+            .and_then(|idx| std::env::args().nth(idx + 1));
+        let theme_mode = if let Some(ref t) = theme_arg {
+            ThemeMode::from_str(t)
+        } else {
+            ThemeMode::from_str(&cfg.theme)
+        };
         let pal = get_palette(theme_mode);
         apply_visuals_for_palette(&cc.egui_ctx, &pal);
 
@@ -878,17 +885,28 @@ impl AcerSenseApp {
             })
             .expect("Failed to spawn background worker thread");
 
-        let initial_tab = if std::env::args().any(|a| a == "--monitoring" || a == "-m" || a == "2")
-        {
-            Tab::Monitoring
-        } else if std::env::args().any(|a| a == "--power" || a == "-p" || a == "3") {
-            Tab::PowerModes
-        } else if std::env::args().any(|a| a == "--rgb" || a == "-r" || a == "4") {
-            Tab::KeyboardRgb
-        } else if std::env::args().any(|a| a == "--settings" || a == "-s" || a == "5") {
-            Tab::SystemSettings
-        } else {
-            Tab::FanControl
+        let tab_arg = std::env::args()
+            .position(|a| a == "--tab")
+            .and_then(|idx| std::env::args().nth(idx + 1));
+        let initial_tab = match tab_arg.as_deref() {
+            Some("fans") | Some("fan") | Some("1") => Tab::FanControl,
+            Some("monitoring") | Some("mon") | Some("2") => Tab::Monitoring,
+            Some("power") | Some("scenarios") | Some("3") => Tab::PowerModes,
+            Some("rgb") | Some("lighting") | Some("4") => Tab::KeyboardRgb,
+            Some("settings") | Some("5") => Tab::SystemSettings,
+            _ => {
+                if std::env::args().any(|a| a == "--monitoring" || a == "-m" || a == "2") {
+                    Tab::Monitoring
+                } else if std::env::args().any(|a| a == "--power" || a == "-p" || a == "3") {
+                    Tab::PowerModes
+                } else if std::env::args().any(|a| a == "--rgb" || a == "-r" || a == "4") {
+                    Tab::KeyboardRgb
+                } else if std::env::args().any(|a| a == "--settings" || a == "-s" || a == "5") {
+                    Tab::SystemSettings
+                } else {
+                    Tab::FanControl
+                }
+            }
         };
 
         Self {
@@ -3643,11 +3661,21 @@ impl eframe::App for AcerSenseApp {
 }
 
 fn main() -> eframe::Result<()> {
+    let is_fullscreen = std::env::args().any(|a| a == "--fullscreen" || a == "-F");
+    let is_maximized = std::env::args().any(|a| a == "--maximized");
+    let mut vp = egui::ViewportBuilder::default()
+        .with_inner_size([980.0_f32, 680.0_f32])
+        .with_min_inner_size([540.0_f32, 440.0_f32])
+        .with_title("AcerSense Linux Pro v2.1 — Hardware Suite");
+
+    if is_fullscreen {
+        vp = vp.with_fullscreen(true);
+    } else if is_maximized {
+        vp = vp.with_maximized(true);
+    }
+
     let options = eframe::NativeOptions {
-        viewport: egui::ViewportBuilder::default()
-            .with_inner_size([980.0_f32, 680.0_f32])
-            .with_min_inner_size([540.0_f32, 440.0_f32])
-            .with_title("AcerSense Linux Pro v2.1 — Hardware Suite"),
+        viewport: vp,
         ..Default::default()
     };
 

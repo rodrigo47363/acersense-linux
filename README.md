@@ -68,29 +68,80 @@
 
 ---
 
-## 🎨 The 19 Color Themes Suite
+## 🖥️ Core Functional Sections (1080p Fullscreen Showcase)
 
-| Theme | Type | Inspiration / Style | Color Identity | Preview |
-|:---|:---:|:---|:---|:---:|
-| **🌿 Confort Humano** | Dark | Ergonomic Human-Centric Master | Slate `#0F1219` • Coral `#F43F5E` • Sky `#38BDF8` | [📸 View](assets/screenshots/01_human_comfort.png) |
-| **🌃 Tokyo Night** | Dark | `simple-tokyonight.rasi` | Indigo `#1A1B26` • Tokyo Blue `#7AA2F7` • Coral `#F7768E` | [📸 View](assets/screenshots/02_tokyo_night.png) |
-| **🏮 Neo Tokyo Cyber** | Dark | `neo_tokyo.rofi` by Rodrigo47363 | Dark Violet `#0F0B1E` • Neon Fuchsia `#FF007C` • Cyan `#00FFFF` | [📸 View](assets/screenshots/03_neo_tokyo.png) |
-| **🔴 Red Audit Offensive** | Dark | `red_audit.rofi` by Rodrigo47363 | Pitch Black `#0A0A0E` • Blood Red `#FF3333` • Amber `#FF9E64` | [📸 View](assets/screenshots/04_red_audit.png) |
-| **🟢 Hacker Matrix** | Dark | `hacker_green.rofi` by Rodrigo47363 | Pure Black `#000000` • Phosphor Green CRT `#00FF00` | [📸 View](assets/screenshots/05_hacker_matrix.png) |
-| **🌌 Stellar Void** | Dark | `stellar_void.rofi` by Rodrigo47363 | Deep Void `#030303` • Plasma Cyan `#00FFFF` • Violet `#8A2BE2` | [📸 View](assets/screenshots/06_stellar_void.png) |
-| **🔮 Aurora Gradient** | Dark | Modern CSS Gradient Button | Cosmic Night `#05062D` • Purple `#AF40FF` • Cyan `#00DDEB` | [📸 View](assets/screenshots/07_aurora_gradient.png) |
-| **💜 Kuromi Goth** | Dark | `kuromi_goth.rofi` by Rodrigo47363 | Absolute Black `#000000` • Goth Lavender `#B48EAD` • Pink `#F5C2E7` | [📸 View](assets/screenshots/08_kuromi_goth.png) |
-| **✨ Cinnamoroll Night** | Dark | `cinnamoroll_night.rofi` by Rodrigo47363 | Midnight `#11152C` • Pastel Sky `#8AADF4` • Cheek Pink `#F5BDE6` | [📸 View](assets/screenshots/09_cinnamoroll_night.png) |
-| **🌲 Everforest Soft** | Dark | `squared-everforest.rasi` | Charcoal `#2B3339` • Sage Green `#A7C080` • Aqua `#7FBBB3` | [📸 View](assets/screenshots/10_everforest_soft.png) |
-| **🌊 Nórdico Calmo** | Dark | `squared-nord.rasi` | Arctic Deep `#10141B` • Glacial Blue `#60A5FA` • Teal `#2DD4BF` | [📸 View](assets/screenshots/11_nordic_calm.png) |
-| **🍃 Salvia & Tierra** | Dark | Organic Earth Palette | Forest `#111613` • Earth Amber `#F59E0B` • Sage Mint `#34D399` | [📸 View](assets/screenshots/12_earth_sage.png) |
-| **⚡ Cyber Nitro** | Dark | Original Acer Nitro Gaming | Pitch `#0A0D12` • Nitro Crimson `#E51937` • Cyan `#00E5FF` | [📸 View](assets/screenshots/13_cyber_nitro.png) |
-| **🔷 Modern Blue** | Dark | `modern_blue.rofi` by Rodrigo47363 | Deep Dark Navy `#1A1B26` • Modern Azure `#7AA2F7` | [📸 View](assets/screenshots/14_modern_blue.png) |
-| **👔 Mantec Corporate** | Dark | `mantec_corporate.rofi` by Rodrigo47363 | Charcoal `#1E1E1E` • Copper Orange `#E67E22` • Steel `#3498DB` | [📸 View](assets/screenshots/15_mantec_corporate.png) |
-| **🔺 Material Dark Red** | Dark | `squared-material-red.rasi` | Darker `#212121` • Coral Red `#F07178` • Amber `#FFCB6B` | [📸 View](assets/screenshots/16_material_dark_red.png) |
-| **☁️ Cinnamoroll Cloud** | Light | `cinnamoroll_cloud.rofi` by Rodrigo47363 | Ethereal White `#F5F8FC` • Vibrant Sky Blue `#2E8FD9` | [📸 View](assets/screenshots/17_cinnamoroll_cloud.png) |
-| **🌸 My Melody Soft** | Light | `mymelody_soft.rofi` by Rodrigo47363 | Soft Cream `#FFF8F0` • Melody Rose `#E85D75` • Apricot `#FFE8D6` | [📸 View](assets/screenshots/18_mymelody_soft.png) |
-| **🍮 Pompompurin Café** | Light | `pompompurin_cafe.rofi` by Rodrigo47363 | Warm Vanilla `#FFFBF0` • Purin Caramel `#C97A18` • Cocoa `#4A2E21` | [📸 View](assets/screenshots/19_pompompurin_cafe.png) |
+AcerSense Pro Linux features 5 distinct high-performance operational dashboards rendered at 60+ FPS:
+
+<details open>
+<summary><b>🌀 1. Fan Speed Control & Dual Turbines (Click to collapse/expand)</b></summary>
+<br>
+<p align="center">
+  <img src="assets/screenshots/sections/01_fan_control.png" width="100%" alt="Fan Speed Control & Dual Turbines">
+</p>
+Dual hardware speedometers with live tachometer calibration up to 5400 / 6120 RPM, 60s dynamic ventilation response graph, and multi-mode fan control (Auto, Max Turbo, Custom Sliders).
+</details>
+
+<details open>
+<summary><b>📊 2. Live Telemetry & Hardware Oscilloscope (Click to collapse/expand)</b></summary>
+<br>
+<p align="center">
+  <img src="assets/screenshots/sections/02_telemetry_monitoring.png" width="100%" alt="Live Telemetry & Hardware Oscilloscope">
+</p>
+Real-time hardware oscilloscope plotting Thermals (°C), Workload (%), Power (W), and Turbines (RPM) with Intel Core silicon telemetry, NVIDIA NVML GPU stats, and NVMe SSD thermal headroom.
+</details>
+
+<details>
+<summary><b>⚡ 3. Operating Scenarios & Power Envelopes (Click to expand)</b></summary>
+<br>
+<p align="center">
+  <img src="assets/screenshots/sections/03_power_scenarios.png" width="100%" alt="Operating Scenarios & Power Envelopes">
+</p>
+Configurable power governance envelopes: Quiet Eco Stealth (PL1: 15W), Balanced Performance (PL1: 45W), Performance Gaming (CoolBoost Active), and Extreme Combat Turbo (PL2: 65W, GPU TGP: 75W).
+</details>
+
+<details>
+<summary><b>🌈 4. 4-Zone RGB Keyboard Lighting Studio (Click to expand)</b></summary>
+<br>
+<p align="center">
+  <img src="assets/screenshots/sections/04_rgb_keyboard.png" width="100%" alt="4-Zone RGB Keyboard Lighting Studio">
+</p>
+Interactive 4-zone Pulsar keyboard visualizer with hardware zone selectors (WASD, Center-Left, Center-Right, Numpad), tactile color swatches, custom RGB color mixer, and factory presets.
+</details>
+
+<details>
+<summary><b>⚙️ 5. System Settings, Battery Care 80% & Theme Selector (Click to expand)</b></summary>
+<br>
+<p align="center">
+  <img src="assets/screenshots/sections/05_system_settings.png" width="100%" alt="System Settings & Theme Selector">
+</p>
+Embedded Controller battery health protection (80% lithium ceiling), Acer CoolBoost thermal expansion, LCD 3ms overdrive, Windows Key lockout, and live visual theme switcher.
+</details>
+
+---
+
+## 🎨 The 19 Color Themes Suite (1080p Fullscreen Previews)
+
+| Theme | Type | Color Identity | Main Dashboard | Complete Section Previews |
+|:---|:---:|:---|:---:|:---|
+| **🌿 Confort Humano** | Dark | Slate `#0F1219` • Coral `#F43F5E` • Sky `#38BDF8` | [📸 View](assets/screenshots/01_human_comfort.png) | [Fans](assets/screenshots/by_theme/01_human_comfort/fans.png) • [Monitor](assets/screenshots/by_theme/01_human_comfort/monitoring.png) • [Power](assets/screenshots/by_theme/01_human_comfort/power.png) • [RGB](assets/screenshots/by_theme/01_human_comfort/rgb.png) • [Settings](assets/screenshots/by_theme/01_human_comfort/settings.png) |
+| **🌃 Tokyo Night** | Dark | Indigo `#1A1B26` • Tokyo Blue `#7AA2F7` • Coral `#F7768E` | [📸 View](assets/screenshots/02_tokyo_night.png) | [Fans](assets/screenshots/by_theme/02_tokyo_night/fans.png) • [Monitor](assets/screenshots/by_theme/02_tokyo_night/monitoring.png) • [Power](assets/screenshots/by_theme/02_tokyo_night/power.png) • [RGB](assets/screenshots/by_theme/02_tokyo_night/rgb.png) • [Settings](assets/screenshots/by_theme/02_tokyo_night/settings.png) |
+| **🏮 Neo Tokyo Cyber** | Dark | Dark Violet `#0F0B1E` • Neon Fuchsia `#FF007C` • Cyan `#00FFFF` | [📸 View](assets/screenshots/03_neo_tokyo.png) | [Fans](assets/screenshots/by_theme/03_neo_tokyo/fans.png) • [Monitor](assets/screenshots/by_theme/03_neo_tokyo/monitoring.png) • [Power](assets/screenshots/by_theme/03_neo_tokyo/power.png) • [RGB](assets/screenshots/by_theme/03_neo_tokyo/rgb.png) • [Settings](assets/screenshots/by_theme/03_neo_tokyo/settings.png) |
+| **🔴 Red Audit Offensive** | Dark | Pitch Black `#0A0A0E` • Blood Red `#FF3333` • Amber `#FF9E64` | [📸 View](assets/screenshots/04_red_audit.png) | [Fans](assets/screenshots/by_theme/04_red_audit/fans.png) • [Monitor](assets/screenshots/by_theme/04_red_audit/monitoring.png) • [Power](assets/screenshots/by_theme/04_red_audit/power.png) • [RGB](assets/screenshots/by_theme/04_red_audit/rgb.png) • [Settings](assets/screenshots/by_theme/04_red_audit/settings.png) |
+| **🟢 Hacker Matrix** | Dark | Pure Black `#000000` • Phosphor Green CRT `#00FF00` | [📸 View](assets/screenshots/05_hacker_matrix.png) | [Fans](assets/screenshots/by_theme/05_hacker_matrix/fans.png) • [Monitor](assets/screenshots/by_theme/05_hacker_matrix/monitoring.png) • [Power](assets/screenshots/by_theme/05_hacker_matrix/power.png) • [RGB](assets/screenshots/by_theme/05_hacker_matrix/rgb.png) • [Settings](assets/screenshots/by_theme/05_hacker_matrix/settings.png) |
+| **🌌 Stellar Void** | Dark | Deep Void `#030303` • Plasma Cyan `#00FFFF` • Violet `#8A2BE2` | [📸 View](assets/screenshots/06_stellar_void.png) | [Fans](assets/screenshots/by_theme/06_stellar_void/fans.png) • [Monitor](assets/screenshots/by_theme/06_stellar_void/monitoring.png) • [Power](assets/screenshots/by_theme/06_stellar_void/power.png) • [RGB](assets/screenshots/by_theme/06_stellar_void/rgb.png) • [Settings](assets/screenshots/by_theme/06_stellar_void/settings.png) |
+| **🔮 Aurora Gradient** | Dark | Cosmic Night `#05062D` • Purple `#AF40FF` • Cyan `#00DDEB` | [📸 View](assets/screenshots/07_aurora_gradient.png) | [Fans](assets/screenshots/by_theme/07_aurora_gradient/fans.png) • [Monitor](assets/screenshots/by_theme/07_aurora_gradient/monitoring.png) • [Power](assets/screenshots/by_theme/07_aurora_gradient/power.png) • [RGB](assets/screenshots/by_theme/07_aurora_gradient/rgb.png) • [Settings](assets/screenshots/by_theme/07_aurora_gradient/settings.png) |
+| **💜 Kuromi Goth** | Dark | Absolute Black `#000000` • Goth Lavender `#B48EAD` • Pink `#F5C2E7` | [📸 View](assets/screenshots/08_kuromi_goth.png) | [Fans](assets/screenshots/by_theme/08_kuromi_goth/fans.png) • [Monitor](assets/screenshots/by_theme/08_kuromi_goth/monitoring.png) • [Power](assets/screenshots/by_theme/08_kuromi_goth/power.png) • [RGB](assets/screenshots/by_theme/08_kuromi_goth/rgb.png) • [Settings](assets/screenshots/by_theme/08_kuromi_goth/settings.png) |
+| **✨ Cinnamoroll Night** | Dark | Midnight `#11152C` • Pastel Sky `#8AADF4` • Cheek Pink `#F5BDE6` | [📸 View](assets/screenshots/09_cinnamoroll_night.png) | [Fans](assets/screenshots/by_theme/09_cinnamoroll_night/fans.png) • [Monitor](assets/screenshots/by_theme/09_cinnamoroll_night/monitoring.png) • [Power](assets/screenshots/by_theme/09_cinnamoroll_night/power.png) • [RGB](assets/screenshots/by_theme/09_cinnamoroll_night/rgb.png) • [Settings](assets/screenshots/by_theme/09_cinnamoroll_night/settings.png) |
+| **🌲 Everforest Soft** | Dark | Charcoal `#2B3339` • Sage Green `#A7C080` • Aqua `#7FBBB3` | [📸 View](assets/screenshots/10_everforest_soft.png) | [Fans](assets/screenshots/by_theme/10_everforest_soft/fans.png) • [Monitor](assets/screenshots/by_theme/10_everforest_soft/monitoring.png) • [Power](assets/screenshots/by_theme/10_everforest_soft/power.png) • [RGB](assets/screenshots/by_theme/10_everforest_soft/rgb.png) • [Settings](assets/screenshots/by_theme/10_everforest_soft/settings.png) |
+| **🌊 Nórdico Calmo** | Dark | Arctic Deep `#10141B` • Glacial Blue `#60A5FA` • Teal `#2DD4BF` | [📸 View](assets/screenshots/11_nordic_calm.png) | [Fans](assets/screenshots/by_theme/11_nordic_calm/fans.png) • [Monitor](assets/screenshots/by_theme/11_nordic_calm/monitoring.png) • [Power](assets/screenshots/by_theme/11_nordic_calm/power.png) • [RGB](assets/screenshots/by_theme/11_nordic_calm/rgb.png) • [Settings](assets/screenshots/by_theme/11_nordic_calm/settings.png) |
+| **🍃 Salvia & Tierra** | Dark | Forest `#111613` • Earth Amber `#F59E0B` • Sage Mint `#34D399` | [📸 View](assets/screenshots/12_earth_sage.png) | [Fans](assets/screenshots/by_theme/12_earth_sage/fans.png) • [Monitor](assets/screenshots/by_theme/12_earth_sage/monitoring.png) • [Power](assets/screenshots/by_theme/12_earth_sage/power.png) • [RGB](assets/screenshots/by_theme/12_earth_sage/rgb.png) • [Settings](assets/screenshots/by_theme/12_earth_sage/settings.png) |
+| **⚡ Cyber Nitro** | Dark | Pitch `#0A0D12` • Nitro Crimson `#E51937` • Cyan `#00E5FF` | [📸 View](assets/screenshots/13_cyber_nitro.png) | [Fans](assets/screenshots/by_theme/13_cyber_nitro/fans.png) • [Monitor](assets/screenshots/by_theme/13_cyber_nitro/monitoring.png) • [Power](assets/screenshots/by_theme/13_cyber_nitro/power.png) • [RGB](assets/screenshots/by_theme/13_cyber_nitro/rgb.png) • [Settings](assets/screenshots/by_theme/13_cyber_nitro/settings.png) |
+| **🔷 Modern Blue** | Dark | Deep Dark Navy `#1A1B26` • Modern Azure `#7AA2F7` | [📸 View](assets/screenshots/14_modern_blue.png) | [Fans](assets/screenshots/by_theme/14_modern_blue/fans.png) • [Monitor](assets/screenshots/by_theme/14_modern_blue/monitoring.png) • [Power](assets/screenshots/by_theme/14_modern_blue/power.png) • [RGB](assets/screenshots/by_theme/14_modern_blue/rgb.png) • [Settings](assets/screenshots/by_theme/14_modern_blue/settings.png) |
+| **👔 Mantec Corporate** | Dark | Charcoal `#1E1E1E` • Copper Orange `#E67E22` • Steel `#3498DB` | [📸 View](assets/screenshots/15_mantec_corporate.png) | [Fans](assets/screenshots/by_theme/15_mantec_corporate/fans.png) • [Monitor](assets/screenshots/by_theme/15_mantec_corporate/monitoring.png) • [Power](assets/screenshots/by_theme/15_mantec_corporate/power.png) • [RGB](assets/screenshots/by_theme/15_mantec_corporate/rgb.png) • [Settings](assets/screenshots/by_theme/15_mantec_corporate/settings.png) |
+| **🔺 Material Dark Red** | Dark | Darker `#212121` • Coral Red `#F07178` • Amber `#FFCB6B` | [📸 View](assets/screenshots/16_material_dark_red.png) | [Fans](assets/screenshots/by_theme/16_material_dark_red/fans.png) • [Monitor](assets/screenshots/by_theme/16_material_dark_red/monitoring.png) • [Power](assets/screenshots/by_theme/16_material_dark_red/power.png) • [RGB](assets/screenshots/by_theme/16_material_dark_red/rgb.png) • [Settings](assets/screenshots/by_theme/16_material_dark_red/settings.png) |
+| **☁️ Cinnamoroll Cloud** | Light | Ethereal White `#F5F8FC` • Vibrant Sky Blue `#2E8FD9` | [📸 View](assets/screenshots/17_cinnamoroll_cloud.png) | [Fans](assets/screenshots/by_theme/17_cinnamoroll_cloud/fans.png) • [Monitor](assets/screenshots/by_theme/17_cinnamoroll_cloud/monitoring.png) • [Power](assets/screenshots/by_theme/17_cinnamoroll_cloud/power.png) • [RGB](assets/screenshots/by_theme/17_cinnamoroll_cloud/rgb.png) • [Settings](assets/screenshots/by_theme/17_cinnamoroll_cloud/settings.png) |
+| **🌸 My Melody Soft** | Light | Soft Cream `#FFF8F0` • Melody Rose `#E85D75` • Apricot `#FFE8D6` | [📸 View](assets/screenshots/18_mymelody_soft.png) | [Fans](assets/screenshots/by_theme/18_mymelody_soft/fans.png) • [Monitor](assets/screenshots/by_theme/18_mymelody_soft/monitoring.png) • [Power](assets/screenshots/by_theme/18_mymelody_soft/power.png) • [RGB](assets/screenshots/by_theme/18_mymelody_soft/rgb.png) • [Settings](assets/screenshots/by_theme/18_mymelody_soft/settings.png) |
+| **🍮 Pompompurin Café** | Light | Warm Vanilla `#FFFBF0` • Purin Caramel `#C97A18` • Cocoa `#4A2E21` | [📸 View](assets/screenshots/19_pompompurin_cafe.png) | [Fans](assets/screenshots/by_theme/19_pompompurin_cafe/fans.png) • [Monitor](assets/screenshots/by_theme/19_pompompurin_cafe/monitoring.png) • [Power](assets/screenshots/by_theme/19_pompompurin_cafe/power.png) • [RGB](assets/screenshots/by_theme/19_pompompurin_cafe/rgb.png) • [Settings](assets/screenshots/by_theme/19_pompompurin_cafe/settings.png) |
 
 ### 🖼️ Visual Themes Gallery
 
@@ -110,10 +161,10 @@
 </details>
 
 <details>
-<summary><b>🎨 Complete 19-Theme Visual Gallery (Click to expand all themes)</b></summary>
+<summary><b>🎨 Complete 19-Theme Visual Comparison (1080p Fullscreen Previews)</b></summary>
 <br>
 
-| Theme | Preview | Theme | Preview |
+| Theme | Preview (1080p) | Theme | Preview (1080p) |
 | :--- | :---: | :--- | :---: |
 | **01. 🌿 Confort Humano** | <img src="assets/screenshots/01_human_comfort.png" width="360" alt="Confort Humano"> | **02. 🌃 Tokyo Night** | <img src="assets/screenshots/02_tokyo_night.png" width="360" alt="Tokyo Night"> |
 | **03. 🏮 Neo Tokyo Cyber** | <img src="assets/screenshots/03_neo_tokyo.png" width="360" alt="Neo Tokyo Cyber"> | **04. 🔴 Red Audit Offensive** | <img src="assets/screenshots/04_red_audit.png" width="360" alt="Red Audit Offensive"> |
