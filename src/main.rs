@@ -52,7 +52,7 @@ fn print_status() {
 
     println!(
         "{}",
-        "── AcerSense Pro (Rust Native Engine v2.0) ──────────────────────────"
+        "── AcerSense Pro (Rust Native Engine v2.1) ──────────────────────────"
             .bold()
             .cyan()
     );

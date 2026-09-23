@@ -30,7 +30,7 @@ cat << "BANNER"
    ╚═╝  ╚═╝ ╚═════╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═══╝╚══════╝╚══════╝
 BANNER
 echo -e "${CLR_RESET}"
-echo -e "${CLR_CYAN}Instalando AcerSense Pro v2.0.0 (Rust Edition) en $(uname -s) ($(uname -m))...${CLR_RESET}\n"
+echo -e "${CLR_CYAN}Instalando AcerSense Pro v2.1.0 (Rust Edition) en $(uname -s) ($(uname -m))...${CLR_RESET}\n"
 
 if [ "$EUID" -ne 0 ]; then
     echo -e "${CLR_YELLOW}[!] Solicitando permisos de administrador (sudo)...${CLR_RESET}"
@@ -121,7 +121,7 @@ if [ -t 0 ]; then
     while read -r -t 0.05 -n 10000 _discard; do :; done 2>/dev/null || true
 fi
 
-echo -e "\n${CLR_GREEN}${CLR_BOLD}[✔] ¡AcerSense Pro v2.0.0 instalado y activo con éxito!${CLR_RESET}"
+echo -e "\n${CLR_GREEN}${CLR_BOLD}[✔] ¡AcerSense Pro v2.1.0 instalado y activo con éxito!${CLR_RESET}"
 echo -e "Comandos disponibles:"
 echo -e "  • ${CLR_CYAN}acersense status${CLR_RESET}   (Telemetría completa en consola)"
 echo -e "  • ${CLR_CYAN}acersense-gui${CLR_RESET}      (Centro de control gráfico a 60+ FPS)"

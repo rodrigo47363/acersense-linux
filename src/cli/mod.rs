@@ -3,7 +3,7 @@ use clap::{Args, Parser, Subcommand};
 #[derive(Parser, Debug)]
 #[command(name = "acersense")]
 #[command(author = "Rodrigo <rodrigo@parrot-sec.local>")]
-#[command(version = "2.0.0 (Rust Edition)")]
+#[command(version = "2.1.0 (Rust Edition)")]
 #[command(about = "Ultra-fast low-level hardware control suite for Acer Nitro & Predator in Linux")]
 pub struct Cli {
     #[command(subcommand)]

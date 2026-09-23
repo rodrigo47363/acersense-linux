@@ -6,14 +6,14 @@
 set -euo pipefail
 
 PACKAGE_NAME="acersense"
-VERSION="2.0.0"
+VERSION="2.1.0"
 ARCH="amd64"
 BUILD_DIR="$(pwd)/build/pkg_deb"
 PKG_ROOT="${BUILD_DIR}/${PACKAGE_NAME}_${VERSION}_${ARCH}"
 OUTPUT_DEB="$(pwd)/${PACKAGE_NAME}_${VERSION}_${ARCH}.deb"
 
 echo "================================================================="
-echo " BUILDING ACERSENSE PRO LINUX DEBIAN PACKAGE v2.0.0 (.deb)"
+echo " BUILDING ACERSENSE PRO LINUX DEBIAN PACKAGE v2.1.0 (.deb)"
 echo "================================================================="
 
 # 0. Build Rust native core

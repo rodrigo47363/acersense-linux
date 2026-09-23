@@ -1,6 +1,6 @@
 [package]
 name = "acersense"
-version = "2.0.0"
+version = "2.1.0"
 edition = "2021"
 authors = ["Rodrigo <rodrigo@parrot-sec.local>"]
 description = "Ultra-fast low-level hardware control suite for Acer Nitro & Predator in Linux"

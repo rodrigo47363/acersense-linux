@@ -1,4 +1,4 @@
-# AcerSense Pro Linux (v2.0.0 Rust Edition)
+# AcerSense Pro Linux (v2.1.0 Rust Edition)
 
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL%203.0-red.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![CI Pipeline](https://github.com/rodrigo47363/acersense-linux/actions/workflows/ci.yml/badge.svg)](https://github.com/rodrigo47363/acersense-linux/actions/workflows/ci.yml)
@@ -196,7 +196,7 @@ Engineered and verified on Compal motherboard platforms:
 ### Option 1: Debian / Parrot OS / Ubuntu Package (.deb)
 ```bash
 # Install the pre-built debian package
-sudo dpkg -i acersense_2.0.0_amd64.deb
+sudo dpkg -i acersense_2.1.0_amd64.deb
 sudo apt-get install -f
 ```
 
