@@ -43,6 +43,12 @@ pub enum Commands {
 
     /// Restore hardware states from saved configuration (used on system boot / resume)
     Restore,
+
+    /// Query or configure interface language: es, en, de, fr, pt, it, ru, zh, ja, ko
+    Lang(LangArgs),
+
+    /// Show project information, author, and official GitHub links
+    About,
 }
 
 #[derive(Args, Debug)]
@@ -132,4 +138,10 @@ pub struct GamingArgs {
     /// LCD Overdrive: on, off
     #[arg(long)]
     pub overdrive: Option<String>,
+}
+
+#[derive(Args, Debug)]
+pub struct LangArgs {
+    /// Language code or name: es, en, de, fr, pt, it, ru, zh, ja, ko
+    pub code: Option<String>,
 }

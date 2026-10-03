@@ -14,8 +14,9 @@ pub fn set_mode(mode: &str) -> Result<()> {
         }
         "auto" => {
             wmi::set_fans_auto()?;
+            wmi::set_coolboost(true)?;
             cfg.mode = "auto".to_string();
-            cfg.coolboost = false;
+            cfg.coolboost = true;
         }
         "custom" => {
             wmi::set_fans_custom(cfg.cpu_fan_target, cfg.gpu_fan_target)?;

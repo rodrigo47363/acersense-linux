@@ -96,9 +96,10 @@ pub fn set_fans_auto() -> Result<()> {
     let _ = call_acpi_raw("\\_SB_.PCI0.WMID.WMBH 1 0x10 0x0001");
     let _ = call_acpi_raw("\\_SB_.PCI0.WMID.WMBH 1 0x10 0x0004");
 
-    // 3. CoolBoost Off en WMAA
-    let _ = call_acpi_raw("\\_SB.PCI0.WMID.WMAA 1 1 0x00007");
-    let _ = call_acpi_raw("\\_SB_.PCI0.WMID.WMAA 1 1 0x00007");
+    // 3. CoolBoost On en WMAA (desbloquea piso de doble turbina en Auto)
+    let _ = call_acpi_raw("\\_SB.PCI0.WMID.WMAA 1 1 0x10007");
+    let _ = call_acpi_raw("\\_SB_.PCI0.WMID.WMAA 1 1 0x10007");
+    let _ = call_acpi_raw("\\_SB.PCI0.WMID.WSMI 0x01 0x10007");
 
     // 4. Restaurar registros del EC al modo BIOS
     let _ = ec_write(0x22, 0x04); // CPU Fan Manual Gate (Auto)
@@ -148,6 +149,16 @@ pub fn set_fans_custom(cpu_pct: u8, gpu_pct: u8) -> Result<()> {
     Ok(())
 }
 
+/// Sets CPU Energy Performance Preference (EPP) across all processor cores
+pub fn set_cpu_epp(epp: &str) -> Result<()> {
+    if let Ok(entries) = glob::glob("/sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference") {
+        for entry in entries.flatten() {
+            let _ = std::fs::write(&entry, epp);
+        }
+    }
+    Ok(())
+}
+
 /// Toggles CoolBoost mode.
 pub fn set_coolboost(enable: bool) -> Result<()> {
     let opcode = if enable { 0x10007 } else { 0x00007 };
@@ -155,27 +166,31 @@ pub fn set_coolboost(enable: bool) -> Result<()> {
     Ok(())
 }
 
-/// Sets Power Profile.
+/// Sets Power Profile and tunes energy preference for thermal efficiency.
 pub fn set_power_profile(profile: &str) -> Result<()> {
     match profile.to_lowercase().as_str() {
         "quiet" | "saver" | "eco" => {
             let _ = call_gaming_method(1, 0x00007);
             let _ = call_gaming_method(14, 0x00);
             let _ = set_fans_auto();
+            let _ = set_cpu_epp("balance_power");
         }
         "balanced" | "balance" => {
-            let _ = call_gaming_method(1, 0x00007);
+            let _ = call_gaming_method(1, 0x10007);
             let _ = call_gaming_method(14, 0x01);
             let _ = set_fans_auto();
+            let _ = set_cpu_epp("balance_power");
         }
         "performance" | "perf" => {
             let _ = call_gaming_method(1, 0x10007);
             let _ = call_gaming_method(14, 0x02);
+            let _ = set_cpu_epp("balance_performance");
         }
         "turbo" => {
             let _ = call_gaming_method(1, 0x30007);
             let _ = call_gaming_method(14, 0x03);
             let _ = set_fans_max();
+            let _ = set_cpu_epp("performance");
         }
         _ => anyhow::bail!("Unknown power profile: {}", profile),
     }

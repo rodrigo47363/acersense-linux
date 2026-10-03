@@ -9,6 +9,7 @@ use std::time::{Duration, Instant};
 
 use core::config::{load_config, save_config, AcerConfig};
 use core::fan;
+use core::i18n::Language;
 use core::profile;
 use eframe::egui::{
     self, Color32, Frame, Margin, Pos2, Rect, RichText, Rounding, ScrollArea, Stroke, Vec2, Visuals,
@@ -85,6 +86,12 @@ pub enum ThemeMode {
     ModernBlue,
     MaterialRed,
     AuroraGradient,
+    AdoRose,
+    Windows10,
+    Windows11,
+    SpotlightDark,
+    SpotlightLight,
+    SuikaMelon,
 }
 
 impl ThemeMode {
@@ -109,30 +116,75 @@ impl ThemeMode {
             Self::MantecCorporate => "👔 Mantec Corporate",
             Self::ModernBlue => "🔷 Modern Blue",
             Self::MaterialRed => "🔺 Material Dark Red",
+            Self::AdoRose => "🌹 Ado Blue Rose",
+            Self::Windows10 => "🪟 Windows 10 Metro",
+            Self::Windows11 => "🪟 Windows 11 Fluent",
+            Self::SpotlightDark => "🍎 macOS Spotlight Dark",
+            Self::SpotlightLight => "🍎 macOS Spotlight Light",
+            Self::SuikaMelon => "🍉 Suika Recon (Dr. Stone)",
         }
     }
 
     pub fn description(&self) -> &'static str {
         match self {
             Self::HumanComfort => "Pizarra cálida, coral suave y esmeralda relajante. Cero fatiga visual para largas sesiones.",
-            Self::TokyoNight => "Inspirado en tokyonight.rasi: Índigo noche (#1A1B26), azul cielo (#7AA2F7) y rosa coral (#F7768E).",
-            Self::NeoTokyo => "Inspirado en tu neo_tokyo.rofi: Púrpura noche (#0F0B1E), fucsia neón (#FF007C) y cian eléctrico (#00FFFF).",
-            Self::Everforest => "Inspirado en squared-everforest.rasi: Carbón cálido (#2B3339), verde bosque suave (#A7C080) y turquesa tenue (#7FBBB3).",
+            Self::TokyoNight => "Índigo noche (#1A1B26), azul cielo (#7AA2F7) y rosa coral (#F7768E). Estética nocturna urbana.",
+            Self::NeoTokyo => "Púrpura noche (#0F0B1E), fucsia neón (#FF007C) y cian eléctrico (#00FFFF). Atmósfera cyberpunk de alto contraste.",
+            Self::Everforest => "Carbón cálido (#2B3339), verde bosque suave (#A7C080) y turquesa tenue (#7FBBB3). Armonía natural y confort.",
             Self::NordicCalm => "Gris niebla, azul glacial y cian ártico. Estética nórdica minimalista y serena.",
             Self::EarthSage => "Carbón bosque, verde salvia orgánico y ámbar dorado. Tonos naturales reconfortantes.",
             Self::CyberNitro => "Rojo carmesí de alto contraste y cian eléctrico estilo deportivo original de Acer.",
-            Self::RedAudit => "Inspirado en tu red_audit.rofi: Pitch Black (#0A0A0E), Blood Red (#FF3333) y alerta ámbar (#FF9E64). Red Team puro.",
-            Self::HackerGreen => "Inspirado en tu hacker_green.rofi: Negro terminal (#000000) y fósforo verde CRT (#00FF00). Minimalismo Matrix.",
-            Self::StellarVoid => "Inspirado en tu stellar_void.rofi: Vacío cósmico (#030303), plasma cian (#00FFFF) y violeta nebulosa (#8A2BE2).",
-            Self::AuroraGradient => "Inspirado en tu botón CSS: Fondo noche cósmica (rgb(5,6,45)), Púrpura (#AF40FF), Índigo (#5B42F3) y Cian (#00DDEB).",
-            Self::KuromiGoth => "Inspirado en tu kuromi_goth.rofi: Negro absoluto (#000000), lavanda gótica (#B48EAD) y rosa fucsia (#F5C2E7).",
-            Self::CinnamorollNight => "Inspirado en tu cinnamoroll_night.rofi: Noche estrellada (#11152C), azul cielo (#8AADF4) y rosa mejilla (#F5BDE6).",
-            Self::CinnamorollCloud => "Inspirado en tu cinnamoroll_cloud.rofi: Blanco etéreo (#F5F8FC) y azul cielo (#2E8FD9). Tema claro diurno.",
-            Self::MyMelodySoft => "Inspirado en tu mymelody_soft.rofi: Crema suave (#FFF8F0), rosa pastel (#E85D75) y cálido albaricoque (#FFE8D6).",
-            Self::PompompurinCafe => "Inspirado en tu pompompurin_cafe.rofi: Vainilla cálida (#FFFBF0), caramelo (#C97A18) y marrón chocolate (#4A2E21).",
-            Self::MantecCorporate => "Inspirado en tu mantec_corporate.rofi: Carbón elegante (#1E1E1E) y naranja cobrizo (#E67E22). Look corporativo.",
-            Self::ModernBlue => "Inspirado en tu modern_blue.rofi: Deep Dark Blue (#1A1B26) y azul moderno de alto contraste (#7AA2F7).",
-            Self::MaterialRed => "Inspirado en squared-material-red.rasi: Gris oscuro Material (#212121) y rojo coral (#F07178).",
+            Self::RedAudit => "Pitch Black (#0A0A0E), Blood Red (#FF3333) y alerta ámbar (#FF9E64). Identidad pura de Red Team y seguridad ofensiva.",
+            Self::HackerGreen => "Negro terminal puro (#000000) y fósforo verde CRT (#00FF00). Minimalismo Matrix para consola y auditoría.",
+            Self::StellarVoid => "Vacío cósmico (#030303), plasma cian (#00FFFF) y violeta nebulosa (#8A2BE2). Estética espacial profunda.",
+            Self::AuroraGradient => "Fondo noche cósmica, degradado púrpura neón (#AF40FF), índigo eléctrico (#5B42F3) y cian radiante (#00DDEB).",
+            Self::KuromiGoth => "Negro absoluto (#000000), lavanda gótica (#B48EAD) y rosa fucsia (#F5C2E7). Estilo gótico moderno.",
+            Self::CinnamorollNight => "Noche estrellada (#11152C), azul cielo (#8AADF4) y rosa mejilla (#F5BDE6). Calma visual y tonos suaves.",
+            Self::CinnamorollCloud => "Blanco etéreo (#F5F8FC), azul cielo (#2E8FD9) y tonos níveos. Tema claro diurno de alta claridad.",
+            Self::MyMelodySoft => "Crema suave (#FFF8F0), rosa pastel (#E85D75) y cálido albaricoque (#FFE8D6). Calidez pastel y suavidad.",
+            Self::PompompurinCafe => "Vainilla cálida (#FFFBF0), caramelo tostado (#C97A18) y marrón chocolate (#4A2E21). Ambiente barista acogedor.",
+            Self::MantecCorporate => "Carbón elegante (#1E1E1E), gris profesional y naranja cobrizo (#E67E22). Look corporativo moderno y sobrio.",
+            Self::ModernBlue => "Deep Dark Blue (#1A1B26) y azul moderno de alto contraste (#7AA2F7). Enfoque técnico y máxima legibilidad.",
+            Self::MaterialRed => "Gris oscuro Material Design (#212121) y acento rojo coral (#F07178). Foco visual sobrio y elegante.",
+            Self::AdoRose => "Abismo medianoche (#070A12), cian eléctrico (#00D2FF), azul zafiro (#2563EB) y rosa neón (#FF2A6D). Tributo Aoi Bara.",
+            Self::Windows10 => "Dark Acrylic (#181818), gris metro (#232323) y azul Windows Metro (#0078D7). Estilo clásico y funcional.",
+            Self::Windows11 => "Sun Valley Mica (#1F1F1F), Fluent Capsule (#2B2B2B) y Luminous Fluent Blue (#60CDFF). Diseño moderno y translúcido.",
+            Self::SpotlightDark => "Dark Slate (#242424), bordes sutiles (#363636) y azul Cupertino (#0860F2). Estética minimalista estilo macOS.",
+            Self::SpotlightLight => "Cristal blanco puro (#F5F5F5), acento azul Cupertino (#0860F2) y texto carbón (#242424). Modo diurno refinado.",
+            Self::SuikaMelon => "Verde corteza (#52B788), ámbar cuarzo (#FFD166) y carmesí pulpa (#FF5C77). Estética táctica de infiltración y ciencia orgánica.",
+        }
+    }
+
+    pub fn description_lang(&self, lang: Language) -> &'static str {
+        match lang {
+            Language::Es => self.description(),
+            _ => match self {
+                Self::HumanComfort => "Warm slate, gentle coral, and soothing emerald. Zero retinal fatigue for long operational sessions.",
+                Self::TokyoNight => "Midnight indigo (#1A1B26), sky blue (#7AA2F7), and coral pink (#F7768E). Urban nocturnal aesthetic.",
+                Self::NeoTokyo => "Midnight purple (#0F0B1E), neon fuchsia (#FF007C), and electric cyan (#00FFFF). High-contrast cyberpunk.",
+                Self::Everforest => "Warm charcoal (#2B3339), gentle forest green (#A7C080), and teal (#7FBBB3). Natural harmony and comfort.",
+                Self::NordicCalm => "Misty gray, glacial blue, and arctic cyan. Minimalist, serene Nordic workstation aesthetic.",
+                Self::EarthSage => "Forest charcoal, organic sage green, and golden amber. Soothing organic earthy tones.",
+                Self::CyberNitro => "High-contrast crimson red and electric cyan. Original Acer Nitro sporty gaming DNA.",
+                Self::RedAudit => "Pitch Black (#0A0A0E), Blood Red (#FF3333), and amber alert (#FF9E64). Pure Red Team & offensive security.",
+                Self::HackerGreen => "Pure terminal black (#000000) and CRT phosphor green (#00FF00). Iconic Matrix minimalism.",
+                Self::StellarVoid => "Cosmic void (#030303), plasma cyan (#00FFFF), and nebula violet (#8A2BE2). Deep space aesthetic.",
+                Self::AuroraGradient => "Cosmic night backdrop with neon purple (#AF40FF), electric indigo (#5B42F3), and vibrant cyan (#00DDEB).",
+                Self::KuromiGoth => "Absolute black (#000000), gothic lavender (#B48EAD), and hot pink (#F5C2E7). Modern goth aesthetic.",
+                Self::CinnamorollNight => "Starry night (#11152C), soft sky blue (#8AADF4), and cheek blush pink (#F5BDE6). Soft visual comfort.",
+                Self::CinnamorollCloud => "Ethereal white (#F5F8FC), sky blue (#2E8FD9), and pure snow accents. Ultra-clear daylight theme.",
+                Self::MyMelodySoft => "Soft cream (#FFF8F0), pastel rose (#E85D75), and warm apricot (#FFE8D6). Warm pastel comfort.",
+                Self::PompompurinCafe => "Warm vanilla (#FFFBF0), toasted caramel (#C97A18), and cocoa brown (#4A2E21). Cozy barista lounge.",
+                Self::MantecCorporate => "Sleek charcoal (#1E1E1E), professional slate, and copper orange (#E67E22). Modern corporate look.",
+                Self::ModernBlue => "Deep Dark Blue (#1A1B26) and high-contrast modern blue (#7AA2F7). Focused technical legibility.",
+                Self::MaterialRed => "Material Design dark gray (#212121) and coral red accent (#F07178). Understated elegance.",
+                Self::AdoRose => "Midnight abyss (#070A12), electric cyan (#00D2FF), sapphire blue (#2563EB), and neon rose (#FF2A6D). Aoi Bara tribute.",
+                Self::Windows10 => "Dark Acrylic (#181818), metro gray (#232323), and Windows Metro blue (#0078D7). Clean functional classic.",
+                Self::Windows11 => "Sun Valley Mica (#1F1F1F), Fluent Capsule (#2B2B2B), and Luminous Fluent Blue (#60CDFF). Modern translucent design.",
+                Self::SpotlightDark => "Dark Slate (#242424), subtle borders (#363636), and Cupertino blue (#0860F2). macOS Spotlight aesthetic.",
+                Self::SpotlightLight => "Pure white crystal (#F5F5F5), Cupertino blue accent (#0860F2), and charcoal text (#242424). Refined day mode.",
+                Self::SuikaMelon => "Rind green (#52B788), quartz amber (#FFD166), and melon pulp red (#FF5C77). Organic tactical science look.",
+            },
         }
     }
 
@@ -159,6 +211,12 @@ impl ThemeMode {
             "mantec_corporate" | "mantec" | "corporate" => Self::MantecCorporate,
             "modern_blue" | "modern" | "blue" => Self::ModernBlue,
             "material_red" | "material" => Self::MaterialRed,
+            "ado_rose" | "adorose" | "ado" | "rose" | "aoi_bara" => Self::AdoRose,
+            "windows_10" | "windows10" | "win10" | "metro" => Self::Windows10,
+            "windows_11" | "windows11" | "win11" | "fluent" | "mica" => Self::Windows11,
+            "spotlight_dark" | "spotlight-dark" | "spotlight" | "launchpad" | "macos_dark" | "macos" => Self::SpotlightDark,
+            "spotlight_light" | "spotlight-light" | "macos_light" => Self::SpotlightLight,
+            "suika" | "suika_melon" | "dr_stone" | "stone" | "melon" => Self::SuikaMelon,
             _ => Self::HumanComfort,
         }
     }
@@ -184,6 +242,12 @@ impl ThemeMode {
             Self::MantecCorporate => "mantec_corporate",
             Self::ModernBlue => "modern_blue",
             Self::MaterialRed => "material_red",
+            Self::AdoRose => "ado_rose",
+            Self::Windows10 => "windows_10",
+            Self::Windows11 => "windows_11",
+            Self::SpotlightDark => "spotlight_dark",
+            Self::SpotlightLight => "spotlight_light",
+            Self::SuikaMelon => "suika_melon",
         }
     }
 
@@ -207,7 +271,13 @@ impl ThemeMode {
             Self::PompompurinCafe => Self::MantecCorporate,
             Self::MantecCorporate => Self::ModernBlue,
             Self::ModernBlue => Self::MaterialRed,
-            Self::MaterialRed => Self::HumanComfort,
+            Self::MaterialRed => Self::AdoRose,
+            Self::AdoRose => Self::Windows10,
+            Self::Windows10 => Self::Windows11,
+            Self::Windows11 => Self::SpotlightDark,
+            Self::SpotlightDark => Self::SpotlightLight,
+            Self::SpotlightLight => Self::SuikaMelon,
+            Self::SuikaMelon => Self::HumanComfort,
         }
     }
 }
@@ -616,7 +686,155 @@ pub fn get_palette(mode: ThemeMode) -> Palette {
             text_muted: Color32::from_rgb(130, 138, 185),
             card_rounding: 8.0,
         },
+        ThemeMode::AdoRose => Palette {
+            name: "Ado Blue Rose",
+            is_light: false,
+            bg: Color32::from_rgb(7, 10, 18),
+            panel: Color32::from_rgb(14, 20, 36),
+            card: Color32::from_rgb(23, 32, 54),
+            card_hover: Color32::from_rgb(32, 44, 75),
+            border: Color32::from_rgb(0, 180, 216),
+            border_subtle: Color32::from_rgb(25, 36, 62),
+            primary: Color32::from_rgb(0, 210, 255),
+            primary_glow: Color32::from_rgb(77, 226, 255),
+            secondary: Color32::from_rgb(37, 99, 235),
+            success: Color32::from_rgb(0, 210, 255),
+            warning: Color32::from_rgb(227, 179, 65),
+            purple: Color32::from_rgb(255, 42, 109),
+            text_primary: Color32::from_rgb(241, 245, 249),
+            text_secondary: Color32::from_rgb(148, 163, 184),
+            text_muted: Color32::from_rgb(100, 116, 139),
+            card_rounding: 12.0,
+        },
+        ThemeMode::Windows10 => Palette {
+            name: "Windows 10 Metro",
+            is_light: false,
+            bg: Color32::from_rgb(18, 18, 18),
+            panel: Color32::from_rgb(24, 24, 24),
+            card: Color32::from_rgb(35, 35, 35),
+            card_hover: Color32::from_rgb(46, 46, 46),
+            border: Color32::from_rgb(51, 51, 51),
+            border_subtle: Color32::from_rgb(38, 38, 38),
+            primary: Color32::from_rgb(0, 120, 215),
+            primary_glow: Color32::from_rgb(41, 143, 230),
+            secondary: Color32::from_rgb(0, 90, 158),
+            success: Color32::from_rgb(16, 124, 65),
+            warning: Color32::from_rgb(255, 185, 0),
+            purple: Color32::from_rgb(136, 23, 152),
+            text_primary: Color32::from_rgb(255, 255, 255),
+            text_secondary: Color32::from_rgb(204, 204, 204),
+            text_muted: Color32::from_rgb(140, 140, 140),
+            card_rounding: 4.0,
+        },
+        ThemeMode::Windows11 => Palette {
+            name: "Windows 11 Fluent",
+            is_light: false,
+            bg: Color32::from_rgb(27, 27, 27),
+            panel: Color32::from_rgb(32, 32, 32),
+            card: Color32::from_rgb(43, 43, 43),
+            card_hover: Color32::from_rgb(53, 53, 53),
+            border: Color32::from_rgb(62, 62, 62),
+            border_subtle: Color32::from_rgb(45, 45, 45),
+            primary: Color32::from_rgb(96, 205, 255),
+            primary_glow: Color32::from_rgb(122, 213, 255),
+            secondary: Color32::from_rgb(76, 194, 255),
+            success: Color32::from_rgb(108, 203, 95),
+            warning: Color32::from_rgb(252, 225, 0),
+            purple: Color32::from_rgb(177, 70, 194),
+            text_primary: Color32::from_rgb(255, 255, 255),
+            text_secondary: Color32::from_rgb(208, 208, 208),
+            text_muted: Color32::from_rgb(140, 140, 140),
+            card_rounding: 8.0,
+        },
+        ThemeMode::SpotlightDark => Palette {
+            name: "Spotlight Dark",
+            is_light: false,
+            bg: Color32::from_rgb(30, 30, 30),
+            panel: Color32::from_rgb(36, 36, 36),
+            card: Color32::from_rgb(46, 46, 46),
+            card_hover: Color32::from_rgb(58, 58, 58),
+            border: Color32::from_rgb(68, 68, 68),
+            border_subtle: Color32::from_rgb(48, 48, 48),
+            primary: Color32::from_rgb(8, 96, 242),
+            primary_glow: Color32::from_rgb(61, 130, 247),
+            secondary: Color32::from_rgb(94, 92, 230),
+            success: Color32::from_rgb(48, 209, 88),
+            warning: Color32::from_rgb(255, 159, 10),
+            purple: Color32::from_rgb(191, 90, 242),
+            text_primary: Color32::from_rgb(255, 255, 255),
+            text_secondary: Color32::from_rgb(222, 222, 222),
+            text_muted: Color32::from_rgb(142, 142, 147),
+            card_rounding: 12.0,
+        },
+        ThemeMode::SpotlightLight => Palette {
+            name: "Spotlight Light",
+            is_light: true,
+            bg: Color32::from_rgb(236, 236, 236),
+            panel: Color32::from_rgb(245, 245, 245),
+            card: Color32::from_rgb(255, 255, 255),
+            card_hover: Color32::from_rgb(240, 240, 240),
+            border: Color32::from_rgb(209, 209, 214),
+            border_subtle: Color32::from_rgb(229, 229, 234),
+            primary: Color32::from_rgb(8, 96, 242),
+            primary_glow: Color32::from_rgb(0, 122, 255),
+            secondary: Color32::from_rgb(88, 86, 214),
+            success: Color32::from_rgb(52, 199, 89),
+            warning: Color32::from_rgb(255, 149, 0),
+            purple: Color32::from_rgb(175, 82, 222),
+            text_primary: Color32::from_rgb(28, 28, 30),
+            text_secondary: Color32::from_rgb(72, 72, 74),
+            text_muted: Color32::from_rgb(142, 142, 147),
+            card_rounding: 12.0,
+        },
+        ThemeMode::SuikaMelon => Palette {
+            name: "Suika Recon",
+            is_light: false,
+            bg: Color32::from_rgb(15, 26, 20),         // #0F1A14 Deep melon night
+            panel: Color32::from_rgb(22, 38, 29),      // #16261D
+            card: Color32::from_rgb(30, 51, 39),       // #1E3327
+            card_hover: Color32::from_rgb(41, 69, 53), // #294535
+            border: Color32::from_rgb(64, 145, 108),   // #40916C Rind green
+            border_subtle: Color32::from_rgb(38, 77, 56), // #264D38
+            primary: Color32::from_rgb(82, 183, 136),  // #52B788 Crisp Watermelon Green
+            primary_glow: Color32::from_rgb(116, 198, 157), // #74C69D
+            secondary: Color32::from_rgb(255, 209, 102), // #FFD166 Quartz Lens Amber (Senku's lenses)
+            success: Color32::from_rgb(116, 198, 157), // #74C69D Fresh Sprout
+            warning: Color32::from_rgb(244, 162, 97),  // #F4A261 Warm Amber
+            purple: Color32::from_rgb(255, 92, 119),   // #FF5C77 Watermelon Pulp Red
+            text_primary: Color32::from_rgb(240, 247, 242), // #F0F7F2 Clean Mint White
+            text_secondary: Color32::from_rgb(168, 207, 184), // #A8CFB8 Pale Sage
+            text_muted: Color32::from_rgb(104, 148, 122), // #68947A Muted Foliage
+            card_rounding: 12.0,
+        },
     }
+}
+
+pub fn setup_custom_fonts(ctx: &egui::Context) {
+    let mut fonts = egui::FontDefinitions::default();
+
+    let font_candidates = [
+        "/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf",
+        "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+        "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    ];
+
+    for path in font_candidates {
+        if let Ok(font_bytes) = std::fs::read(path) {
+            fonts.font_data.insert(
+                "cjk_fallback".to_owned(),
+                egui::FontData::from_owned(font_bytes),
+            );
+            if let Some(prop) = fonts.families.get_mut(&egui::FontFamily::Proportional) {
+                prop.push("cjk_fallback".to_owned());
+            }
+            if let Some(mono) = fonts.families.get_mut(&egui::FontFamily::Monospace) {
+                mono.push("cjk_fallback".to_owned());
+            }
+            break;
+        }
+    }
+
+    ctx.set_fonts(fonts);
 }
 
 pub fn apply_visuals_for_palette(ctx: &egui::Context, pal: &Palette) {
@@ -678,6 +896,7 @@ struct AcerSenseApp {
     current_tab: Tab,
     config: AcerConfig,
     theme_mode: ThemeMode,
+    language: Language,
 
     // Decoupled Background Worker Channels
     cmd_tx: Sender<HardwareCommand>,
@@ -813,6 +1032,7 @@ impl AcerSenseApp {
         };
         let pal = get_palette(theme_mode);
         apply_visuals_for_palette(&cc.egui_ctx, &pal);
+        setup_custom_fonts(&cc.egui_ctx);
 
         let textures = NitroTextures {
             fan_blade: load_texture(&cc.egui_ctx, "nitro_fan_blade", ASSET_FAN_BLADE),
@@ -909,10 +1129,20 @@ impl AcerSenseApp {
             }
         };
 
+        let lang_arg = std::env::args()
+            .position(|a| a == "--lang" || a == "-l")
+            .and_then(|idx| std::env::args().nth(idx + 1));
+        let language = if let Some(ref l) = lang_arg {
+            Language::from_str(l)
+        } else {
+            Language::from_str(&cfg.language)
+        };
+
         Self {
             current_tab: initial_tab,
             config: cfg,
             theme_mode,
+            language,
             cmd_tx,
             telemetry_rx,
             telemetry: TelemetryData::default(),
@@ -949,6 +1179,17 @@ impl AcerSenseApp {
         apply_visuals_for_palette(ctx, &self.pal());
     }
 
+    pub fn set_language(&mut self, lang: Language) {
+        self.language = lang;
+        self.config.language = lang.as_str().to_string();
+        save_config(&self.config);
+    }
+
+    pub fn toggle_language(&mut self) {
+        let next = self.language.next();
+        self.set_language(next);
+    }
+
     #[allow(clippy::too_many_arguments)]
     fn draw_nitro_dial(
         &self,
@@ -983,20 +1224,24 @@ impl AcerSenseApp {
 
                 let tjmax = if title.contains("CPU") { 100.0_f32 } else { 87.0_f32 };
                 let headroom = (tjmax - temp).max(0.0_f32);
-                t_lbl.on_hover_text(format!(
-                    "{} Telemetría:\n• Temp actual: {:.1}°C\n• Margen térmico: +{:.1}°C antes de Throttling (Tope: {:.0}°C)",
-                    title, temp, headroom, tjmax
-                ));
+                t_lbl.on_hover_text(self.language.dial_telemetry_hover(title, temp, headroom, tjmax));
                 ui.label(RichText::new(format!("({:.0}%)", load)).size(11.0_f32).color(pal.text_muted));
             });
             ui.add_space(6.0_f32);
 
             let (rect, response) = ui.allocate_exact_size(Vec2::splat(dial_size), egui::Sense::hover());
-            let trend_status = if delta_rpm > 35 { "Acelerando ▲" } else if delta_rpm < -35 { "Desacelerando ▼" } else { "Estable •" };
-            response.on_hover_text(format!(
-                "Dinámica de Turbina {}:\n• Velocidad: {} RPM (Máx: {} RPM)\n• Tendencia: {}\n• Sensor: {:.1}°C",
-                title, rpm, max_rpm, trend_status, temp
-            ));
+            let trend_status = self.language.delta_trend_str(delta_rpm);
+            let hover_info = match self.language {
+                Language::Es => format!(
+                    "Dinámica de Turbina {}:\n• Velocidad: {} RPM (Máx: {} RPM)\n• Tendencia: {}\n• Sensor: {:.1}°C",
+                    title, rpm, max_rpm, trend_status, temp
+                ),
+                _ => format!(
+                    "Turbine Dynamics {}:\n• Speed: {} RPM (Max: {} RPM)\n• Trend: {}\n• Sensor: {:.1}°C",
+                    title, rpm, max_rpm, trend_status, temp
+                ),
+            };
+            response.on_hover_text(hover_info);
             let painter = ui.painter_at(rect);
             let center = rect.center();
             let radius = (dial_size / 2.0_f32) - 4.0_f32;
@@ -1079,7 +1324,13 @@ impl AcerSenseApp {
             } else if delta_rpm < -35 {
                 (format!("▼ {}", delta_rpm), pal.secondary)
             } else {
-                ("• ESTABLE".to_string(), pal.text_muted)
+                (
+                    match self.language {
+                        Language::Es => "• ESTABLE".to_string(),
+                        _ => "• STEADY".to_string(),
+                    },
+                    pal.text_muted,
+                )
             };
 
             let badge_y = center.y + dial_size * 0.10_f32;
@@ -1186,7 +1437,10 @@ impl AcerSenseApp {
             painter.text(
                 Pos2::new(chart_right - 6.0_f32, alert_y - 6.0_f32),
                 egui::Align2::RIGHT_BOTTOM,
-                "LÍMITE TÉRMICO (85°C)",
+                match self.language {
+                    Language::Es => "LÍMITE TÉRMICO (85°C)",
+                    _ => "THERMAL THRESHOLD (85°C)",
+                },
                 egui::FontId::monospace(8.5_f32),
                 Color32::from_rgba_unmultiplied(
                     pal.primary.r(),
@@ -1306,19 +1560,38 @@ impl AcerSenseApp {
 
     fn draw_tile_cpu(&self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         ui.vertical(|ui| {
             let temp_c = if self.telemetry.cpu_temp >= 85.0 { pal.primary } else if self.telemetry.cpu_temp >= 75.0 { pal.warning } else { pal.secondary };
-            ui.label(RichText::new("CPU PACKAGE").size(10.5_f32).color(pal.text_muted).strong());
+            let cpu_title = match l {
+                Language::Es => "PAQUETE CPU",
+                _ => "CPU PACKAGE",
+            };
+            ui.label(RichText::new(cpu_title).size(10.5_f32).color(pal.text_muted).strong());
             ui.horizontal(|ui| {
                 let t_lbl = ui.label(RichText::new(format!("{:.1}°C", self.telemetry.cpu_temp)).size(16.0_f32).color(temp_c).strong());
                 let headroom = (100.0_f32 - self.telemetry.cpu_temp).max(0.0_f32);
-                t_lbl.on_hover_text(format!(
-                    "Intel Core i5-10300H Telemetry:\n• Thermal Headroom: +{:.1}°C before TjMax (100.0°C)\n• Active Governor: {}\n• EPP: {}\n• Turbo Boost: {}",
-                    headroom,
-                    self.telemetry.cpu_governor,
-                    self.telemetry.cpu_epp,
-                    if self.telemetry.cpu_turbo { "Active" } else { "Disabled" }
-                ));
+                let turbo_str = match l {
+                    Language::Es => if self.telemetry.cpu_turbo { "Activo" } else { "Desactivado" },
+                    _ => if self.telemetry.cpu_turbo { "Active" } else { "Disabled" },
+                };
+                let hover_text = match l {
+                    Language::Es => format!(
+                        "Telemetría Intel Core i5-10300H:\n• Margen térmico: +{:.1}°C antes de TjMax (100.0°C)\n• Gobernador: {}\n• EPP: {}\n• Turbo Boost: {}",
+                        headroom,
+                        self.telemetry.cpu_governor,
+                        self.telemetry.cpu_epp,
+                        turbo_str
+                    ),
+                    _ => format!(
+                        "Intel Core i5-10300H Telemetry:\n• Thermal Headroom: +{:.1}°C before TjMax (100.0°C)\n• Active Governor: {}\n• EPP: {}\n• Turbo Boost: {}",
+                        headroom,
+                        self.telemetry.cpu_governor,
+                        self.telemetry.cpu_epp,
+                        turbo_str
+                    ),
+                };
+                t_lbl.on_hover_text(hover_text);
                 ui.label(RichText::new(format!("({:.0}%)", self.telemetry.cpu_load)).size(12.0_f32).color(pal.text_muted));
             });
             draw_tactical_bar(ui, self.telemetry.cpu_load, temp_c, 5.0_f32);
@@ -1329,30 +1602,53 @@ impl AcerSenseApp {
 
     fn draw_tile_gpu(&self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         ui.vertical(|ui| {
-            ui.label(RichText::new("DISCRETE GPU").size(10.5_f32).color(pal.text_muted).strong());
+            let gpu_title = match l {
+                Language::Es => "GPU DEDICADA",
+                _ => "DISCRETE GPU",
+            };
+            ui.label(RichText::new(gpu_title).size(10.5_f32).color(pal.text_muted).strong());
             if self.telemetry.gpu_active {
                 let temp_c = if self.telemetry.gpu_temp >= 80.0 { pal.primary } else { pal.secondary };
                 ui.horizontal(|ui| {
                     let t_lbl = ui.label(RichText::new(format!("{:.1}°C", self.telemetry.gpu_temp)).size(16.0_f32).color(temp_c).strong());
                     let headroom = (87.0_f32 - self.telemetry.gpu_temp).max(0.0_f32);
-                    t_lbl.on_hover_text(format!(
-                        "NVIDIA RTX 3050 Telemetry:\n• Thermal Headroom: +{:.1}°C before Throttle (87.0°C)\n• Driver: {}\n• VRAM: {:.2} / {:.1} GB",
-                        headroom,
-                        self.telemetry.driver_version,
-                        self.telemetry.gpu_vram_used,
-                        self.telemetry.gpu_vram_total
-                    ));
+                    let hover_gpu = match l {
+                        Language::Es => format!(
+                            "Telemetría NVIDIA RTX 3050:\n• Margen térmico: +{:.1}°C antes de Throttling (87.0°C)\n• Driver: {}\n• VRAM: {:.2} / {:.1} GB",
+                            headroom,
+                            self.telemetry.driver_version,
+                            self.telemetry.gpu_vram_used,
+                            self.telemetry.gpu_vram_total
+                        ),
+                        _ => format!(
+                            "NVIDIA RTX 3050 Telemetry:\n• Thermal Headroom: +{:.1}°C before Throttle (87.0°C)\n• Driver: {}\n• VRAM: {:.2} / {:.1} GB",
+                            headroom,
+                            self.telemetry.driver_version,
+                            self.telemetry.gpu_vram_used,
+                            self.telemetry.gpu_vram_total
+                        ),
+                    };
+                    t_lbl.on_hover_text(hover_gpu);
                     ui.label(RichText::new(format!("({:.0}%)", self.telemetry.gpu_load)).size(12.0_f32).color(pal.text_muted));
                 });
                 draw_tactical_bar(ui, self.telemetry.gpu_load, pal.primary, 5.0_f32);
                 ui.add_space(2.0_f32);
                 ui.label(RichText::new(format!("{} MHz • {:.1}W • VRAM {:.1}G", self.telemetry.gpu_clock, self.telemetry.gpu_power, self.telemetry.gpu_vram_used)).size(10.5_f32).color(pal.text_muted).monospace());
             } else {
-                ui.label(RichText::new("D3cold Standby").size(16.0_f32).color(pal.text_muted).strong());
+                let standby_title = match l {
+                    Language::Es => "Suspensión D3cold",
+                    _ => "D3cold Standby",
+                };
+                ui.label(RichText::new(standby_title).size(16.0_f32).color(pal.text_muted).strong());
                 draw_tactical_bar(ui, 0.0_f32, pal.border, 5.0_f32);
                 ui.add_space(2.0_f32);
-                ui.label(RichText::new("0.0 W • PCIe Sleep").size(10.5_f32).color(pal.text_muted).monospace());
+                let sleep_txt = match l {
+                    Language::Es => "0.0 W • PCIe Ahorro",
+                    _ => "0.0 W • PCIe Sleep",
+                };
+                ui.label(RichText::new(sleep_txt).size(10.5_f32).color(pal.text_muted).monospace());
             }
         });
     }
@@ -1395,9 +1691,14 @@ impl AcerSenseApp {
 
     fn draw_tile_power(&self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         ui.vertical(|ui| {
+            let pwr_title = match l {
+                Language::Es => "ENERGÍA / BATERÍA",
+                _ => "POWER / BATTERY",
+            };
             ui.label(
-                RichText::new("POWER / BATTERY")
+                RichText::new(pwr_title)
                     .size(10.5_f32)
                     .color(pal.text_muted)
                     .strong(),
@@ -1432,10 +1733,14 @@ impl AcerSenseApp {
                 5.0_f32,
             );
             ui.add_space(2.0_f32);
+            let health_label = match l {
+                Language::Es => "Salud",
+                _ => "Health",
+            };
             ui.label(
                 RichText::new(format!(
-                    "{:.2}V • H: {:.0}%",
-                    self.telemetry.bat_voltage, self.telemetry.bat_health
+                    "{:.2}V • {}: {:.0}%",
+                    self.telemetry.bat_voltage, health_label, self.telemetry.bat_health
                 ))
                 .size(10.5_f32)
                 .color(pal.text_muted)
@@ -1447,6 +1752,7 @@ impl AcerSenseApp {
     /// Renders the Dedicated Fan Control Tab (Tab::FanControl)
     fn render_fans_tab(&mut self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         let avail_w = ui.available_width();
         let is_auto = self.config.mode == "auto";
         let is_max = self.config.mode == "max" || self.config.mode == "turbo";
@@ -1456,16 +1762,17 @@ impl AcerSenseApp {
         self.nitro_card_frame().show(ui, |ui| {
             // 1. Header Row: Title, Mode Pill, Fan Sync, and CoolBoost Toggle
             ui.horizontal(|ui| {
-                ui.heading(RichText::new("Fan Speed Control").size(16.0_f32).strong().color(pal.text_primary));
+                ui.heading(RichText::new(l.fan_title()).size(16.0_f32).strong().color(pal.text_primary));
                 ui.add_space(8.0_f32);
 
                 // Operational Mode Badge / Pill
-                let (mode_text, mode_color, mode_desc) = if is_auto {
-                    ("• BIOS CLOSED LOOP", pal.secondary, "Compal EC autonomous closed loop. Fans dynamically ramp according to thermal curves.")
+                let (mode_text, mode_desc) = l.fan_mode_badge(if is_auto { "auto" } else if is_max { "max" } else { "custom" });
+                let mode_color = if is_auto {
+                    pal.secondary
                 } else if is_max {
-                    ("• TURBO SMM OVERDRIVE", pal.primary, "Overdrive active. Compal EC registers locked to 0xFF (Max 12V fan rail voltage).")
+                    pal.primary
                 } else {
-                    ("• MANUAL PWM TARGET", pal.warning, "Manual PWM duty cycle override. Autonomous closed loop slipped to target duty.")
+                    pal.warning
                 };
 
                 let badge = egui::Frame::none()
@@ -1481,7 +1788,7 @@ impl AcerSenseApp {
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     // CoolBoost Pill Toggle
                     let cb = self.config.coolboost;
-                    let cb_text = if cb { "❄ CoolBoost™ ON" } else { "❄ CoolBoost™ OFF" };
+                    let cb_text = l.coolboost_text(cb);
                     let cb_color = if cb { pal.success } else { pal.text_muted };
                     let cb_bg = if cb { Color32::from_rgba_unmultiplied(pal.success.r(), pal.success.g(), pal.success.b(), 24) } else { pal.panel };
                     let cb_border = if cb { pal.success } else { pal.border };
@@ -1491,9 +1798,7 @@ impl AcerSenseApp {
                         .stroke(Stroke::new(1.0_f32, cb_border))
                         .rounding(Rounding::same(4.0_f32));
 
-                    if ui.add(cb_btn).on_hover_text(
-                        "Compal EC CoolBoost offset: elevates dynamic fan curve baseline +400-500 RPM for lower thermal hysteresis under transient load spikes. Click to toggle."
-                    ).clicked() {
+                    if ui.add(cb_btn).on_hover_text(l.coolboost_tooltip()).clicked() {
                         self.config.coolboost = !cb;
                         let _ = self.cmd_tx.send(HardwareCommand::SetCoolboost(self.config.coolboost));
                         save_config(&self.config);
@@ -1503,7 +1808,7 @@ impl AcerSenseApp {
 
                     // Fan Sync Toggle (Tactical Link / Decouple)
                     let sync = self.config.sync_fans;
-                    let sync_text = if sync { "🔗 Fans Linked" } else { "⚡ Independent" };
+                    let sync_text = l.sync_fans_text(sync);
                     let sync_color = if sync { pal.secondary } else { pal.text_muted };
                     let sync_bg = if sync { Color32::from_rgba_unmultiplied(pal.secondary.r(), pal.secondary.g(), pal.secondary.b(), 24) } else { pal.panel };
                     let sync_border = if sync { pal.secondary } else { pal.border };
@@ -1513,11 +1818,7 @@ impl AcerSenseApp {
                         .stroke(Stroke::new(1.0_f32, sync_border))
                         .rounding(Rounding::same(4.0_f32));
 
-                    if ui.add(sync_btn).on_hover_text(if sync {
-                        "Fans are LINKED: CPU and GPU target speeds move synchronously. Click to decouple."
-                    } else {
-                        "Fans are INDEPENDENT: CPU and GPU target speeds are adjusted separately. Click to link."
-                    }).clicked() {
+                    if ui.add(sync_btn).on_hover_text(l.sync_fans_tooltip(sync)).clicked() {
                         self.config.sync_fans = !sync;
                         if self.config.sync_fans {
                             self.config.gpu_fan_target = self.config.cpu_fan_target;
@@ -1539,7 +1840,7 @@ impl AcerSenseApp {
             let btn_w = ((ui.available_width() - 16.0_f32) / 3.0_f32).max(85.0_f32);
 
             let btn_auto = egui::Button::new(
-                RichText::new(if avail_w < 520.0 { "AUTO (A)" } else { "AUTO (A)\nBIOS Closed Loop" })
+                RichText::new(l.btn_auto_label(avail_w < 520.0))
                     .size(11.5_f32)
                     .strong()
                     .color(if is_auto { pal.secondary } else { pal.text_muted })
@@ -1549,7 +1850,7 @@ impl AcerSenseApp {
             .rounding(Rounding::same(6.0_f32));
 
             let btn_max = egui::Button::new(
-                RichText::new(if avail_w < 520.0 { "MAX (M)" } else { "MAX (M)\nTurbo 100% SMM" })
+                RichText::new(l.btn_max_label(avail_w < 520.0))
                     .size(11.5_f32)
                     .strong()
                     .color(if is_max { pal.primary } else { pal.text_muted })
@@ -1559,7 +1860,7 @@ impl AcerSenseApp {
             .rounding(Rounding::same(6.0_f32));
 
             let btn_custom = egui::Button::new(
-                RichText::new(if avail_w < 520.0 { "CUSTOM (C)" } else { "CUSTOM (C)\nManual Target" })
+                RichText::new(l.btn_custom_label(avail_w < 520.0))
                     .size(11.5_f32)
                     .strong()
                     .color(if is_custom { pal.warning } else { pal.text_muted })
@@ -1587,13 +1888,8 @@ impl AcerSenseApp {
 
             // 3. Tactical Speed Presets (Quick 1-click duty overrides)
             ui.horizontal(|ui| {
-                ui.label(RichText::new("Presets:").size(11.0_f32).strong().color(pal.text_muted));
-                let presets: [(&str, u8, &str); 4] = [
-                    ("20% Quiet", 20, "20% Target (~2100 RPM) • Low acoustic footprint"),
-                    ("45% Balanced", 45, "45% Target (~3200 RPM) • Daily browsing & dev"),
-                    ("75% High Flow", 75, "75% Target (~4500 RPM) • Sustained compile & gaming"),
-                    ("100% Max", 100, "100% Target (Max RPM) • Thermal throttling prevention"),
-                ];
+                ui.label(RichText::new(l.presets_title()).size(11.0_f32).strong().color(pal.text_muted));
+                let presets = l.fan_presets();
 
                 for (label, val, desc) in presets {
                     let is_active_preset = is_custom && self.config.cpu_fan_target == val && self.config.gpu_fan_target == val;
@@ -1637,7 +1933,7 @@ impl AcerSenseApp {
                     ui.set_width(col_w);
                     self.draw_nitro_dial(
                         ui,
-                        "CPU FAN",
+                        l.cpu_fan_name(),
                         self.telemetry.cpu_rpm,
                         5660,
                         self.telemetry.cpu_temp,
@@ -1661,7 +1957,7 @@ impl AcerSenseApp {
                                 .fill(pal.card)
                                 .stroke(Stroke::new(1.0_f32, pal.border))
                                 .rounding(Rounding::same(4.0_f32));
-                            if ui.add(step_minus).on_hover_text("Reducir -5%").clicked() {
+                            if ui.add(step_minus).on_hover_text(l.minus_tooltip()).clicked() {
                                 self.config.cpu_fan_target = self.config.cpu_fan_target.saturating_sub(5);
                                 if self.config.sync_fans { self.config.gpu_fan_target = self.config.cpu_fan_target; }
                                 let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans { cpu_pct: self.config.cpu_fan_target, gpu_pct: self.config.gpu_fan_target });
@@ -1678,7 +1974,7 @@ impl AcerSenseApp {
                                 .fill(pal.card)
                                 .stroke(Stroke::new(1.0_f32, pal.border))
                                 .rounding(Rounding::same(4.0_f32));
-                            if ui.add(step_plus).on_hover_text("Aumentar +5%").clicked() {
+                            if ui.add(step_plus).on_hover_text(l.plus_tooltip()).clicked() {
                                 self.config.cpu_fan_target = (self.config.cpu_fan_target + 5).min(100);
                                 if self.config.sync_fans { self.config.gpu_fan_target = self.config.cpu_fan_target; }
                                 let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans { cpu_pct: self.config.cpu_fan_target, gpu_pct: self.config.gpu_fan_target });
@@ -1688,9 +1984,11 @@ impl AcerSenseApp {
                         });
                     } else {
                         let (badge_txt, badge_col, badge_hover) = if is_max {
-                            ("⚡ Overdrive Turbo (100% SMM)", pal.primary, "SMM Turbo activo forzando raíles a máxima potencia de disipación.")
+                            let (txt, hover) = l.turbo_smm_badge();
+                            (txt, pal.primary, hover)
                         } else {
-                            ("🔒 Curva Térmica BIOS Autónoma", pal.secondary, "Compal EC gestiona dinámicamente el ciclo PWM según la curva térmica.")
+                            let (txt, hover) = l.bios_curve_badge();
+                            (txt, pal.secondary, hover)
                         };
                         egui::Frame::none()
                             .fill(Color32::from_rgba_unmultiplied(badge_col.r(), badge_col.g(), badge_col.b(), 18))
@@ -1710,7 +2008,7 @@ impl AcerSenseApp {
                     ui.set_width(col_w);
                     self.draw_nitro_dial(
                         ui,
-                        "GPU FAN",
+                        l.gpu_fan_name(),
                         self.telemetry.gpu_rpm,
                         6000,
                         self.telemetry.gpu_temp,
@@ -1734,7 +2032,7 @@ impl AcerSenseApp {
                                 .fill(pal.card)
                                 .stroke(Stroke::new(1.0_f32, pal.border))
                                 .rounding(Rounding::same(4.0_f32));
-                            if ui.add(step_minus).on_hover_text("Reducir -5%").clicked() {
+                            if ui.add(step_minus).on_hover_text(l.minus_tooltip()).clicked() {
                                 self.config.gpu_fan_target = self.config.gpu_fan_target.saturating_sub(5);
                                 if self.config.sync_fans { self.config.cpu_fan_target = self.config.gpu_fan_target; }
                                 let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans { cpu_pct: self.config.cpu_fan_target, gpu_pct: self.config.gpu_fan_target });
@@ -1751,7 +2049,7 @@ impl AcerSenseApp {
                                 .fill(pal.card)
                                 .stroke(Stroke::new(1.0_f32, pal.border))
                                 .rounding(Rounding::same(4.0_f32));
-                            if ui.add(step_plus).on_hover_text("Aumentar +5%").clicked() {
+                            if ui.add(step_plus).on_hover_text(l.plus_tooltip()).clicked() {
                                 self.config.gpu_fan_target = (self.config.gpu_fan_target + 5).min(100);
                                 if self.config.sync_fans { self.config.cpu_fan_target = self.config.gpu_fan_target; }
                                 let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans { cpu_pct: self.config.cpu_fan_target, gpu_pct: self.config.gpu_fan_target });
@@ -1761,9 +2059,11 @@ impl AcerSenseApp {
                         });
                     } else {
                         let (badge_txt, badge_col, badge_hover) = if is_max {
-                            ("⚡ Overdrive Turbo (100% SMM)", pal.primary, "SMM Turbo activo forzando raíles a máxima potencia de disipación.")
+                            let (txt, hover) = l.turbo_smm_badge();
+                            (txt, pal.primary, hover)
                         } else {
-                            ("🔒 Curva Térmica BIOS Autónoma", pal.secondary, "Compal EC gestiona dinámicamente el ciclo PWM según la curva térmica.")
+                            let (txt, hover) = l.bios_curve_badge();
+                            (txt, pal.secondary, hover)
                         };
                         egui::Frame::none()
                             .fill(Color32::from_rgba_unmultiplied(badge_col.r(), badge_col.g(), badge_col.b(), 18))
@@ -1783,18 +2083,17 @@ impl AcerSenseApp {
 
             // 5. Aerodynamic Acoustic & Airflow Estimate Strip
             let max_rpm = self.telemetry.cpu_rpm.max(self.telemetry.gpu_rpm);
-            let (noise_dba, noise_desc, noise_color) = if max_rpm == 0 {
-                (18, "0 RPM • Passive Convection / Pure Silence", pal.success)
+            let (noise_dba, noise_desc) = l.acoustic_state(max_rpm);
+            let noise_color = if max_rpm == 0 {
+                pal.success
             } else if max_rpm < 2200 {
-                (24, "Whisper Flow • Near Inaudible / Office & Dev", pal.success)
+                pal.success
             } else if max_rpm < 3400 {
-                (33, "Gentle Draft • Mild Ambient Whir", pal.secondary)
+                pal.secondary
             } else if max_rpm < 4500 {
-                (43, "Forced Induction • Audible Balanced Gaming", pal.warning)
-            } else if max_rpm < 5400 {
-                (51, "High Turbine Flow • Heavy Thermal Dissipation", pal.primary)
+                pal.warning
             } else {
-                (56, "Max Jet Induction • Full 12V Turbo Overdrive", pal.primary)
+                pal.primary
             };
 
             let approx_cfm = ((self.telemetry.cpu_rpm + self.telemetry.gpu_rpm) as f32 * 0.0031_f32).clamp(0.0_f32, 36.0_f32);
@@ -1806,11 +2105,11 @@ impl AcerSenseApp {
                 .inner_margin(Margin::symmetric(10.0_f32, 6.0_f32))
                 .show(ui, |ui| {
                     ui.horizontal(|ui| {
-                        ui.label(RichText::new("Acoustic Footprint:").size(11.0_f32).color(pal.text_primary).strong());
+                        ui.label(RichText::new(l.acoustic_footprint_label()).size(11.0_f32).color(pal.text_primary).strong());
                         ui.label(RichText::new(format!("~{} dBA", noise_dba)).size(11.5_f32).strong().color(noise_color));
                         ui.label(RichText::new(format!("• {}", noise_desc)).size(11.0_f32).color(pal.text_muted));
                         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                            ui.label(RichText::new(format!("Est. Airflow: {:.1} CFM", approx_cfm)).size(11.0_f32).color(pal.secondary).monospace());
+                            ui.label(RichText::new(l.est_airflow_label(approx_cfm)).size(11.0_f32).color(pal.secondary).monospace());
                         });
                     });
                 });
@@ -1822,7 +2121,7 @@ impl AcerSenseApp {
         self.nitro_card_frame().show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new("Ventilation Dynamics Curve")
+                    RichText::new(l.ventilation_dynamics_title())
                         .size(13.5_f32)
                         .strong()
                         .color(pal.text_primary),
@@ -1830,7 +2129,7 @@ impl AcerSenseApp {
                 let avail = ui.available_width();
                 if avail > 340.0_f32 {
                     ui.label(
-                        RichText::new("• Dual-Turbine Response (60s)")
+                        RichText::new(l.dual_turbine_label())
                             .size(11.0_f32)
                             .color(pal.text_muted),
                     );
@@ -1861,21 +2160,21 @@ impl AcerSenseApp {
         self.nitro_card_frame().show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.heading(
-                    RichText::new("Live System Telemetry Matrix")
+                    RichText::new(l.telemetry_matrix_title())
                         .size(15.0_f32)
                         .strong()
                         .color(pal.text_primary),
                 );
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     if ui
-                        .button(RichText::new("PURGE TURBO").color(pal.primary).strong())
+                        .button(RichText::new(l.purge_turbo_btn()).color(pal.primary).strong())
                         .clicked()
                     {
                         self.config.mode = "max".into();
                         let _ = self.cmd_tx.send(HardwareCommand::SetFanMode("max".into()));
                     }
                     if ui
-                        .button(RichText::new("RESET AUTO").color(pal.secondary).strong())
+                        .button(RichText::new(l.reset_auto_btn()).color(pal.secondary).strong())
                         .clicked()
                     {
                         self.config.mode = "auto".into();
@@ -1893,6 +2192,7 @@ impl AcerSenseApp {
     /// Renders the Comprehensive Hardware Observatory tab (Tab::Monitoring)
     fn render_monitoring_tab(&mut self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         let avail_w = ui.available_width();
 
         // 1. TOP KPI SUMMARY RIBBON (4 Executive Metrics)
@@ -1911,7 +2211,7 @@ impl AcerSenseApp {
             0 => {
                 self.nitro_card_frame().show(ui, |ui| {
                     ui.label(
-                        RichText::new("THERMAL HEADROOM")
+                        RichText::new(l.kpi_thermal_headroom())
                             .size(9.5_f32)
                             .strong()
                             .color(pal.text_muted),
@@ -1930,19 +2230,16 @@ impl AcerSenseApp {
                             .color(h_col),
                     );
                     ui.label(
-                        RichText::new(format!(
-                            "Peak: {:.0}°C CPU / {:.0}°C GPU",
-                            self.peak_cpu_temp, self.peak_gpu_temp
-                        ))
-                        .size(9.5_f32)
-                        .color(pal.text_muted),
+                        RichText::new(l.kpi_peak_temps(self.peak_cpu_temp, self.peak_gpu_temp))
+                            .size(9.5_f32)
+                            .color(pal.text_muted),
                     );
                 });
             }
             1 => {
                 self.nitro_card_frame().show(ui, |ui| {
                     ui.label(
-                        RichText::new("TOTAL POWER DRAW")
+                        RichText::new(l.kpi_combined_power())
                             .size(9.5_f32)
                             .strong()
                             .color(pal.text_muted),
@@ -1954,19 +2251,16 @@ impl AcerSenseApp {
                             .color(pal.secondary),
                     );
                     ui.label(
-                        RichText::new(format!(
-                            "Peak: {:.1} W / 135W AC",
-                            self.peak_cpu_power + self.peak_gpu_power
-                        ))
-                        .size(9.5_f32)
-                        .color(pal.text_muted),
+                        RichText::new(l.kpi_peak_power(self.peak_cpu_power + self.peak_gpu_power))
+                            .size(9.5_f32)
+                            .color(pal.text_muted),
                     );
                 });
             }
             2 => {
                 self.nitro_card_frame().show(ui, |ui| {
                     ui.label(
-                        RichText::new("DUAL TURBINES")
+                        RichText::new(l.kpi_turbine_utilization())
                             .size(9.5_f32)
                             .strong()
                             .color(pal.text_muted),
@@ -1997,21 +2291,23 @@ impl AcerSenseApp {
             3 => {
                 self.nitro_card_frame().show(ui, |ui| {
                     ui.label(
-                        RichText::new("POWER SOURCE")
+                        RichText::new(l.power_delivery_title())
                             .size(9.5_f32)
                             .strong()
                             .color(pal.text_muted),
                     );
                     let (p_txt, p_col) = if self.telemetry.ac_connected {
-                        ("135W AC MAINS", pal.success)
+                        (l.footer_ac().to_string(), pal.success)
                     } else {
-                        ("ON BATTERY", pal.warning)
+                        (l.footer_battery(self.telemetry.bat_pct), pal.warning)
                     };
                     ui.label(RichText::new(p_txt).size(15.0_f32).strong().color(p_col));
                     ui.label(
                         RichText::new(format!(
-                            "Bat: {}% • Salud: {:.0}%",
-                            self.telemetry.bat_pct, self.telemetry.bat_health
+                            "Bat: {}% • {}: {:.0}%",
+                            self.telemetry.bat_pct,
+                            if l == Language::Es { "Salud" } else { "Health" },
+                            self.telemetry.bat_health
                         ))
                         .size(9.5_f32)
                         .color(pal.text_muted),
@@ -2047,7 +2343,7 @@ impl AcerSenseApp {
             // Row 1: Heading and Mode Selector
             ui.horizontal(|ui| {
                 ui.heading(
-                    RichText::new("📊 Live Hardware Oscilloscope")
+                    RichText::new(l.oscilloscope_title())
                         .size(15.5_f32)
                         .strong()
                         .color(pal.text_primary),
@@ -2057,7 +2353,7 @@ impl AcerSenseApp {
                     if ui
                         .selectable_label(
                             is_fans,
-                            RichText::new("🌀 Turbines")
+                            RichText::new(l.graph_turbines())
                                 .color(if is_fans {
                                     pal.secondary
                                 } else {
@@ -2073,7 +2369,7 @@ impl AcerSenseApp {
                     if ui
                         .selectable_label(
                             is_pwr,
-                            RichText::new("🔌 Power (W)")
+                            RichText::new(l.graph_power())
                                 .color(if is_pwr {
                                     pal.secondary
                                 } else {
@@ -2089,7 +2385,7 @@ impl AcerSenseApp {
                     if ui
                         .selectable_label(
                             is_work,
-                            RichText::new("⚡ Load (%)")
+                            RichText::new(l.graph_workload())
                                 .color(if is_work {
                                     pal.secondary
                                 } else {
@@ -2105,7 +2401,7 @@ impl AcerSenseApp {
                     if ui
                         .selectable_label(
                             is_therm,
-                            RichText::new("🌡 Thermals")
+                            RichText::new(l.graph_thermals())
                                 .color(if is_therm {
                                     pal.secondary
                                 } else {
@@ -2124,7 +2420,7 @@ impl AcerSenseApp {
             // Row 2: Timeline controls & live indicator
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new("Window:")
+                    RichText::new(l.window_label())
                         .size(10.5_f32)
                         .color(pal.text_muted),
                 );
@@ -2144,9 +2440,9 @@ impl AcerSenseApp {
                 }
                 ui.add_space(6.0_f32);
                 let p_label = if self.graph_paused {
-                    "▶ Resume"
+                    l.graph_resume()
                 } else {
-                    "⏸ Pause"
+                    l.graph_pause()
                 };
                 if ui
                     .button(
@@ -2166,14 +2462,14 @@ impl AcerSenseApp {
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     if self.graph_paused {
                         ui.label(
-                            RichText::new("⏸ FROZEN")
+                            RichText::new(l.status_frozen())
                                 .size(10.0_f32)
                                 .strong()
                                 .color(pal.warning),
                         );
                     } else {
                         ui.label(
-                            RichText::new("🟢 LIVE 60 FPS")
+                            RichText::new(l.status_live())
                                 .size(10.0_f32)
                                 .strong()
                                 .color(pal.success),
@@ -2194,7 +2490,7 @@ impl AcerSenseApp {
             ui.horizontal_wrapped(|ui| match self.monitoring_graph_mode {
                 MonitoringGraphMode::Thermals => {
                     ui.label(
-                        RichText::new("● CPU Package:")
+                        RichText::new(l.legend_cpu_package())
                             .color(pal.secondary)
                             .strong(),
                     );
@@ -2204,14 +2500,14 @@ impl AcerSenseApp {
                             .monospace(),
                     );
                     ui.add_space(14.0_f32);
-                    ui.label(RichText::new("● Discrete GPU:").color(pal.primary).strong());
+                    ui.label(RichText::new(l.legend_discrete_gpu()).color(pal.primary).strong());
                     ui.label(
                         RichText::new(format!("{:.1}°C", self.telemetry.gpu_temp))
                             .color(pal.text_primary)
                             .monospace(),
                     );
                     ui.add_space(14.0_f32);
-                    ui.label(RichText::new("● NVMe SSD:").color(pal.warning).strong());
+                    ui.label(RichText::new(l.legend_nvme()).color(pal.warning).strong());
                     ui.label(
                         RichText::new(format!("{:.1}°C", self.telemetry.nvme_temp))
                             .color(pal.text_primary)
@@ -2219,7 +2515,7 @@ impl AcerSenseApp {
                     );
                 }
                 MonitoringGraphMode::Workload => {
-                    ui.label(RichText::new("● CPU Load:").color(pal.secondary).strong());
+                    ui.label(RichText::new(l.legend_cpu_load()).color(pal.secondary).strong());
                     ui.label(
                         RichText::new(format!("{:.1}%", self.telemetry.cpu_load))
                             .color(pal.text_primary)
@@ -2227,7 +2523,7 @@ impl AcerSenseApp {
                     );
                     ui.add_space(14.0_f32);
                     ui.label(
-                        RichText::new("● GPU Core Load:")
+                        RichText::new(l.legend_gpu_load())
                             .color(pal.primary)
                             .strong(),
                     );
@@ -2239,7 +2535,7 @@ impl AcerSenseApp {
                 }
                 MonitoringGraphMode::Power => {
                     ui.label(
-                        RichText::new("● CPU Package:")
+                        RichText::new(l.legend_cpu_package())
                             .color(pal.secondary)
                             .strong(),
                     );
@@ -2249,7 +2545,7 @@ impl AcerSenseApp {
                             .monospace(),
                     );
                     ui.add_space(14.0_f32);
-                    ui.label(RichText::new("● Discrete GPU:").color(pal.primary).strong());
+                    ui.label(RichText::new(l.legend_discrete_gpu()).color(pal.primary).strong());
                     ui.label(
                         RichText::new(format!(
                             "{:.1} W",
@@ -2269,7 +2565,7 @@ impl AcerSenseApp {
                         } else {
                             0.0
                         };
-                    ui.label(RichText::new("● Combined:").color(pal.success).strong());
+                    ui.label(RichText::new(l.legend_combined()).color(pal.success).strong());
                     ui.label(
                         RichText::new(format!("{:.1} W", total_w))
                             .color(pal.text_primary)
@@ -2277,14 +2573,14 @@ impl AcerSenseApp {
                     );
                 }
                 MonitoringGraphMode::Turbines => {
-                    ui.label(RichText::new("● CPU Fan:").color(pal.secondary).strong());
+                    ui.label(RichText::new(l.legend_cpu_fan()).color(pal.secondary).strong());
                     ui.label(
                         RichText::new(format!("{} RPM", self.telemetry.cpu_rpm))
                             .color(pal.text_primary)
                             .monospace(),
                     );
                     ui.add_space(14.0_f32);
-                    ui.label(RichText::new("● GPU Fan:").color(pal.primary).strong());
+                    ui.label(RichText::new(l.legend_gpu_fan()).color(pal.primary).strong());
                     ui.label(
                         RichText::new(format!("{} RPM", self.telemetry.gpu_rpm))
                             .color(pal.text_primary)
@@ -2334,10 +2630,11 @@ impl AcerSenseApp {
 
     fn render_cpu_card(&self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         self.nitro_card_frame().show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.heading(
-                    RichText::new("🖥 CPU Silicon Architecture")
+                    RichText::new(l.cpu_arch_title())
                         .size(14.5_f32)
                         .strong()
                         .color(pal.secondary),
@@ -2359,9 +2656,17 @@ impl AcerSenseApp {
                 });
             });
             ui.label(
-                RichText::new(format!("{} (4 Cores / 8 Threads)", self.telemetry.cpu_name))
-                    .size(11.0_f32)
-                    .color(pal.text_muted),
+                RichText::new(format!(
+                    "{} {}",
+                    self.telemetry.cpu_name,
+                    if l == Language::Es {
+                        "(4 Núcleos / 8 Hilos)"
+                    } else {
+                        "(4 Cores / 8 Threads)"
+                    }
+                ))
+                .size(11.0_f32)
+                .color(pal.text_muted),
             );
             ui.add_space(4.0_f32);
             ui.separator();
@@ -2370,7 +2675,7 @@ impl AcerSenseApp {
             // Utilization bar
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new("Instant Load:")
+                    RichText::new(l.instant_load_label())
                         .size(11.0_f32)
                         .color(pal.text_muted),
                 );
@@ -2400,7 +2705,7 @@ impl AcerSenseApp {
             let freq_pct = (self.telemetry.cpu_clock as f32 / 4500.0_f32) * 100.0_f32;
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new("Dynamic Boost Frequency:")
+                    RichText::new(l.dynamic_boost_label())
                         .size(11.0_f32)
                         .color(pal.text_muted),
                 );
@@ -2423,18 +2728,23 @@ impl AcerSenseApp {
             // Linux Governance
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new(format!(
-                        "Gov: {} | EPP: {}",
-                        self.telemetry.cpu_governor, self.telemetry.cpu_epp
-                    ))
+                    RichText::new(l.active_governor_label(&self.telemetry.cpu_governor, &self.telemetry.cpu_epp))
                     .size(10.0_f32)
                     .color(pal.text_muted),
                 );
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     let turbo_text = if self.telemetry.cpu_turbo {
-                        "INTEL TURBO: ACTIVE"
+                        if l == Language::Es {
+                            "INTEL TURBO: ACTIVO"
+                        } else {
+                            "INTEL TURBO: ACTIVE"
+                        }
                     } else {
-                        "TURBO: OFF"
+                        if l == Language::Es {
+                            "TURBO: DESACTIVADO"
+                        } else {
+                            "TURBO: OFF"
+                        }
                     };
                     let turbo_col = if self.telemetry.cpu_turbo {
                         pal.success
@@ -2454,15 +2764,16 @@ impl AcerSenseApp {
 
     fn render_gpu_card(&self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         self.nitro_card_frame().show(ui, |ui| {
             ui.horizontal(|ui| {
-                ui.heading(RichText::new("🎮 Discrete NVIDIA Graphics").size(14.5_f32).strong().color(pal.primary));
+                ui.heading(RichText::new(l.gpu_discrete_title()).size(14.5_f32).strong().color(pal.primary));
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     if self.telemetry.gpu_active {
                         let temp_c = if self.telemetry.gpu_temp >= 80.0 { pal.primary } else { pal.success };
                         ui.label(RichText::new(format!("{:.1} °C", self.telemetry.gpu_temp)).size(14.0_f32).strong().color(temp_c));
                     } else {
-                        ui.label(RichText::new("PCIe D3cold STANDBY").size(11.0_f32).strong().color(pal.text_muted));
+                        ui.label(RichText::new(l.gpu_standby_badge()).size(11.0_f32).strong().color(pal.text_muted));
                     }
                 });
             });
@@ -2474,7 +2785,7 @@ impl AcerSenseApp {
             if self.telemetry.gpu_active {
                 // Silicon core load
                 ui.horizontal(|ui| {
-                    ui.label(RichText::new("Silicon Utilization:").size(11.0_f32).color(pal.text_muted));
+                    ui.label(RichText::new(l.silicon_utilization()).size(11.0_f32).color(pal.text_muted));
                     ui.label(RichText::new(format!("{:.1}%", self.telemetry.gpu_load)).size(11.5_f32).strong().color(pal.text_primary));
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                         ui.label(RichText::new(format!("{} MHz • {:.1} W", self.telemetry.gpu_clock, self.telemetry.gpu_power)).size(11.0_f32).monospace().color(pal.primary));
@@ -2487,7 +2798,7 @@ impl AcerSenseApp {
                 // VRAM Bar
                 let vram_pct = if self.telemetry.gpu_vram_total > 0.0 { (self.telemetry.gpu_vram_used / self.telemetry.gpu_vram_total) * 100.0 } else { 0.0 };
                 ui.horizontal(|ui| {
-                    ui.label(RichText::new("Dedicated VRAM:").size(11.0_f32).color(pal.text_muted));
+                    ui.label(RichText::new(l.dedicated_vram()).size(11.0_f32).color(pal.text_muted));
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                         ui.label(RichText::new(format!("{:.2} / {:.1} GB GDDR6 ({:.0}%)", self.telemetry.gpu_vram_used, self.telemetry.gpu_vram_total, vram_pct)).size(10.5_f32).monospace().color(pal.text_primary));
                     });
@@ -2498,17 +2809,19 @@ impl AcerSenseApp {
 
                 ui.label(RichText::new(format!("Driver: v{} • Bus PCIe 0000:01:00.0 (Active)", self.telemetry.driver_version)).size(10.0_f32).color(pal.text_muted));
             } else {
-                ui.label(RichText::new("PCIe D3cold Ultra-Low Power State (0.0 W)").size(12.0_f32).color(pal.text_muted));
-                ui.label(RichText::new("GPU turbine is in Zero-RPM silent mode to conserve energy and eliminate noise.").size(10.5_f32).color(pal.text_muted));
+                let (d3_t1, d3_t2) = l.gpu_d3cold_desc();
+                ui.label(RichText::new(d3_t1).size(12.0_f32).color(pal.text_muted));
+                ui.label(RichText::new(d3_t2).size(10.5_f32).color(pal.text_muted));
             }
         });
     }
 
     fn render_memory_card(&self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         self.nitro_card_frame().show(ui, |ui| {
             ui.heading(
-                RichText::new("💾 Memory Subsystem")
+                RichText::new(l.memory_subsystem_title())
                     .size(13.5_f32)
                     .strong()
                     .color(pal.text_primary),
@@ -2518,7 +2831,7 @@ impl AcerSenseApp {
 
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new("Physical RAM:")
+                    RichText::new(l.physical_ram())
                         .size(11.0_f32)
                         .color(pal.text_muted),
                 );
@@ -2542,7 +2855,7 @@ impl AcerSenseApp {
 
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new("Virtual Swap:")
+                    RichText::new(l.virtual_swap())
                         .size(11.0_f32)
                         .color(pal.text_muted),
                 );
@@ -2567,10 +2880,11 @@ impl AcerSenseApp {
 
     fn render_storage_card(&self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         self.nitro_card_frame().show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.heading(
-                    RichText::new("💽 NVMe Solid State Drive")
+                    RichText::new(l.nvme_storage_title())
                         .size(13.5_f32)
                         .strong()
                         .color(pal.text_primary),
@@ -2594,19 +2908,19 @@ impl AcerSenseApp {
 
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new("Controller State:")
+                    RichText::new(l.controller_state_label())
                         .size(11.0_f32)
                         .color(pal.text_muted),
                 );
                 ui.label(
-                    RichText::new("Online / Optimal")
+                    RichText::new(l.controller_state_val())
                         .size(11.0_f32)
                         .color(pal.success)
                         .strong(),
                 );
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     ui.label(
-                        RichText::new(format!("Life Integrity: {}%", self.telemetry.nvme_health))
+                        RichText::new(l.life_integrity(self.telemetry.nvme_health))
                             .size(11.0_f32)
                             .color(pal.text_primary),
                     );
@@ -2617,19 +2931,20 @@ impl AcerSenseApp {
 
     fn render_power_card(&self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         self.nitro_card_frame().show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.heading(
-                    RichText::new("⚡ Power Delivery & Battery")
+                    RichText::new(l.power_delivery_title())
                         .size(13.5_f32)
                         .strong()
                         .color(pal.text_primary),
                 );
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     let (src_txt, src_col) = if self.telemetry.ac_connected {
-                        ("⚡ 135W AC MAINS", pal.success)
+                        (l.footer_ac().to_string(), pal.success)
                     } else {
-                        ("🔋 BATTERY", pal.warning)
+                        (l.footer_battery(self.telemetry.bat_pct), pal.warning)
                     };
                     ui.label(
                         RichText::new(src_txt)
@@ -2645,8 +2960,10 @@ impl AcerSenseApp {
             ui.horizontal(|ui| {
                 ui.label(
                     RichText::new(format!(
-                        "Level: {}% ({})",
-                        self.telemetry.bat_pct, self.telemetry.bat_status
+                        "{}: {}% ({})",
+                        if l == Language::Es { "Nivel" } else { "Level" },
+                        self.telemetry.bat_pct,
+                        self.telemetry.bat_status
                     ))
                     .size(11.0_f32)
                     .color(pal.text_primary)
@@ -2655,8 +2972,10 @@ impl AcerSenseApp {
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     ui.label(
                         RichText::new(format!(
-                            "{:.2} V • Health: {:.0}%",
-                            self.telemetry.bat_voltage, self.telemetry.bat_health
+                            "{:.2} V • {}: {:.0}%",
+                            self.telemetry.bat_voltage,
+                            if l == Language::Es { "Salud" } else { "Health" },
+                            self.telemetry.bat_health
                         ))
                         .size(10.5_f32)
                         .color(pal.text_muted)
@@ -2679,8 +2998,12 @@ impl AcerSenseApp {
 
             ui.label(
                 RichText::new(format!(
-                    "Cell: {} • Cycles: {} • Care 80%: {}",
-                    self.telemetry.bat_model,
+                    "{} • Cycles: {} • Care 80%: {}",
+                    if l == Language::Es {
+                        format!("Celda: {}", self.telemetry.bat_model)
+                    } else {
+                        format!("Cell: {}", self.telemetry.bat_model)
+                    },
                     self.telemetry.bat_cycles,
                     if self.config.battery_health_80 {
                         "ON"
@@ -2696,20 +3019,17 @@ impl AcerSenseApp {
 
     fn render_turbines_card(&self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         self.nitro_card_frame().show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.heading(
-                    RichText::new("🌀 AeroBlade Turbines")
+                    RichText::new(l.aeroblade_turbines_title())
                         .size(13.5_f32)
                         .strong()
                         .color(pal.text_primary),
                 );
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    let cb_txt = if self.config.coolboost {
-                        "CoolBoost ON"
-                    } else {
-                        "CoolBoost OFF"
-                    };
+                    let cb_txt = l.coolboost_text(self.config.coolboost);
                     let cb_col = if self.config.coolboost {
                         pal.success
                     } else {
@@ -2724,7 +3044,7 @@ impl AcerSenseApp {
             let cpu_pct = (self.telemetry.cpu_rpm as f32 / 5660.0_f32) * 100.0_f32;
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new("CPU Turbine:")
+                    RichText::new(l.cpu_turbine_label())
                         .size(11.0_f32)
                         .color(pal.text_muted),
                 );
@@ -2745,7 +3065,7 @@ impl AcerSenseApp {
             let gpu_pct = (self.telemetry.gpu_rpm as f32 / 6000.0_f32) * 100.0_f32;
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new("GPU Turbine:")
+                    RichText::new(l.gpu_turbine_label())
                         .size(11.0_f32)
                         .color(pal.text_muted),
                 );
@@ -2767,28 +3087,26 @@ impl AcerSenseApp {
     /// Renders Tab 3: Tactical Operating Scenarios & Power Profiles
     fn render_scenarios_tab(&mut self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         let current_p = self.config.profile.clone();
 
         // 1. Scenarios Header Card
         self.nitro_card_frame().show(ui, |ui| {
             ui.horizontal(|ui| {
-                ui.heading(RichText::new("⚡ Operating Scenarios & Power Envelopes").size(16.0_f32).strong().color(pal.text_primary));
+                ui.heading(RichText::new(l.scenarios_header()).size(16.0_f32).strong().color(pal.text_primary));
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    ui.label(RichText::new(format!("CURRENT: {}", current_p.to_uppercase())).size(12.0_f32).strong().color(pal.primary));
+                    ui.label(RichText::new(l.current_badge(&current_p)).size(12.0_f32).strong().color(pal.primary));
                 });
             });
             ui.separator();
             ui.add_space(6.0_f32);
 
-            let scenarios = [
-                ("quiet", "🌱 Quiet / Eco Stealth", "Maximum battery endurance & acoustic silence (<22 dBA). Limits CPU to 15W TDP and maintains fans at whisper speed.", pal.success, "PL1: 15W | Fan: Silent Min | Temp: Cold"),
-                ("balanced", "⚡ Balanced Performance", "Optimal daily configuration for security audits, development, and adaptive cooling under varying loads.", pal.secondary, "PL1: 45W | Fan: Auto BIOS | Temp: Nominal"),
-                ("performance", "🔥 Performance Gaming", "Unlocked CPU clock speeds (up to 4.50 GHz boost) with accelerated cooling curve for heavy multitasking.", pal.warning, "PL1: 45W+ | CoolBoost: Active | Temp: Active"),
-                ("turbo", "🚀 Extreme Combat Turbo", "Full 100% PWM fan saturation (5660/6000 RPM) with maximum PL2 power envelope for password cracking and stress loads.", pal.primary, "PL2: 65W | GPU TGP: 75W | Fan: 100% Turbo"),
-            ];
+            let scenarios = l.scenario_items();
+            let colors = [pal.success, pal.secondary, pal.warning, pal.primary];
 
-            for (id, title, desc, col, specs) in scenarios {
-                let is_active = current_p == id;
+            for (i, (id, title, desc, specs)) in scenarios.iter().enumerate() {
+                let col = colors[i % colors.len()];
+                let is_active = current_p == *id;
                 let bg_col = if is_active { pal.card_hover } else { pal.panel };
                 let border_col = if is_active { col } else { pal.border };
 
@@ -2799,26 +3117,26 @@ impl AcerSenseApp {
                     .inner_margin(Margin::same(12.0_f32))
                     .show(ui, |ui| {
                         ui.horizontal(|ui| {
-                            ui.label(RichText::new(title).size(14.0_f32).strong().color(if is_active { col } else { pal.text_primary }));
+                            ui.label(RichText::new(*title).size(14.0_f32).strong().color(if is_active { col } else { pal.text_primary }));
                             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                                 if is_active {
-                                    ui.label(RichText::new("● ACTIVE").size(10.5_f32).strong().color(col));
+                                    ui.label(RichText::new(l.active_indicator()).size(10.5_f32).strong().color(col));
                                 } else {
-                                    let btn = egui::Button::new(RichText::new("Engage").size(10.5_f32).color(pal.text_primary))
+                                    let btn = egui::Button::new(RichText::new(l.engage_button()).size(10.5_f32).color(pal.text_primary))
                                         .fill(pal.card)
                                         .stroke(Stroke::new(1.0_f32, pal.border))
                                         .rounding(Rounding::same(4.0_f32));
                                     if ui.add(btn).clicked() {
-                                        self.config.profile = id.into();
-                                        let _ = self.cmd_tx.send(HardwareCommand::SetPowerProfile(id.into()));
+                                        self.config.profile = (*id).into();
+                                        let _ = self.cmd_tx.send(HardwareCommand::SetPowerProfile((*id).into()));
                                     }
                                 }
                             });
                         });
                         ui.add_space(2.0_f32);
-                        ui.label(RichText::new(desc).size(11.0_f32).color(pal.text_muted));
+                        ui.label(RichText::new(*desc).size(11.0_f32).color(pal.text_muted));
                         ui.add_space(4.0_f32);
-                        ui.label(RichText::new(specs).size(10.0_f32).monospace().color(col));
+                        ui.label(RichText::new(*specs).size(10.0_f32).monospace().color(col));
                     });
                 ui.add_space(6.0_f32);
             }
@@ -2829,7 +3147,7 @@ impl AcerSenseApp {
         // 2. Real-Time Power State Card
         self.nitro_card_frame().show(ui, |ui| {
             ui.heading(
-                RichText::new("🔌 Energy Governance & Linux Power State")
+                RichText::new(l.energy_governance_title())
                     .size(14.0_f32)
                     .strong()
                     .color(pal.text_primary),
@@ -2845,7 +3163,7 @@ impl AcerSenseApp {
                 };
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new("Real-Time Dissipation:")
+                    RichText::new(l.realtime_dissipation_label())
                         .size(11.0_f32)
                         .color(pal.text_muted),
                 );
@@ -2868,18 +3186,23 @@ impl AcerSenseApp {
             ui.add_space(4.0_f32);
             ui.horizontal(|ui| {
                 ui.label(
-                    RichText::new(format!(
-                        "Active Governor: {} | EPP: {}",
-                        self.telemetry.cpu_governor, self.telemetry.cpu_epp
-                    ))
+                    RichText::new(l.active_governor_label(&self.telemetry.cpu_governor, &self.telemetry.cpu_epp))
                     .size(10.5_f32)
                     .color(pal.text_muted),
                 );
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     let t_txt = if self.telemetry.cpu_turbo {
-                        "INTEL TURBO: ACTIVE"
+                        if l == Language::Es {
+                            "INTEL TURBO: ACTIVO"
+                        } else {
+                            "INTEL TURBO: ACTIVE"
+                        }
                     } else {
-                        "INTEL TURBO: LOCKED"
+                        if l == Language::Es {
+                            "INTEL TURBO: BLOQUEADO"
+                        } else {
+                            "INTEL TURBO: LOCKED"
+                        }
                     };
                     let t_col = if self.telemetry.cpu_turbo {
                         pal.success
@@ -2895,10 +3218,11 @@ impl AcerSenseApp {
     /// Renders Tab 4: 4-Zone Pulsar Keyboard Lighting Studio
     fn render_keyboard_rgb_tab(&mut self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
         self.nitro_card_frame().show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.heading(
-                    RichText::new("🌈 4-Zone Pulsar Keyboard Lighting Studio")
+                    RichText::new(l.rgb_header())
                         .size(16.0_f32)
                         .strong()
                         .color(pal.text_primary),
@@ -2930,20 +3254,14 @@ impl AcerSenseApp {
 
             // 2. Zone Selection Bar
             ui.label(
-                RichText::new("Select Target Keyboard Zone:")
+                RichText::new(l.select_zone_label())
                     .strong()
                     .size(12.5_f32)
                     .color(pal.text_primary),
             );
             ui.add_space(4.0_f32);
             ui.horizontal_wrapped(|ui| {
-                let zones = [
-                    (0, "🌐 All Zones (1-4)"),
-                    (1, "🎮 Zone 1 (WASD)"),
-                    (2, "⌨ Zone 2 (Center-Left)"),
-                    (3, "⌨ Zone 3 (Center-Right)"),
-                    (4, "🔢 Zone 4 (Numpad)"),
-                ];
+                let zones = l.rgb_zones();
 
                 for (z_idx, z_label) in zones {
                     let is_sel = self.rgb_selected_zone == z_idx;
@@ -2969,7 +3287,7 @@ impl AcerSenseApp {
 
             // 3. Tactical Color Palette (Quick-Apply Swatches)
             ui.label(
-                RichText::new("Quick Tactical Palette:")
+                RichText::new(l.quick_palette_title())
                     .strong()
                     .size(12.5_f32)
                     .color(pal.text_primary),
@@ -3010,7 +3328,7 @@ impl AcerSenseApp {
                                     b,
                                 });
                             }
-                            self.rgb_last_status = format!("Applied {} to All Zones", name);
+                            self.rgb_last_status = l.applied_to_all_zones(name);
                         } else {
                             let _ = self.cmd_tx.send(HardwareCommand::SetRgbZone {
                                 zone: self.rgb_selected_zone,
@@ -3018,8 +3336,7 @@ impl AcerSenseApp {
                                 g,
                                 b,
                             });
-                            self.rgb_last_status =
-                                format!("Applied {} to Zone {}", name, self.rgb_selected_zone);
+                            self.rgb_last_status = l.applied_to_zone(name, self.rgb_selected_zone);
                         }
                     }
                 }
@@ -3029,7 +3346,7 @@ impl AcerSenseApp {
 
             // 4. Custom RGB Sliders & Live Swatch
             ui.label(
-                RichText::new("Custom Color Mixer:")
+                RichText::new(l.custom_mixer_title())
                     .strong()
                     .size(12.5_f32)
                     .color(pal.text_primary),
@@ -3060,7 +3377,7 @@ impl AcerSenseApp {
                     });
                     ui.add_space(2.0_f32);
                     let push_btn = egui::Button::new(
-                        RichText::new("⚡ Push Color to Selected Zone")
+                        RichText::new(l.push_color_btn())
                             .strong()
                             .color(pal.text_primary),
                     )
@@ -3078,8 +3395,7 @@ impl AcerSenseApp {
                                     b,
                                 });
                             }
-                            self.rgb_last_status =
-                                format!("Pushed #{:02X}{:02X}{:02X} to All Zones", r, g, b);
+                            self.rgb_last_status = l.pushed_to_all_zones(r, g, b);
                         } else {
                             let _ = self.cmd_tx.send(HardwareCommand::SetRgbZone {
                                 zone: self.rgb_selected_zone,
@@ -3087,10 +3403,7 @@ impl AcerSenseApp {
                                 g,
                                 b,
                             });
-                            self.rgb_last_status = format!(
-                                "Pushed #{:02X}{:02X}{:02X} to Zone {}",
-                                r, g, b, self.rgb_selected_zone
-                            );
+                            self.rgb_last_status = l.pushed_to_zone(r, g, b, self.rgb_selected_zone);
                         }
                     }
                 });
@@ -3102,7 +3415,7 @@ impl AcerSenseApp {
 
             // 5. Curated Multi-Zone Master Presets
             ui.label(
-                RichText::new("Acer Nitro Multi-Zone Presets:")
+                RichText::new(l.master_presets_title())
                     .strong()
                     .size(12.5_f32)
                     .color(pal.text_primary),
@@ -3127,7 +3440,7 @@ impl AcerSenseApp {
                             .rounding(Rounding::same(5.0_f32));
                     if ui.add(p_btn).clicked() {
                         let _ = self.cmd_tx.send(HardwareCommand::SetRgbPreset(id.into()));
-                        self.rgb_last_status = format!("Applied preset: {}", label);
+                        self.rgb_last_status = l.applied_preset(label);
                     }
                 }
             });
@@ -3137,16 +3450,54 @@ impl AcerSenseApp {
     /// Renders Tab 5: Hardware Settings, Gaming Locks & Self-Diagnostics
     fn render_settings_tab(&mut self, ui: &mut egui::Ui) {
         let pal = self.pal();
+        let l = self.language;
 
-        // 0. Visual Ergonomics & Human Color Themes
+        // 0. Language Selection Card (Español / English)
         self.nitro_card_frame().show(ui, |ui| {
             ui.horizontal(|ui| {
-                ui.heading(RichText::new("🎨 Paleta de Color & Ergonomía Visual").size(15.0_f32).strong().color(pal.text_primary));
+                ui.heading(RichText::new(l.settings_lang_header()).size(15.0_f32).strong().color(pal.text_primary));
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    ui.label(RichText::new(format!("ACTIVO: {}", self.language.badge())).size(11.5_f32).strong().color(pal.primary));
+                });
+            });
+            ui.label(RichText::new(l.settings_lang_subtitle()).size(11.0_f32).color(pal.text_muted));
+            ui.add_space(6.0_f32);
+            ui.separator();
+            ui.add_space(8.0_f32);
+
+            ui.horizontal_wrapped(|ui| {
+                for lang in Language::ALL {
+                    let is_active = self.language == lang;
+                    let flag = lang.badge().split_whitespace().next().unwrap_or("");
+                    let btn_label = format!("{} {}", flag, lang.name());
+                    let btn = egui::Button::new(
+                        RichText::new(btn_label)
+                            .size(12.0_f32)
+                            .strong()
+                            .color(if is_active { pal.primary } else { pal.text_primary })
+                    )
+                    .fill(if is_active { Color32::from_rgba_unmultiplied(pal.primary.r(), pal.primary.g(), pal.primary.b(), 32) } else { pal.card })
+                    .stroke(Stroke::new(if is_active { 1.5_f32 } else { 1.0_f32 }, if is_active { pal.primary } else { pal.border }))
+                    .rounding(Rounding::same(6.0_f32));
+
+                    if ui.add_sized([135.0_f32, 32.0_f32], btn).clicked() {
+                        self.set_language(lang);
+                    }
+                }
+            });
+        });
+
+        ui.add_space(10.0_f32);
+
+        // 1. Visual Ergonomics & Human Color Themes
+        self.nitro_card_frame().show(ui, |ui| {
+            ui.horizontal(|ui| {
+                ui.heading(RichText::new(l.settings_theme_header()).size(15.0_f32).strong().color(pal.text_primary));
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                     ui.label(RichText::new(format!("ACTIVO: {}", self.theme_mode.name())).size(11.5_f32).strong().color(pal.primary));
                 });
             });
-            ui.label(RichText::new("Diseño optimizado para confort humano, reduciendo el estrés retinal y mejorando la legibilidad técnica en sesiones prolongadas.").size(11.0_f32).color(pal.text_muted));
+            ui.label(RichText::new(l.settings_theme_subtitle()).size(11.0_f32).color(pal.text_muted));
             ui.add_space(6.0_f32);
             ui.separator();
             ui.add_space(8.0_f32);
@@ -3171,6 +3522,12 @@ impl AcerSenseApp {
                 ThemeMode::CinnamorollCloud,
                 ThemeMode::MyMelodySoft,
                 ThemeMode::PompompurinCafe,
+                ThemeMode::AdoRose,
+                ThemeMode::Windows10,
+                ThemeMode::Windows11,
+                ThemeMode::SpotlightDark,
+                ThemeMode::SpotlightLight,
+                ThemeMode::SuikaMelon,
             ];
 
             for t in all_themes {
@@ -3200,9 +3557,9 @@ impl AcerSenseApp {
 
                             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                                 if is_sel {
-                                    ui.label(RichText::new("✔ ACTIVO").size(11.0_f32).strong().color(pal.success));
+                                    ui.label(RichText::new(l.active_theme_badge()).size(11.0_f32).strong().color(pal.success));
                                 } else {
-                                    let btn = egui::Button::new(RichText::new("Seleccionar").size(11.0_f32).color(pal.text_primary))
+                                    let btn = egui::Button::new(RichText::new(l.select_button()).size(11.0_f32).color(pal.text_primary))
                                         .fill(pal.card)
                                         .stroke(Stroke::new(1.0_f32, pal.border))
                                         .rounding(Rounding::same(5.0_f32));
@@ -3213,7 +3570,7 @@ impl AcerSenseApp {
                             });
                         });
                         ui.add_space(2.0_f32);
-                        ui.label(RichText::new(t.description()).size(10.5_f32).color(pal.text_muted));
+                        ui.label(RichText::new(t.description_lang(l)).size(10.5_f32).color(pal.text_muted));
                     });
                 ui.add_space(6.0_f32);
             }
@@ -3221,70 +3578,70 @@ impl AcerSenseApp {
 
         ui.add_space(10.0_f32);
 
-        // 1. Battery & Power Delivery Protection Card
+        // 2. Battery & Power Delivery Protection Card
         self.nitro_card_frame().show(ui, |ui| {
-            ui.heading(RichText::new("🔋 Battery & Lithium Care System").size(15.0_f32).strong().color(pal.text_primary));
+            ui.heading(RichText::new(l.battery_care_header()).size(15.0_f32).strong().color(pal.text_primary));
             ui.separator();
             ui.add_space(6.0_f32);
 
             let mut limit = self.config.battery_health_80;
             let is_active = limit;
-            if ui.checkbox(&mut limit, RichText::new("80% Battery Health Protection Limiter").size(13.0_f32).strong().color(if is_active { pal.success } else { pal.text_primary })).changed() {
+            if ui.checkbox(&mut limit, RichText::new(l.battery_limiter_checkbox()).size(13.0_f32).strong().color(if is_active { pal.success } else { pal.text_primary })).changed() {
                 self.config.battery_health_80 = limit;
                 let _ = self.cmd_tx.send(HardwareCommand::SetBatteryLimit(limit));
             }
-            ui.label(RichText::new("Stops charging at ~80% capacity to prevent chemical degradation and battery swelling during continuous AC mains usage.").size(10.5_f32).color(pal.text_muted));
+            ui.label(RichText::new(l.battery_limiter_desc()).size(10.5_f32).color(pal.text_muted));
             ui.add_space(6.0_f32);
 
             ui.horizontal(|ui| {
-                ui.label(RichText::new(format!("Cell Model: {} • Cycles: {} • Chemistry Health: {:.0}%", self.telemetry.bat_model, self.telemetry.bat_cycles, self.telemetry.bat_health)).size(10.5_f32).monospace().color(pal.text_muted));
+                ui.label(RichText::new(l.battery_specs_line(&self.telemetry.bat_model, self.telemetry.bat_cycles, self.telemetry.bat_health)).size(10.5_f32).monospace().color(pal.text_muted));
             });
         });
 
         ui.add_space(10.0_f32);
 
-        // 2. Tactical Gaming Locks & Display Enhancement
+        // 3. Tactical Gaming Locks & Display Enhancement
         self.nitro_card_frame().show(ui, |ui| {
-            ui.heading(RichText::new("🎮 Tactical Gaming Locks & Hardware Features").size(15.0_f32).strong().color(pal.text_primary));
+            ui.heading(RichText::new(l.gaming_locks_header()).size(15.0_f32).strong().color(pal.text_primary));
             ui.separator();
             ui.add_space(6.0_f32);
 
             let mut win_lock = self.config.winkey_locked;
-            if ui.checkbox(&mut win_lock, RichText::new("🔒 Lock Windows / Super Key during Gaming").size(12.5_f32).color(pal.text_primary).strong()).changed() {
+            if ui.checkbox(&mut win_lock, RichText::new(l.winkey_lock_label()).size(12.5_f32).color(pal.text_primary).strong()).changed() {
                 self.config.winkey_locked = win_lock;
                 let _ = gaming::set_winkey_lock(win_lock);
                 save_config(&self.config);
             }
-            ui.label(RichText::new("Disables the Super key scancode to avoid desktop dropouts during full-screen operations.").size(10.5_f32).color(pal.text_muted));
+            ui.label(RichText::new(l.winkey_lock_desc()).size(10.5_f32).color(pal.text_muted));
             ui.add_space(8.0_f32);
 
             let mut tp_lock = self.config.touchpad_locked;
-            if ui.checkbox(&mut tp_lock, RichText::new("🚫 Disable Internal Touchpad").size(12.5_f32).color(pal.text_primary).strong()).changed() {
+            if ui.checkbox(&mut tp_lock, RichText::new(l.touchpad_lock_label()).size(12.5_f32).color(pal.text_primary).strong()).changed() {
                 self.config.touchpad_locked = tp_lock;
                 let _ = gaming::set_touchpad_lock(tp_lock);
                 save_config(&self.config);
             }
-            ui.label(RichText::new("Suppresses touchpad hardware interrupts to eliminate accidental palm touches when using an external mouse.").size(10.5_f32).color(pal.text_muted));
+            ui.label(RichText::new(l.touchpad_lock_desc()).size(10.5_f32).color(pal.text_muted));
             ui.add_space(10.0_f32);
 
-            let od_btn = egui::Button::new(RichText::new("🚀 Trigger LCD 3ms Response Overdrive").color(pal.primary).strong())
+            let od_btn = egui::Button::new(RichText::new(l.lcd_overdrive_button()).color(pal.primary).strong())
                 .fill(pal.card)
                 .stroke(Stroke::new(1.0_f32, pal.border))
                 .rounding(Rounding::same(5.0_f32));
             if ui.add(od_btn).clicked() {
                 let _ = self.cmd_tx.send(HardwareCommand::SetLcdOverdrive(true));
             }
-            ui.label(RichText::new("Applies accelerated voltage overdrive to the panel to eliminate ghosting in high-FPS gaming.").size(10.5_f32).color(pal.text_muted));
+            ui.label(RichText::new(l.lcd_overdrive_desc()).size(10.5_f32).color(pal.text_muted));
         });
 
         ui.add_space(10.0_f32);
 
-        // 3. Embedded Controller (EC) & ACPI Hardware Diagnostics
+        // 4. Embedded Controller (EC) & ACPI Hardware Diagnostics
         self.nitro_card_frame().show(ui, |ui| {
             ui.horizontal(|ui| {
-                ui.heading(RichText::new("🐧 Linux Kernel & Hardware Bus Diagnostics").size(15.0_f32).strong().color(pal.text_primary));
+                ui.heading(RichText::new(l.diagnostics_header()).size(15.0_f32).strong().color(pal.text_primary));
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    let test_btn = egui::Button::new(RichText::new("🩺 Run Hardware Self-Test").strong().color(pal.secondary))
+                    let test_btn = egui::Button::new(RichText::new(l.run_diagnostics_btn()).strong().color(pal.secondary))
                         .fill(pal.card)
                         .stroke(Stroke::new(1.0_f32, pal.border))
                         .rounding(Rounding::same(5.0_f32));
@@ -3294,12 +3651,11 @@ impl AcerSenseApp {
                         let bat_ok = self.telemetry.bat_pct > 0;
                         let gpu_ok = self.telemetry.driver_version != "N/A";
 
-                        self.diag_status = Some(format!(
-                            "Diagnostic Result: ACPI Bus: {}, NVMe Controller: {}, Battery Sensor: {}, NVIDIA Bus: {}",
+                        self.diag_status = Some(l.diagnostics_result(
                             if acpi_ok { "✔ OPTIMAL" } else { "⚠ ERROR" },
                             if nvme_ok { "✔ ACTIVE" } else { "⚠ UNKNOWN" },
                             if bat_ok { "✔ ONLINE" } else { "⚠ OFF" },
-                            if gpu_ok { "✔ D0/D3 LINK OK" } else { "⚠ SUSPENDED" }
+                            if gpu_ok { "✔ D0/D3 LINK OK" } else { "⚠ SUSPENDED" },
                         ));
                     }
                 });
@@ -3323,6 +3679,101 @@ impl AcerSenseApp {
                         ui.label(RichText::new(res).size(11.0_f32).monospace().color(pal.secondary));
                     });
             }
+        });
+
+        ui.add_space(10.0_f32);
+
+        // 5. Open Source Project & GitHub Community
+        self.nitro_card_frame().show(ui, |ui| {
+            ui.horizontal(|ui| {
+                ui.heading(RichText::new(l.about_github_header()).size(15.0_f32).strong().color(pal.text_primary));
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    ui.label(RichText::new("v2.1.0 (Rust)").size(11.5_f32).strong().color(pal.primary));
+                });
+            });
+            ui.label(RichText::new(l.about_github_subtitle()).size(11.0_f32).color(pal.text_muted));
+            ui.add_space(6.0_f32);
+            ui.separator();
+            ui.add_space(8.0_f32);
+
+            ui.horizontal(|ui| {
+                ui.label(RichText::new(l.about_meta_info()).size(11.0_f32).color(pal.text_secondary));
+            });
+            ui.add_space(8.0_f32);
+
+            ui.horizontal_wrapped(|ui| {
+                let repo_btn = egui::Button::new(
+                    RichText::new(l.btn_project_repo())
+                        .size(12.0_f32)
+                        .strong()
+                        .color(pal.primary),
+                )
+                .fill(pal.card)
+                .stroke(Stroke::new(1.0_f32, pal.primary))
+                .rounding(Rounding::same(6.0_f32));
+
+                if ui
+                    .add_sized([195.0_f32, 34.0_f32], repo_btn)
+                    .on_hover_text("https://github.com/rodrigo47363/acersense-linux")
+                    .clicked()
+                {
+                    ui.ctx().open_url(egui::OpenUrl::new_tab("https://github.com/rodrigo47363/acersense-linux"));
+                }
+
+                let author_btn = egui::Button::new(
+                    RichText::new(l.btn_author_profile())
+                        .size(12.0_f32)
+                        .strong()
+                        .color(pal.text_primary),
+                )
+                .fill(pal.card)
+                .stroke(Stroke::new(1.0_f32, pal.border))
+                .rounding(Rounding::same(6.0_f32));
+
+                if ui
+                    .add_sized([210.0_f32, 34.0_f32], author_btn)
+                    .on_hover_text("https://github.com/rodrigo47363")
+                    .clicked()
+                {
+                    ui.ctx().open_url(egui::OpenUrl::new_tab("https://github.com/rodrigo47363"));
+                }
+
+                let issues_btn = egui::Button::new(
+                    RichText::new(l.btn_report_issue())
+                        .size(12.0_f32)
+                        .strong()
+                        .color(pal.secondary),
+                )
+                .fill(pal.card)
+                .stroke(Stroke::new(1.0_f32, pal.border))
+                .rounding(Rounding::same(6.0_f32));
+
+                if ui
+                    .add_sized([185.0_f32, 34.0_f32], issues_btn)
+                    .on_hover_text("https://github.com/rodrigo47363/acersense-linux/issues")
+                    .clicked()
+                {
+                    ui.ctx().open_url(egui::OpenUrl::new_tab("https://github.com/rodrigo47363/acersense-linux/issues"));
+                }
+
+                let releases_btn = egui::Button::new(
+                    RichText::new(l.btn_releases())
+                        .size(12.0_f32)
+                        .strong()
+                        .color(pal.success),
+                )
+                .fill(pal.card)
+                .stroke(Stroke::new(1.0_f32, pal.border))
+                .rounding(Rounding::same(6.0_f32));
+
+                if ui
+                    .add_sized([195.0_f32, 34.0_f32], releases_btn)
+                    .on_hover_text("https://github.com/rodrigo47363/acersense-linux/releases")
+                    .clicked()
+                {
+                    ui.ctx().open_url(egui::OpenUrl::new_tab("https://github.com/rodrigo47363/acersense-linux/releases"));
+                }
+            });
         });
     }
 }
@@ -3399,6 +3850,9 @@ impl eframe::App for AcerSenseApp {
                 let next = self.theme_mode.next();
                 self.set_theme(ctx, next);
             }
+            if i.key_pressed(egui::Key::L) {
+                self.toggle_language();
+            }
             if i.key_pressed(egui::Key::M) {
                 self.config.mode = "max".into();
                 let _ = self.cmd_tx.send(HardwareCommand::SetFanMode("max".into()));
@@ -3464,6 +3918,27 @@ impl eframe::App for AcerSenseApp {
                     });
 
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        // Quick language switcher pill button
+                        let lang_btn = egui::Button::new(
+                            RichText::new(self.language.badge())
+                                .size(11.0_f32)
+                                .strong()
+                                .color(pal.primary),
+                        )
+                        .fill(pal.card)
+                        .stroke(Stroke::new(1.0_f32, pal.border))
+                        .rounding(Rounding::same(6.0_f32));
+
+                        if ui
+                            .add(lang_btn)
+                            .on_hover_text(self.language.lang_tooltip())
+                            .clicked()
+                        {
+                            self.toggle_language();
+                        }
+
+                        ui.add_space(4.0_f32);
+
                         // Quick theme cycle pill button
                         let theme_text = format!("🎨 {}", self.theme_mode.name());
                         let theme_btn = egui::Button::new(
@@ -3478,13 +3953,32 @@ impl eframe::App for AcerSenseApp {
 
                         if ui
                             .add(theme_btn)
-                            .on_hover_text(
-                                "Clic o presiona [T] para alternar entre paletas de confort",
-                            )
+                            .on_hover_text(self.language.theme_tooltip())
                             .clicked()
                         {
                             let next = self.theme_mode.next();
                             self.set_theme(ctx, next);
+                        }
+
+                        ui.add_space(4.0_f32);
+
+                        // Quick GitHub project link button
+                        let gh_btn = egui::Button::new(
+                            RichText::new("🐙 GitHub")
+                                .size(11.0_f32)
+                                .strong()
+                                .color(pal.text_primary),
+                        )
+                        .fill(pal.card)
+                        .stroke(Stroke::new(1.0_f32, pal.border))
+                        .rounding(Rounding::same(6.0_f32));
+
+                        if ui
+                            .add(gh_btn)
+                            .on_hover_text("GitHub: https://github.com/rodrigo47363/acersense-linux")
+                            .clicked()
+                        {
+                            ctx.open_url(egui::OpenUrl::new_tab("https://github.com/rodrigo47363/acersense-linux"));
                         }
                     });
                 });
@@ -3495,11 +3989,11 @@ impl eframe::App for AcerSenseApp {
 
                 // ROW 2: Balanced Segmented Navigation Tab Bar
                 let tabs = [
-                    (Tab::FanControl, "🌀 VENTILADORES (1)"),
-                    (Tab::Monitoring, "📊 MONITOREO (2)"),
-                    (Tab::PowerModes, "⚡ ESCENARIOS (3)"),
-                    (Tab::KeyboardRgb, "🌈 ILUMINACIÓN (4)"),
-                    (Tab::SystemSettings, "⚙ AJUSTES (5)"),
+                    (Tab::FanControl, self.language.tab_fans()),
+                    (Tab::Monitoring, self.language.tab_monitoring()),
+                    (Tab::PowerModes, self.language.tab_power()),
+                    (Tab::KeyboardRgb, self.language.tab_rgb()),
+                    (Tab::SystemSettings, self.language.tab_settings()),
                 ];
 
                 let tab_count = tabs.len() as f32;
@@ -3584,11 +4078,11 @@ impl eframe::App for AcerSenseApp {
                     };
 
                     if self.telemetry.ac_connected {
-                        render_chip(ui, "⚡ AC MAINS (135W)", pal.success);
+                        render_chip(ui, self.language.footer_ac(), pal.success);
                     } else {
                         render_chip(
                             ui,
-                            &format!("🔋 BATERÍA ({}%)", self.telemetry.bat_pct),
+                            &self.language.footer_battery(self.telemetry.bat_pct),
                             pal.warning,
                         );
                     }
@@ -3596,20 +4090,20 @@ impl eframe::App for AcerSenseApp {
                     ui.add_space(4.0_f32);
                     render_chip(
                         ui,
-                        &format!("🌀 FAN: {}", self.config.mode.to_uppercase()),
+                        &self.language.footer_fan(&self.config.mode),
                         pal.secondary,
                     );
 
                     ui.add_space(4.0_f32);
                     render_chip(
                         ui,
-                        &format!("⚡ PERFIL: {}", self.config.profile.to_uppercase()),
+                        &self.language.footer_profile(&self.config.profile),
                         pal.primary,
                     );
 
                     ui.add_space(6.0_f32);
                     ui.label(
-                        RichText::new(format!("DISIPACIÓN: {:.1} W", total_w))
+                        RichText::new(self.language.footer_dissipation(total_w))
                             .color(pal.text_primary)
                             .monospace()
                             .size(10.5_f32),
@@ -3618,11 +4112,9 @@ impl eframe::App for AcerSenseApp {
                     if avail_w >= 720.0_f32 {
                         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                             ui.label(
-                                RichText::new(
-                                    "[1-5] Pestañas  [T] Tema  [A/M/C] Modo  [Ctrl+Q] Salir",
-                                )
-                                .color(pal.text_muted)
-                                .size(10.0_f32),
+                                RichText::new(self.language.footer_shortcuts())
+                                    .color(pal.text_muted)
+                                    .size(10.0_f32),
                             );
                         });
                     }
@@ -3661,6 +4153,20 @@ impl eframe::App for AcerSenseApp {
 }
 
 fn main() -> eframe::Result<()> {
+    if std::env::args().any(|a| a == "--help" || a == "-h") {
+        println!("AcerSense Linux Pro GUI v2.1.0");
+        println!("Uso / Usage: acersense-gui [OPCIONES / OPTIONS]");
+        println!();
+        println!("  --lang <code>          Forzar idioma inicial / Force initial language");
+        println!("                         [es, en, de, fr, pt, it, ru, zh, ja, ko]");
+        println!("  --theme <nombre>       Forzar tema visual / Force visual theme");
+        println!("  --tab <fans|mon|...>   Pestaña inicial / Initial tab");
+        println!("  -F, --fullscreen       Iniciar en pantalla completa / Launch in fullscreen");
+        println!("  --maximized            Iniciar ventana maximizada / Launch maximized");
+        println!("  -h, --help             Mostrar esta ayuda / Display this help message");
+        return Ok(());
+    }
+
     let is_fullscreen = std::env::args().any(|a| a == "--fullscreen" || a == "-F");
     let is_maximized = std::env::args().any(|a| a == "--maximized");
     let mut vp = egui::ViewportBuilder::default()
@@ -3735,6 +4241,19 @@ mod tests {
         assert_eq!(ThemeMode::from_str("material_red"), ThemeMode::MaterialRed);
         assert_eq!(ThemeMode::from_str("aurora"), ThemeMode::AuroraGradient);
         assert_eq!(ThemeMode::from_str("gradient"), ThemeMode::AuroraGradient);
+        assert_eq!(ThemeMode::from_str("ado_rose"), ThemeMode::AdoRose);
+        assert_eq!(ThemeMode::from_str("ado"), ThemeMode::AdoRose);
+        assert_eq!(ThemeMode::from_str("windows_10"), ThemeMode::Windows10);
+        assert_eq!(ThemeMode::from_str("win10"), ThemeMode::Windows10);
+        assert_eq!(ThemeMode::from_str("windows_11"), ThemeMode::Windows11);
+        assert_eq!(ThemeMode::from_str("win11"), ThemeMode::Windows11);
+        assert_eq!(ThemeMode::from_str("spotlight_dark"), ThemeMode::SpotlightDark);
+        assert_eq!(ThemeMode::from_str("launchpad"), ThemeMode::SpotlightDark);
+        assert_eq!(ThemeMode::from_str("spotlight_light"), ThemeMode::SpotlightLight);
+        assert_eq!(ThemeMode::from_str("suika"), ThemeMode::SuikaMelon);
+        assert_eq!(ThemeMode::from_str("suika_melon"), ThemeMode::SuikaMelon);
+        assert_eq!(ThemeMode::from_str("dr_stone"), ThemeMode::SuikaMelon);
+        assert_eq!(ThemeMode::from_str("melon"), ThemeMode::SuikaMelon);
         assert_eq!(ThemeMode::from_str("unknown"), ThemeMode::HumanComfort);
     }
 
@@ -3760,6 +4279,12 @@ mod tests {
             ThemeMode::MantecCorporate,
             ThemeMode::ModernBlue,
             ThemeMode::MaterialRed,
+            ThemeMode::AdoRose,
+            ThemeMode::Windows10,
+            ThemeMode::Windows11,
+            ThemeMode::SpotlightDark,
+            ThemeMode::SpotlightLight,
+            ThemeMode::SuikaMelon,
             ThemeMode::HumanComfort,
         ];
 
@@ -3791,10 +4316,22 @@ mod tests {
             ThemeMode::MantecCorporate,
             ThemeMode::ModernBlue,
             ThemeMode::MaterialRed,
+            ThemeMode::AdoRose,
+            ThemeMode::Windows10,
+            ThemeMode::Windows11,
+            ThemeMode::SpotlightDark,
+            ThemeMode::SpotlightLight,
+            ThemeMode::SuikaMelon,
         ] {
             let p = get_palette(mode);
             assert!(!p.name.is_empty());
             assert!(p.card_rounding > 0.0);
         }
+    }
+
+    #[test]
+    fn test_custom_font_loader() {
+        let ctx = egui::Context::default();
+        setup_custom_fonts(&ctx);
     }
 }

@@ -16,10 +16,16 @@ pub struct AcerConfig {
     pub touchpad_locked: bool,
     #[serde(default = "default_theme")]
     pub theme: String,
+    #[serde(default = "default_language")]
+    pub language: String,
 }
 
 fn default_theme() -> String {
     "human".to_string()
+}
+
+fn default_language() -> String {
+    "es".to_string()
 }
 
 impl Default for AcerConfig {
@@ -27,14 +33,15 @@ impl Default for AcerConfig {
         Self {
             mode: "auto".to_string(),
             profile: "balanced".to_string(),
-            coolboost: false,
+            coolboost: true,
             cpu_fan_target: 50,
             gpu_fan_target: 50,
-            sync_fans: false,
+            sync_fans: true,
             battery_health_80: false,
             winkey_locked: false,
             touchpad_locked: false,
             theme: "human".to_string(),
+            language: "es".to_string(),
         }
     }
 }
@@ -100,12 +107,13 @@ mod tests {
         let cfg = AcerConfig::default();
         assert_eq!(cfg.mode, "auto");
         assert_eq!(cfg.profile, "balanced");
-        assert!(!cfg.coolboost);
+        assert!(cfg.coolboost);
         assert_eq!(cfg.cpu_fan_target, 50);
         assert_eq!(cfg.gpu_fan_target, 50);
-        assert!(!cfg.sync_fans);
+        assert!(cfg.sync_fans);
         assert!(!cfg.battery_health_80);
         assert_eq!(cfg.theme, "human");
+        assert_eq!(cfg.language, "es");
     }
 
     #[test]
@@ -115,6 +123,7 @@ mod tests {
             cpu_fan_target: 85,
             gpu_fan_target: 90,
             theme: "nordic".into(),
+            language: "en".into(),
             ..Default::default()
         };
 
@@ -125,11 +134,12 @@ mod tests {
         assert_eq!(deserialized.cpu_fan_target, 85);
         assert_eq!(deserialized.gpu_fan_target, 90);
         assert_eq!(deserialized.theme, "nordic");
+        assert_eq!(deserialized.language, "en");
     }
 
     #[test]
     fn test_config_backward_compatibility() {
-        // Legacy JSON omitting `theme` and `sync_fans`
+        // Legacy JSON omitting `theme`, `sync_fans`, and `language`
         let legacy_json = r#"{
             "mode": "max",
             "profile": "turbo",
@@ -145,6 +155,7 @@ mod tests {
             .expect("Backward compatibility deserialization failed");
         assert_eq!(cfg.mode, "max");
         assert_eq!(cfg.theme, "human"); // Default fallback
+        assert_eq!(cfg.language, "es"); // Default fallback
         assert!(!cfg.sync_fans); // Default fallback
     }
 }

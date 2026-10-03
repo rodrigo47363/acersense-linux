@@ -13,10 +13,10 @@ case "$1/$2" in
         # System resumed from suspend / hibernation
         # Give EC and ACPI subsystem 1 second to stabilize
         sleep 1
-        if command -v acersense-daemon >/dev/null 2>&1; then
-            acersense-daemon --resume || true
-        elif [ -x /usr/local/bin/acersense-daemon ]; then
-            /usr/local/bin/acersense-daemon --resume || true
+        if command -v acersense >/dev/null 2>&1; then
+            acersense restore || true
+        elif [ -x /usr/local/bin/acersense ]; then
+            /usr/local/bin/acersense restore || true
         fi
         ;;
 esac

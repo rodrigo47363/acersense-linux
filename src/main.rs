@@ -430,6 +430,40 @@ fn main() -> Result<()> {
         Some(Commands::Restore) => {
             restore_hardware_state()?;
         }
+        Some(Commands::Lang(args)) => {
+            let mut cfg = load_config();
+            if let Some(ref code) = args.code {
+                let lang = core::i18n::Language::from_str(code);
+                cfg.language = lang.as_str().to_string();
+                core::config::save_config(&cfg);
+                println!(
+                    "{} Language configured: {} [{}]",
+                    "[+]".green().bold(),
+                    lang.name().bold(),
+                    lang.badge()
+                );
+            } else {
+                let lang = core::i18n::Language::from_str(&cfg.language);
+                println!(
+                    "Current language: {} [{}] (code: '{}')",
+                    lang.name().bold(),
+                    lang.badge(),
+                    lang.code().cyan()
+                );
+                println!("Available options: {}", core::i18n::Language::available_str());
+            }
+        }
+        Some(Commands::About) => {
+            println!("{}", "═══════════════════════════════════════════════════════════════════".cyan().bold());
+            println!("  {}", "AcerSense Pro Linux — Hardware Control Suite".bold().white());
+            println!("  {}", "Version: v2.1.0 (Rust Edition) • License: GPL-3.0 • Author: Rodrigo".dimmed());
+            println!("{}", "═══════════════════════════════════════════════════════════════════".cyan().bold());
+            println!("  {} https://github.com/rodrigo47363/acersense-linux", "🐙 Project Repository:".green().bold());
+            println!("  {} https://github.com/rodrigo47363", "👤 Developer Profile: ".yellow().bold());
+            println!("  {} https://github.com/rodrigo47363/acersense-linux/issues", "🐞 Issue Tracker:     ".red().bold());
+            println!("  {} https://github.com/rodrigo47363/acersense-linux/releases", "⭐ Releases & Tags:   ".magenta().bold());
+            println!("{}", "───────────────────────────────────────────────────────────────────".dimmed());
+        }
     }
 
     Ok(())
