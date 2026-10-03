@@ -82,7 +82,7 @@
 
 ## 🖥️ Core Functional Sections (1080p Fullscreen Showcase)
 
-AcerSense Pro Linux features 5 distinct high-performance operational dashboards rendered at 60+ FPS:
+AcerSense Pro Linux features distinct high-performance operational dashboards rendered at 60+ FPS:
 
 <details open>
 <summary><b>🌀 1. Fan Speed Control & Dual Turbines (Click to collapse/expand)</b></summary>
@@ -120,13 +120,22 @@ Configurable power governance envelopes: Quiet Eco Stealth (PL1: 15W), Balanced 
 Interactive 4-zone Pulsar keyboard visualizer with hardware zone selectors (WASD, Center-Left, Center-Right, Numpad), tactile color swatches, custom RGB color mixer, and factory presets.
 </details>
 
-<details>
-<summary><b>⚙️ 5. System Settings, Battery Care 80% & Theme Selector (Click to expand)</b></summary>
+<details open>
+<summary><b>⚙️ 5. System Settings, 10-Language Selector & Theme Hub (Click to collapse/expand)</b></summary>
 <br>
 <p align="center">
-  <img src="assets/screenshots/sections/05_system_settings.png" width="100%" alt="System Settings & Theme Selector">
+  <img src="assets/screenshots/sections/05_system_settings.png" width="100%" alt="System Settings, 10-Language Selector & Theme Hub">
 </p>
-Embedded Controller battery health protection (80% lithium ceiling), Acer CoolBoost thermal expansion, LCD 3ms overdrive, Windows Key lockout, and live visual theme switcher.
+Native 10-language internationalization matrix (ES, EN, DE, FR, PT, IT, RU, ZH, JA, KO) with real-time hot-reloading, 19 visual ergonomics themes with contrast indicators, and instant tactile switching.
+</details>
+
+<details open>
+<summary><b>🐙 6. Open Source Community, GitHub Hub & Battery Care (Click to collapse/expand)</b></summary>
+<br>
+<p align="center">
+  <img src="assets/screenshots/sections/06_community_and_github.png" width="100%" alt="Open Source Community, GitHub Hub & Battery Care">
+</p>
+Embedded Controller battery health protection (80% lithium ceiling), tactical gaming lockouts (Windows key and Touchpad suppression), LCD 3ms overdrive, hardware diagnostic bus status, and direct one-click GitHub community hub with repository, author profile, issues, and release trackers.
 </details>
 
 ---

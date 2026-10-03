@@ -813,9 +813,9 @@ pub fn setup_custom_fonts(ctx: &egui::Context) {
     let mut fonts = egui::FontDefinitions::default();
 
     let font_candidates = [
-        "/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf",
-        "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
         "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+        "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+        "/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf",
     ];
 
     for path in font_candidates {
@@ -1113,7 +1113,7 @@ impl AcerSenseApp {
             Some("monitoring") | Some("mon") | Some("2") => Tab::Monitoring,
             Some("power") | Some("scenarios") | Some("3") => Tab::PowerModes,
             Some("rgb") | Some("lighting") | Some("4") => Tab::KeyboardRgb,
-            Some("settings") | Some("5") => Tab::SystemSettings,
+            Some("settings") | Some("5") | Some("community") | Some("about") | Some("github") => Tab::SystemSettings,
             _ => {
                 if std::env::args().any(|a| a == "--monitoring" || a == "-m" || a == "2") {
                     Tab::Monitoring
@@ -3684,7 +3684,7 @@ impl AcerSenseApp {
         ui.add_space(10.0_f32);
 
         // 5. Open Source Project & GitHub Community
-        self.nitro_card_frame().show(ui, |ui| {
+        let comm_resp = self.nitro_card_frame().show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.heading(RichText::new(l.about_github_header()).size(15.0_f32).strong().color(pal.text_primary));
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
@@ -3775,6 +3775,10 @@ impl AcerSenseApp {
                 }
             });
         });
+
+        if std::env::args().any(|a| a == "--community" || a == "community" || a == "--about") {
+            comm_resp.response.scroll_to_me(Some(egui::Align::Center));
+        }
     }
 }
 
@@ -4175,7 +4179,7 @@ fn main() -> eframe::Result<()> {
         .with_title("AcerSense Linux Pro v2.1 — Hardware Suite");
 
     if is_fullscreen {
-        vp = vp.with_fullscreen(true);
+        vp = vp.with_fullscreen(true).with_inner_size([1920.0_f32, 1080.0_f32]);
     } else if is_maximized {
         vp = vp.with_maximized(true);
     }
