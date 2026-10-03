@@ -4,7 +4,8 @@
 [![CI Pipeline](https://github.com/rodrigo47363/acersense-linux/actions/workflows/ci.yml/badge.svg)](https://github.com/rodrigo47363/acersense-linux/actions/workflows/ci.yml)
 [![Language: Rust 2021](https://img.shields.io/badge/Language-Rust%202021-orange.svg)](https://www.rust-lang.org/)
 [![GUI: egui / eframe](https://img.shields.io/badge/GUI-egui%20%7C%2060%2B%20FPS-00F0FF.svg)](https://github.com/emilk/egui)
-[![Themes: 19 Custom Palettes](https://img.shields.io/badge/Themes-19%20Custom%20Palettes-af40ff.svg)](#-curated-19-theme-visual-ergonomics-suite)
+[![Themes: 19 Custom Palettes](https://img.shields.io/badge/Themes-19%20Custom%20Palettes-af40ff.svg)](#-the-19-color-themes-suite-1080p-fullscreen-previews)
+[![i18n: 10 Locales](https://img.shields.io/badge/i18n-10%20Locales-00DDEB.svg)](#6--native-multilingual-engine-10-locales)
 [![Hardware: Acer Nitro & Predator](https://img.shields.io/badge/Hardware-Acer%20Nitro%20%7C%20Predator%20%7C%20Aspire-orange.svg)]()
 [![Platform: Linux](https://img.shields.io/badge/Platform-Parrot%20%7C%20Debian%20%7C%20Arch%20%7C%20Fedora%20%7C%20Ubuntu-brightgreen.svg)]()
 [![Code Quality: Clippy 0 Warnings](https://img.shields.io/badge/Clippy-0%20Warnings-success.svg)]()
@@ -55,16 +56,27 @@
 * **Physics-Based Gauges:** Dynamic speedometer dials with live RPM calculations and temperature monitoring.
 * **4-Zone RGB Lighting Visualizer:** Live interactive preview with preset configurations and custom color picker.
 
-### 6. 🎯 Physical NitroSense Key `[N]` Integration
-* Maps keyboard hardware scancode `0xf5` to `KEY_PROG1` (`XF86Launch1`) using custom udev and hwdb rules, launching the AcerSense Pro GUI directly upon pressing the physical **[N]** key.
+### 6. 🌍 Native Multilingual Engine (10 Locales)
+* **Zero-Latency Dynamic Switching:** Instant locale translation across all 5 operational dashboards with immediate UI re-rendering and zero restart required.
+* **10 Global Locales Supported:** Spanish (`es`), English (`en`), German (`de`), French (`fr`), Portuguese (`pt`), Italian (`it`), Russian (`ru`), Chinese Simplified (`zh`), Japanese (`ja`), and Korean (`ko`).
+* **CLI Language Management:** Query and change language via `acersense lang [code]` with persistent configuration saved in `~/.config/acersense/config.json`.
+* **FreeDesktop Multilingual Metadata:** Fully localized `.desktop` entries with localized names, generic definitions, and regional search tags.
 
-### 7. 🔋 Battery Health Protection (80% Lithium Care Mode)
+### 7. 🎯 Physical NitroSense Key `[N]` & Modern Launcher Integration
+* **Hardware Scancode Mapping:** Maps keyboard scancode `0xf5` to `KEY_PROG1` (`XF86Launch1`) using udev/hwdb rules to launch the GUI directly from the hardware **[N]** key.
+* **Rofi & Application Launchers:** Native FreeDesktop XDG standard (`Settings;HardwareSettings;`), single de-duplicated entry, and multilingual fuzzy-search keywords (`acer`, `nitro`, `predator`, `ventiladores`, `fans`, `cooling`, `rgb`, `hardware`, `bateria`).
+
+### 8. 🔋 Battery Health Protection (80% Lithium Care Mode)
 * Enforces battery charge limit at **80%** directly in the hardware Embedded Controller, extending battery chemical longevity.
 
-### 8. 🌈 4-Zone RGB Keyboard Lighting & Gaming Tweaks
+### 9. 🌈 4-Zone RGB Keyboard Lighting & Gaming Tweaks
 * **Lighting Presets:** `cyberpunk`, `nitro`, `ice`, `toxic`, `synthwave`, and `white`.
 * **Custom Hex Styling:** Assign individual hex colors per zone or broadcast across all 4 zones.
 * **Gaming Locks:** Disable Windows key or Touchpad during gaming sessions.
+
+### 10. 🐙 Open Source Transparency & Community Links
+* **Direct Repository & Author Access:** Dedicated GitHub community button in the GUI header and interactive project card in Settings.
+* **CLI Project Introspection:** `acersense about` outputs official repository links, developer profile ([@rodrigo47363](https://github.com/rodrigo47363)), issue tracker, and releases.
 
 ---
 
@@ -235,10 +247,14 @@ sudo install -m 755 target/release/acersense-gui /usr/local/bin/acersense-gui
 | **`acersense fan --mode auto`** | Restores automatic BIOS fan curve |
 | **`acersense fan --toggle`** | Alternates fan profile between Auto and Max |
 | **`acersense fan --coolboost on`** | Enables Acer CoolBoost thermal headroom |
-| **`acersense profile --set turbo`** | Sets power profile (`quiet`, `balanced`, `performance`, `turbo`) |
+| **`acersense profile --set turbo`** | Sets power profile (`quiet`, `balanced`, `performance`, `turbo`) with CPU EPP auto-tuning |
 | **`acersense battery --limit-80 on`** | Enforces 80% maximum charge health limit |
 | **`acersense rgb --preset cyberpunk`** | Applies neon cyberpunk 4-zone keyboard backlight theme |
 | **`acersense gaming --winkey lock`** | Locks Windows/Super key to prevent accidental desktop switching |
+| **`acersense lang`** | Displays active language and lists supported global locales |
+| **`acersense lang <es|en|de|...>`** | Sets interface language (`es`, `en`, `de`, `fr`, `pt`, `it`, `ru`, `zh`, `ja`, `ko`) |
+| **`acersense about`** | Displays official GitHub repository, author profile, and community links |
+| **`acersense restore`** | Reapplies saved hardware configuration on system boot or suspend resume |
 | **`acersense --polybar`** | Outputs compact color-coded status line for Polybar / status bars |
 | **`acersense --json`** | Emits machine-readable telemetry JSON for custom scripting |
 
@@ -255,6 +271,15 @@ interval = 2
 click-left = acersense fan --toggle
 click-right = acersense-gui
 ```
+
+---
+
+## 🐙 Community & Author
+
+* **Project Repository:** [github.com/rodrigo47363/acersense-linux](https://github.com/rodrigo47363/acersense-linux)
+* **Lead Developer:** Rodrigo ([@rodrigo47363](https://github.com/rodrigo47363))
+* **Issue Tracker & Bug Reports:** [Issues](https://github.com/rodrigo47363/acersense-linux/issues)
+* **Releases & Binary Packages:** [Releases](https://github.com/rodrigo47363/acersense-linux/releases)
 
 ---
 
