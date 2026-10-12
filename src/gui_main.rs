@@ -2084,9 +2084,7 @@ impl AcerSenseApp {
             // 5. Aerodynamic Acoustic & Airflow Estimate Strip
             let max_rpm = self.telemetry.cpu_rpm.max(self.telemetry.gpu_rpm);
             let (noise_dba, noise_desc) = l.acoustic_state(max_rpm);
-            let noise_color = if max_rpm == 0 {
-                pal.success
-            } else if max_rpm < 2200 {
+            let noise_color = if max_rpm < 2200 {
                 pal.success
             } else if max_rpm < 3400 {
                 pal.secondary

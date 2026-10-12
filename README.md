@@ -4,13 +4,14 @@
 [![CI Pipeline](https://github.com/rodrigo47363/acersense-linux/actions/workflows/ci.yml/badge.svg)](https://github.com/rodrigo47363/acersense-linux/actions/workflows/ci.yml)
 [![Language: Rust 2021](https://img.shields.io/badge/Language-Rust%202021-orange.svg)](https://www.rust-lang.org/)
 [![GUI: egui / eframe](https://img.shields.io/badge/GUI-egui%20%7C%2060%2B%20FPS-00F0FF.svg)](https://github.com/emilk/egui)
-[![Themes: 19 Custom Palettes](https://img.shields.io/badge/Themes-19%20Custom%20Palettes-af40ff.svg)](#-the-19-color-themes-suite-1080p-fullscreen-previews)
+[![Themes: 25 Custom Palettes](https://img.shields.io/badge/Themes-25%20Custom%20Palettes-af40ff.svg)](#-the-25-color-themes-suite-visual-ergonomics-matrix)
 [![i18n: 10 Locales](https://img.shields.io/badge/i18n-10%20Locales-00DDEB.svg)](#6--native-multilingual-engine-10-locales)
-[![Hardware: Acer Nitro & Predator](https://img.shields.io/badge/Hardware-Acer%20Nitro%20%7C%20Predator%20%7C%20Aspire-orange.svg)]()
-[![Platform: Linux](https://img.shields.io/badge/Platform-Parrot%20%7C%20Debian%20%7C%20Arch%20%7C%20Fedora%20%7C%20Ubuntu-brightgreen.svg)]()
-[![Code Quality: Clippy 0 Warnings](https://img.shields.io/badge/Clippy-0%20Warnings-success.svg)]()
+[![Hardware: Acer Nitro & Predator](https://img.shields.io/badge/Hardware-Acer%20Nitro%20%7C%20Predator%20%7C%20Aspire-orange.svg)](#-supported-laptop-hardware)
+[![Platform: Linux](https://img.shields.io/badge/Platform-Parrot%20%7C%20Debian%20%7C%20Arch%20%7C%20Fedora%20%7C%20Ubuntu-brightgreen.svg)](#-quick-installation--deployment)
+[![Code Quality: Clippy 0 Warnings](https://img.shields.io/badge/Clippy-0%20Warnings-success.svg)](#4--high-performance-native-rust-core-acersense)
+[![Direct ACPI / SMM: Ring -2 Interconnect](https://img.shields.io/badge/Bus-ACPI%20%7C%20WSMI%20%7C%20EC-blueviolet.svg)](#-system-architecture--hardware-bus-pipeline)
 
-**AcerSense Pro Linux** is an ultra-high performance, low-latency open-source hardware control suite and native Rust engine designed to replace proprietary Windows utilities (**Acer NitroSense**, **Acer PredatorSense**, and **Acer Care Center**) on Acer Nitro, Predator, and Aspire Gaming laptops.
+**AcerSense Pro Linux** is an ultra-high performance, low-latency open-source hardware control suite and native Rust engine designed to completely replace proprietary Windows utilities (**Acer NitroSense**, **Acer PredatorSense**, and **Acer Care Center**) on Acer Nitro, Predator, and Aspire Gaming laptops.
 
 ```
     █████╗  ██████╗███████╗██████╗ ███████╗███████╗███╗   ██╗███████╗███████╗
@@ -33,21 +34,23 @@
 ### 1. 🏎️ Dual Fans Peak Hardware Synchronization (5400 / 6120 RPM)
 * **Byte-Scale PWM Calibration:** Solves the 8-bit quantization issue by addressing Embedded Controller (EC) registers `0x14` and `0x24` with native 8-bit resolution ($0-255$).
 * **Physical Hardware Limits:** CPU Fan locks at **5400 RPM** and GPU Fan (Numpad) reaches **6120 RPM** in Turbo Max burst.
+* **Firmware SMM Closed-Loop Bypass:** Standard Linux drivers are throttled because the InsydeH2O UEFI BIOS executes a System Management Mode (SMM, Ring -2) closed-loop routine that resets GPU registers to ~2400 RPM when idle. AcerSense Pro bypasses this by dispatching WMI Method 14 (`0x0E`) opcode `0x820009` (`SetGamingFanBehavior`) and Method 16 (`0x10`) opcode `0x6404` (`SetGamingFanSpeed` GPU 100%) via WSMI port `0xD0`, unlocking the physical maximum speed inconditionally.
 * **Full Multi-Channel Broadcast:** Concurrently orchestrates Method 7 channels `0x00` (CPU), `0x08` (GPU/Numpad), and `0x09` (Dual Sync).
 
-### 2. 🎨 Curated 19-Theme Visual Ergonomics Suite
+### 2. 🎨 Curated 25-Theme Visual Ergonomics Suite
 * **Zero Retinal Fatigue:** Engineered adhering to **WCAG AAA** contrast standards ($>10:1$ luminance ratio), preventing glare burn and eye strain during long-night coding or pentesting sessions.
-* **Bimodal Engine (Dark & Light Modes):** Dynamically toggles between `Visuals::dark()` and `Visuals::light()` with contrast inversion for daylight visibility.
-* **Live Hotkey Switching `[T]`:** Instant circular cycling across all 19 themes with zero UI reload or latency.
-* **Persistent Dotfile Aesthetic:** Includes personal dotfile palettes (**Tokyo Night**, **Neo Tokyo**, **Red Audit Offensive**, **Hacker Matrix**, **Aurora Gradient**, **Kuromi Goth**, **Everforest**, etc.).
+* **Bimodal Engine (Dark & Light Modes):** Dynamically toggles between dark backgrounds and high-clarity daylight palettes with contrast inversion.
+* **Live Hotkey Switching `[T]`:** Instant circular cycling across all **25 themes** with zero UI reload or latency.
+* **Persistent Dotfile Aesthetic:** Includes personal dotfile palettes (**Tokyo Night**, **Neo Tokyo**, **Red Audit Offensive**, **Hacker Matrix**, **Aurora Gradient**, **Kuromi Goth**, **Everforest**, **Ado Blue Rose**, **Windows 11 Fluent**, **macOS Spotlight**, **Suika Recon**, etc.).
 
-### 3. 📈 Real-Time Telemetry & Hardware Graphs
-* **Multi-Mode History Charts:** Toggle live graphs between **Thermals** (°C), **Workload** (%), **Power Envelopes** (Watts), and **Turbines** (RPM).
-* **High-Precision Sensor Polling:** Reads Intel Core / AMD Ryzen Package temps, NVIDIA NVML GPU temperatures, and NVMe SSD controller health.
+### 3. 📈 Real-Time Telemetry & Hardware Oscilloscope
+* **Multi-Mode History Charts:** Toggle live oscilloscope graphs between **Thermals** (°C), **Workload** (%), **Power Envelopes** (Watts), and **Turbines** (RPM).
+* **High-Precision Sensor Polling:** Reads Intel Core / AMD Ryzen Package temps, NVIDIA NVML GPU temperatures, clocks, VRAM & PCIe D3cold power states, and NVMe SSD controller health.
 
 ### 4. 🦀 High-Performance Native Rust Core (`acersense`)
 * **Zero Overhead & Sub-Millisecond Execution:** Built with modern Rust 2021 edition and compiled with full Link-Time Optimization (`lto = true`, `opt-level = 3`, `strip = true`).
-* **Direct ACPI Call Interface:** Interacts with `\_SB.PCI0.WMID.WMBH` via `/proc/acpi/call` without bulky interpreter dependencies.
+* **Clippy 0 Warnings:** Audited and verified with strict static code analysis for memory safety and zero resource leaks.
+* **Direct ACPI Call Interface:** Interacts directly with `\_SB.PCI0.WMID.WMBH` via `/proc/acpi/call` without bulky interpreter dependencies or external runtimes.
 * **Modular Architecture:** Pure decoupling of CLI parsing (`clap 4.5`), hardware abstractions (`hw::*`), and core fan curves.
 
 ### 5. 🎛️ Hardware-Accelerated Vector GUI (`acersense-gui` @ 60+ FPS)
@@ -57,26 +60,82 @@
 * **4-Zone RGB Lighting Visualizer:** Live interactive preview with preset configurations and custom color picker.
 
 ### 6. 🌍 Native Multilingual Engine (10 Locales)
-* **Zero-Latency Dynamic Switching:** Instant locale translation across all 5 operational dashboards with immediate UI re-rendering and zero restart required.
+* **Zero-Latency Dynamic Switching:** Instant locale translation across all operational dashboards with immediate UI re-rendering and zero restart required (Hotkey `[L]`).
 * **10 Global Locales Supported:** Spanish (`es`), English (`en`), German (`de`), French (`fr`), Portuguese (`pt`), Italian (`it`), Russian (`ru`), Chinese Simplified (`zh`), Japanese (`ja`), and Korean (`ko`).
 * **CLI Language Management:** Query and change language via `acersense lang [code]` with persistent configuration saved in `~/.config/acersense/config.json`.
 * **FreeDesktop Multilingual Metadata:** Fully localized `.desktop` entries with localized names, generic definitions, and regional search tags.
 
 ### 7. 🎯 Physical NitroSense Key `[N]` & Modern Launcher Integration
-* **Hardware Scancode Mapping:** Maps keyboard scancode `0xf5` to `KEY_PROG1` (`XF86Launch1`) using udev/hwdb rules to launch the GUI directly from the hardware **[N]** key.
+* **Hardware Scancode Mapping:** Maps keyboard scancode `0xf5` (as well as `0x54`, `0xa8`, `0xd5`, `0xec`, `0x85`) to `KEY_PROG1` (`XF86Launch1`) using udev/hwdb rules to launch the GUI directly from the hardware **[N]** key.
 * **Rofi & Application Launchers:** Native FreeDesktop XDG standard (`Settings;HardwareSettings;`), single de-duplicated entry, and multilingual fuzzy-search keywords (`acer`, `nitro`, `predator`, `ventiladores`, `fans`, `cooling`, `rgb`, `hardware`, `bateria`).
 
 ### 8. 🔋 Battery Health Protection (80% Lithium Care Mode)
-* Enforces battery charge limit at **80%** directly in the hardware Embedded Controller, extending battery chemical longevity.
+* Enforces battery charge limit at **80%** directly in the hardware Embedded Controller, extending battery chemical longevity and preventing thermal swelling under continuous AC power.
 
 ### 9. 🌈 4-Zone RGB Keyboard Lighting & Gaming Tweaks
 * **Lighting Presets:** `cyberpunk`, `nitro`, `ice`, `toxic`, `synthwave`, and `white`.
-* **Custom Hex Styling:** Assign individual hex colors per zone or broadcast across all 4 zones.
-* **Gaming Locks:** Disable Windows key or Touchpad during gaming sessions.
+* **Custom Hex Styling:** Assign individual hex colors per zone (`--zones`) or broadcast across all 4 zones (`--color`).
+* **Tactical Gaming Locks:** Disable Windows key (`--winkey lock`) or Touchpad (`--touchpad lock`) during gaming sessions, plus LCD 3ms overdrive control (`--overdrive on`).
 
 ### 10. 🐙 Open Source Transparency & Community Links
 * **Direct Repository & Author Access:** Dedicated GitHub community button in the GUI header and interactive project card in Settings.
 * **CLI Project Introspection:** `acersense about` outputs official repository links, developer profile ([@rodrigo47363](https://github.com/rodrigo47363)), issue tracker, and releases.
+
+---
+
+## 🏗️ System Architecture & Hardware Bus Pipeline
+
+```mermaid
+flowchart TD
+    subgraph UI ["User & Desktop Layer"]
+        GUI["acersense-gui (egui / eframe @ 60+ FPS)"]
+        CLI["acersense CLI (clap v4.5)"]
+        BAR["Status Bars (Polybar / Waybar / i3blocks)"]
+        HOTKEY["Physical [N] Key (Scancode 0xF5 -> KEY_PROG1)"]
+    end
+
+    subgraph ENGINE ["Rust Core Engine"]
+        CONF["Config Engine (~/.config/acersense/config.json)"]
+        I18N["i18n Engine (10 Locales)"]
+        THEMES["Theme Engine (25 Palettes)"]
+        TELEM["Telemetry Engine (CPU / GPU / NVMe / Watts)"]
+    end
+
+    subgraph KERNEL ["Linux Kernel Space"]
+        ACPI_CALL["/proc/acpi/call (acpi_call kernel module)"]
+        UDEV["udev / hwdb (99-acersense.rules & 90-acer-nitrosense.hwdb)"]
+        SYSFS["sysfs (/sys/class/hwmon & /sys/class/power_supply)"]
+        NVML["NVIDIA NVML / Proprietary Driver"]
+    end
+
+    subgraph FIRMWARE ["Firmware & System Architecture"]
+        DSDT["ACPI DSDT / SSDT (\\_SB.PCI0.WMID.WMBH)"]
+        SMM["InsydeH2O SMM / Ring -2 (WSMI Port 0xD0)"]
+        EC["Compal Embedded Controller (ITE IT8227E-192)"]
+    end
+
+    subgraph HARDWARE ["Target Hardware Components"]
+        CPU_FAN["CPU Turbine (5400 RPM Peak)"]
+        GPU_FAN["GPU Turbine (6120 RPM Peak)"]
+        RGB_KB["4-Zone Pulsar RGB Keyboard"]
+        BATTERY["Lithium Battery Charge Controller (80% Ceiling)"]
+    end
+
+    GUI --> CONF
+    CLI --> CONF
+    HOTKEY --> UDEV --> GUI
+    BAR --> CLI
+
+    CONF --> KERNEL
+    TELEM --> SYSFS
+    TELEM --> NVML
+
+    KERNEL --> ACPI_CALL --> DSDT --> SMM --> EC
+    EC --> CPU_FAN
+    EC --> GPU_FAN
+    EC --> RGB_KB
+    EC --> BATTERY
+```
 
 ---
 
@@ -126,7 +185,7 @@ Interactive 4-zone Pulsar keyboard visualizer with hardware zone selectors (WASD
 <p align="center">
   <img src="assets/screenshots/sections/05_system_settings.png" width="100%" alt="System Settings, 10-Language Selector & Theme Hub">
 </p>
-Native 10-language internationalization matrix (ES, EN, DE, FR, PT, IT, RU, ZH, JA, KO) with real-time hot-reloading, 19 visual ergonomics themes with contrast indicators, and instant tactile switching.
+Native 10-language internationalization matrix (ES, EN, DE, FR, PT, IT, RU, ZH, JA, KO) with real-time hot-reloading, 25 visual ergonomics themes with contrast indicators, and instant tactile switching.
 </details>
 
 <details open>
@@ -140,7 +199,43 @@ Embedded Controller battery health protection (80% lithium ceiling), tactical ga
 
 ---
 
-## 🎨 The 19 Color Themes Suite (1080p Fullscreen Previews)
+## 🎨 The 25 Color Themes Suite (Visual Ergonomics Matrix)
+
+AcerSense Pro features a curated suite of **25 visual ergonomics themes** engineered to eliminate retinal fatigue, enhance focus, and match personal dotfile setups.
+
+### 🌟 Complete Themes Catalog & Palette Identity
+
+| # | Theme Name | Mode | CLI / Config Alias | Color Identity & Accent Palette | Visual Purpose & Rationale |
+|---|:---|:---:|:---|:---|:---|
+| **01** | **🌿 Confort Humano** | Dark | `human` / `human_comfort` | Slate `#0F1219` • Coral `#F43F5E` • Sky `#38BDF8` | Warm slate & gentle coral. Zero retinal fatigue for long coding sessions. |
+| **02** | **🌃 Tokyo Night** | Dark | `tokyo` / `tokyonight` | Indigo `#1A1B26` • Tokyo Blue `#7AA2F7` • Coral `#F7768E` | Iconic nocturnal urban aesthetic matching Tokyo Night terminal/IDE themes. |
+| **03** | **🏮 Neo Tokyo Cyber** | Dark | `neotokyo` / `neo` | Dark Violet `#0F0B1E` • Neon Fuchsia `#FF007C` • Cyan `#00FFFF` | High-contrast synthwave cyberpunk styling. |
+| **04** | **🔴 Red Audit Offensive** | Dark | `red_audit` / `red` | Pitch Black `#0A0A0E` • Blood Red `#FF3333` • Amber `#FF9E64` | Pure Red Team & offensive security operational identity. |
+| **05** | **🟢 Hacker Matrix** | Dark | `hacker_green` / `matrix` | Pure Black `#000000` • Phosphor Green CRT `#00FF00` | Classic CRT terminal phosphor aesthetics with maximum contrast. |
+| **06** | **🌌 Stellar Void** | Dark | `stellar_void` / `space` | Deep Void `#030303` • Plasma Cyan `#00FFFF` • Violet `#8A2BE2` | Deep-space aesthetic with glowing plasma telemetry accents. |
+| **07** | **🔮 Aurora Gradient** | Dark | `aurora_gradient` / `aurora` | Cosmic Night `#05062D` • Purple `#AF40FF` • Cyan `#00DDEB` | Cosmic night with radiant neon purple and cyan accents. |
+| **08** | **💜 Kuromi Goth** | Dark | `kuromi_goth` / `kuromi` | Absolute Black `#000000` • Goth Lavender `#B48EAD` • Pink `#F5C2E7` | Modern gothic look with muted lavender and soft pink highlights. |
+| **09** | **✨ Cinnamoroll Night** | Dark | `cinnamoroll_night` / `cinna_night`| Midnight `#11152C` • Pastel Sky `#8AADF4` • Cheek Pink `#F5BDE6` | Gentle night aesthetic with soft pastel sky and blush tones. |
+| **10** | **🌲 Everforest Soft** | Dark | `everforest` / `forest` | Charcoal `#2B3339` • Sage Green `#A7C080` • Aqua `#7FBBB3` | Warm organic charcoal and soothing natural sage harmony. |
+| **11** | **🌊 Nórdico Calmo** | Dark | `nordic` | Arctic Deep `#10141B` • Glacial Blue `#60A5FA` • Teal `#2DD4BF` | Minimalist and serene Nordic workstation colorway. |
+| **12** | **🍃 Salvia & Tierra** | Dark | `earth` / `earth_sage` | Forest `#111613` • Earth Amber `#F59E0B` • Sage Mint `#34D399` | Forest charcoal, organic sage green, and warm golden amber. |
+| **13** | **⚡ Cyber Nitro** | Dark | `cyber` / `cyber_nitro` | Pitch `#0A0D12` • Nitro Crimson `#E51937` • Cyan `#00E5FF` | Original Acer Nitro sporty gaming DNA with electric accents. |
+| **14** | **🔷 Modern Blue** | Dark | `modern_blue` / `modern` | Deep Navy `#1A1B26` • Modern Azure `#7AA2F7` | Focused technical readability with crisp modern blue accents. |
+| **15** | **👔 Mantec Corporate** | Dark | `mantec_corporate` / `corporate` | Charcoal `#1E1E1E` • Copper Orange `#E67E22` • Steel `#3498DB` | Professional enterprise slate with understated copper flair. |
+| **16** | **🔺 Material Dark Red** | Dark | `material_red` / `material` | Darker `#212121` • Coral Red `#F07178` • Amber `#FFCB6B` | Material Design dark gray with refined coral red highlights. |
+| **17** | **☁️ Cinnamoroll Cloud** | Light | `cinnamoroll_cloud` / `cloud` | Ethereal White `#F5F8FC` • Vibrant Sky `#2E8FD9` | Ultra-clear daylight theme engineered for sunlit working environments. |
+| **18** | **🌸 My Melody Soft** | Light | `mymelody_soft` / `melody` | Soft Cream `#FFF8F0` • Melody Rose `#E85D75` • Apricot `#FFE8D6` | Warm pastel comfort with soft rose accents. |
+| **19** | **🍮 Pompompurin Café** | Light | `pompompurin_cafe` / `purin` | Warm Vanilla `#FFFBF0` • Purin Caramel `#C97A18` • Cocoa `#4A2E21` | Cozy coffeehouse vibe with warm vanilla and toasted caramel. |
+| **20** | **🌹 Ado Blue Rose** | Dark | `ado_rose` / `ado` / `rose` | Midnight Abyss `#070A12` • Electric Cyan `#00D2FF` • Neon Rose `#FF2A6D` | Inspired by Aoi Bara with electric cyan and neon rose accents. |
+| **21** | **🪟 Windows 10 Metro** | Dark | `windows_10` / `win10` / `metro` | Dark Acrylic `#181818` • Metro Gray `#232323` • Metro Blue `#0078D7` | Clean, flat, functional Windows 10 styling. |
+| **22** | **🪟 Windows 11 Fluent** | Dark | `windows_11` / `win11` / `fluent` | Sun Valley Mica `#1F1F1F` • Capsule `#2B2B2B` • Fluent Blue `#60CDFF` | Translucent Mica effect with soft rounded capsules. |
+| **23** | **🍎 macOS Spotlight Dark** | Dark | `spotlight_dark` / `macos` | Dark Slate `#242424` • Glass Border `#363636` • Cupertino Blue `#0860F2` | Minimalist dark macOS Spotlight look with Cupertino blue. |
+| **24** | **🍎 macOS Spotlight Light** | Light | `spotlight_light` / `macos_light` | Pure White `#F5F5F5` • Charcoal `#242424` • Cupertino Blue `#0860F2` | Refined Cupertino light mode with crystal contrast. |
+| **25** | **🍉 Suika Recon** | Dark | `suika_melon` / `suika` / `stone` | Rind Green `#52B788` • Quartz Amber `#FFD166` • Pulp Red `#FF5C77` | Dr. Stone tactical organic science and reconnaissance palette. |
+
+---
+
+### 🖼️ Visual Themes Showcase & 1080p Previews
 
 | Theme | Type | Color Identity | Main Dashboard | Complete Section Previews |
 |:---|:---:|:---|:---:|:---|
@@ -164,10 +259,8 @@ Embedded Controller battery health protection (80% lithium ceiling), tactical ga
 | **🌸 My Melody Soft** | Light | Soft Cream `#FFF8F0` • Melody Rose `#E85D75` • Apricot `#FFE8D6` | [📸 View](assets/screenshots/18_mymelody_soft.png) | [Fans](assets/screenshots/by_theme/18_mymelody_soft/fans.png) • [Monitor](assets/screenshots/by_theme/18_mymelody_soft/monitoring.png) • [Power](assets/screenshots/by_theme/18_mymelody_soft/power.png) • [RGB](assets/screenshots/by_theme/18_mymelody_soft/rgb.png) • [Settings](assets/screenshots/by_theme/18_mymelody_soft/settings.png) |
 | **🍮 Pompompurin Café** | Light | Warm Vanilla `#FFFBF0` • Purin Caramel `#C97A18` • Cocoa `#4A2E21` | [📸 View](assets/screenshots/19_pompompurin_cafe.png) | [Fans](assets/screenshots/by_theme/19_pompompurin_cafe/fans.png) • [Monitor](assets/screenshots/by_theme/19_pompompurin_cafe/monitoring.png) • [Power](assets/screenshots/by_theme/19_pompompurin_cafe/power.png) • [RGB](assets/screenshots/by_theme/19_pompompurin_cafe/rgb.png) • [Settings](assets/screenshots/by_theme/19_pompompurin_cafe/settings.png) |
 
-### 🖼️ Visual Themes Gallery
-
 <details open>
-<summary><b>✨ Highlighted Signature Themes (Click to collapse/expand)</b></summary>
+<summary><b>✨ Highlighted Signature Themes Gallery (Click to collapse/expand)</b></summary>
 <br>
 <p align="center">
   <img src="assets/screenshots/07_aurora_gradient.png" width="32%" alt="Aurora Gradient">
@@ -182,7 +275,7 @@ Embedded Controller battery health protection (80% lithium ceiling), tactical ga
 </details>
 
 <details>
-<summary><b>🎨 Complete 19-Theme Visual Comparison (1080p Fullscreen Previews)</b></summary>
+<summary><b>🎨 Complete Visual Comparison Grid (Click to expand)</b></summary>
 <br>
 
 | Theme | Preview (1080p) | Theme | Preview (1080p) |
@@ -204,7 +297,7 @@ Embedded Controller battery health protection (80% lithium ceiling), tactical ga
 
 ## 💻 Supported Laptop Hardware
 
-Engineered and verified on Compal motherboard platforms:
+Engineered and verified on Acer Compal motherboard platforms:
 * **Acer Nitro 5:** AN515-42, AN515-43, AN515-44, AN515-45, AN515-46, AN515-47, AN515-51, AN515-52, AN515-53, AN515-54, **AN515-55**, AN515-56, AN515-57, AN515-58
 * **Acer Nitro 16 & 17:** AN516-51, AN517-41, AN517-42, AN517-51, AN517-52, AN517-54, AN517-55
 * **Acer Predator Helios & Triton:** PH315, PH317, PT314, PT315, PT515, PT516
@@ -212,83 +305,254 @@ Engineered and verified on Compal motherboard platforms:
 
 ---
 
-## 📦 Quick Installation
+## 📦 Quick Installation & Deployment
 
 ### Option 1: Debian / Parrot OS / Ubuntu Package (.deb)
+The recommended installation method for Debian-based distributions:
 ```bash
-# Install the pre-built debian package
+# Install the pre-built Debian package
 sudo dpkg -i acersense_2.1.0_amd64.deb
 sudo apt-get install -f
 ```
 
 ### Option 2: Automated Production Installer
+Automatically configures kernel modules (`acpi_call`), udev rules, system groups, systemd persistence, and compiles release binaries:
 ```bash
 git clone https://github.com/rodrigo47363/acersense-linux.git
 cd acersense-linux
 sudo ./install.sh
 ```
 
-### Option 3: Build from Source (Cargo)
+### Option 3: Build from Source with Cargo
+For Arch Linux, Fedora, Void Linux, or custom installations:
+
+1. **Install Build & Runtime Dependencies:**
+   * **Debian / Ubuntu / Parrot:**
+     ```bash
+     sudo apt-get update
+     sudo apt-get install -y cargo rustc acpi-call-dkms lm-sensors libx11-dev libxcursor-dev libxrandr-dev libxi-dev libgl1-mesa-dev
+     ```
+   * **Arch Linux / Manjaro:**
+     ```bash
+     sudo pacman -Syu --needed base-devel rust acpi_call lm_sensors libx11 libxcursor libxrandr libxi mesa
+     ```
+   * **Fedora / RHEL:**
+     ```bash
+     sudo dnf install -y cargo rust akmod-acpi_call lm_sensors libX11-devel libXcursor-devel libXrandr-devel libXi-devel mesa-libGL-devel
+     ```
+
+2. **Compile with Full Optimizations:**
+   ```bash
+   cargo build --release
+   ```
+
+3. **Install Binaries to System Path:**
+   ```bash
+   sudo install -m 755 target/release/acersense /usr/local/bin/acersense
+   sudo install -m 755 target/release/acersense-gui /usr/local/bin/acersense-gui
+   ```
+
+4. **Enable acpi_call Kernel Module & Systemd Daemon:**
+   ```bash
+   echo "acpi_call" | sudo tee /etc/modules-load.d/acpi_call.conf
+   sudo modprobe acpi_call
+   sudo install -m 644 assets/acersensed.service /etc/systemd/system/acersensed.service
+   sudo systemctl daemon-reload
+   sudo systemctl enable --now acersensed.service
+   ```
+
+### Building Debian Package from Source
 ```bash
-# Prerequisites: cargo, rustc, acpi-call-dkms, lm-sensors
-cargo build --release
+./build_deb.sh
+```
 
-# Install binaries into user path
-cp target/release/acersense target/release/acersense-gui ~/.local/bin/
-
-# (Optional) Install system-wide service binaries
-sudo install -m 755 target/release/acersense /usr/local/bin/acersense
-sudo install -m 755 target/release/acersense-gui /usr/local/bin/acersense-gui
+### Uninstallation
+```bash
+sudo ./uninstall.sh
 ```
 
 ---
 
-## ⌨️ Tactical Commands & Keybindings
+## ⌨️ Tactical Commands & Keybindings Reference
 
-| Key / Command | Action |
-| :--- | :--- |
-| **Physical `[N]` Key** | Launches AcerSense Pro GUI (Identical to Windows NitroSense) |
-| **`[T]` Key (in GUI)** | **Cycle color themes in real time** through all 19 palettes |
-| **`Win + N`** | Desktop shortcut for AcerSense GUI |
-| **`Win + Shift + N`** | Quick-toggles Turbo Max (6120 RPM) $\leftrightarrow$ Silent Auto |
-| **`acersense`** / **`acersense status`** | Displays full system thermals, fans, battery & RGB telemetry |
-| **`acersense fan --mode max`** | Forces dual fans to maximum physical speed (5400 / 6120 RPM) |
-| **`acersense fan --mode auto`** | Restores automatic BIOS fan curve |
-| **`acersense fan --toggle`** | Alternates fan profile between Auto and Max |
-| **`acersense fan --coolboost on`** | Enables Acer CoolBoost thermal headroom |
-| **`acersense profile --set turbo`** | Sets power profile (`quiet`, `balanced`, `performance`, `turbo`) with CPU EPP auto-tuning |
-| **`acersense battery --limit-80 on`** | Enforces 80% maximum charge health limit |
-| **`acersense rgb --preset cyberpunk`** | Applies neon cyberpunk 4-zone keyboard backlight theme |
-| **`acersense gaming --winkey lock`** | Locks Windows/Super key to prevent accidental desktop switching |
-| **`acersense lang`** | Displays active language and lists supported global locales |
-| **`acersense lang <es|en|de|...>`** | Sets interface language (`es`, `en`, `de`, `fr`, `pt`, `it`, `ru`, `zh`, `ja`, `ko`) |
-| **`acersense about`** | Displays official GitHub repository, author profile, and community links |
-| **`acersense restore`** | Reapplies saved hardware configuration on system boot or suspend resume |
-| **`acersense --polybar`** | Outputs compact color-coded status line for Polybar / status bars |
-| **`acersense --json`** | Emits machine-readable telemetry JSON for custom scripting |
+### 🎮 Global Shortcuts & GUI In-App Hotkeys
+
+| Shortcut | Context | Action |
+| :--- | :--- | :--- |
+| **Physical `[N]` Key** | Global Hardware | Launches AcerSense Pro GUI (Mapped via scancode `0xF5` $\rightarrow$ `KEY_PROG1`) |
+| **`Win + N`** | Desktop / Window Manager | Launches AcerSense Pro GUI |
+| **`Win + Shift + N`** | Desktop / Window Manager | Toggles Turbo Max (6120 RPM) $\leftrightarrow$ Silent Auto |
+| **`[T]`** | Inside GUI | **Instant circular theme cycling** through all 25 palettes |
+| **`[L]`** | Inside GUI | **Instant language cycling** across all 10 supported locales |
+| **`[1]` - `[5]`** | Inside GUI | Direct tab jump (`1` Fans, `2` Monitor, `3` Power, `4` RGB, `5` Settings) |
+| **`[A]`** | Inside GUI | Sets fans to **Auto mode** (BIOS thermal curve) |
+| **`[M]`** | Inside GUI | Sets fans to **Max Turbo mode** (5400 / 6120 RPM) |
+| **`[C]`** | Inside GUI | Switches to **Custom sliders mode** |
+| **`Ctrl + Q`** | Inside GUI | Exits the GUI application cleanly |
 
 ---
 
-## 📊 Status Bars Integration (Polybar / Waybar)
+### 🖥️ GUI Launch Arguments (`acersense-gui`)
 
-### Polybar (`~/.config/polybar/config.ini`)
+```bash
+# Launch GUI in default desktop window (980x680)
+acersense-gui
+
+# Launch GUI in true 1080p Fullscreen mode
+acersense-gui --fullscreen    # (or -F)
+
+# Launch GUI with window maximized
+acersense-gui --maximized
+
+# Launch GUI with a specific theme pre-loaded
+acersense-gui --theme tokyo           # (Options: human, tokyo, neotokyo, red_audit, matrix, suika, etc.)
+
+# Launch GUI with a specific locale
+acersense-gui --lang es               # (Options: es, en, de, fr, pt, it, ru, zh, ja, ko)
+
+# Launch GUI directly on a specific tab
+acersense-gui --tab fans              # Fan control & tachometers
+acersense-gui --tab monitoring        # Telemetry oscilloscope (or --monitoring / -m)
+acersense-gui --tab power             # Operating power envelopes (or --power / -p)
+acersense-gui --tab rgb               # 4-zone keyboard studio (or --rgb / -r)
+acersense-gui --tab settings          # System settings & themes (or --settings / -s)
+```
+
+---
+
+### ⚙️ CLI Control Engine (`acersense`)
+
+| Command / Flag | Arguments & Options | Technical Description & Practical Output |
+| :--- | :--- | :--- |
+| **`acersense`** / **`acersense status`** | _None_ | Displays complete system thermals, silicon clock, fan RPM, battery & RGB telemetry |
+| **`acersense fan --mode <mode>`** | `auto`, `max`, `custom`, `silent` | Sets fan governor profile (`max` locks hardware at 5400/6120 RPM) |
+| **`acersense fan --toggle`** | `-t` | Quick-toggles between Auto BIOS curve and 100% Turbo Max burst |
+| **`acersense fan --status`** | `-s` | Inspects live fan speeds, RPM readings, and active cooling state |
+| **`acersense fan --coolboost <state>`** | `on`, `off` | Toggles Acer CoolBoost thermal headroom floor via ACPI WMAA |
+| **`acersense fan --cpu <pct> --gpu <pct>`** | `0-100` | Applies custom individual PWM duty cycle percentages to CPU and GPU fans |
+| **`acersense profile --set <profile>`** | `quiet`, `balanced`, `performance`, `turbo` | Applies power envelope (governor, EPP, turbo boost limits) |
+| **`acersense profile --next`** | `-n` | Cycles sequentially to the next platform power profile |
+| **`acersense profile --status`** | _None_ | Outputs the currently active power profile |
+| **`acersense mode <target>`** | `next`, `toggle`, `max`, `auto`, `quiet`, `balanced`, `performance`, `turbo` | Unified command shorthand for switching power or fan modes |
+| **`acersense battery --limit-80 <state>`** | `on`, `off` | Enforces 80% maximum charge ceiling directly in the Compal EC |
+| **`acersense battery --status`** | `-s` | Displays battery health, capacity, cycle count, and charging rate |
+| **`acersense rgb --preset <preset>`** | `nitro`, `cyberpunk`, `ice`, `toxic`, `synthwave`, `white` | Applies factory curated 4-zone keyboard backlight color scheme |
+| **`acersense rgb --color "<hex>"`** | `"#RRGGBB"` (e.g. `"#FF0033"`) | Broadcasts a single custom hex color across all 4 keyboard lighting zones |
+| **`acersense rgb --zones <z1> <z2> <z3> <z4>`** | 4 hex codes (e.g. `"#FF0000"` `"#00FF00"` `"#0000FF"` `"#FFFF00"`) | Assigns distinct custom hex colors to Zone 1, 2, 3, and 4 |
+| **`acersense gaming --winkey <state>`** | `lock`, `unlock` | Suppresses or enables the Windows/Super key to prevent gaming alt-tabs |
+| **`acersense gaming --touchpad <state>`** | `lock`, `unlock` | Disables or enables touchpad input during keyboard heavy gaming |
+| **`acersense gaming --overdrive <state>`** | `on`, `off` | Toggles LCD 3ms overdrive panel response acceleration |
+| **`acersense lang [code]`** | `es`, `en`, `de`, `fr`, `pt`, `it`, `ru`, `zh`, `ja`, `ko` | Queries or switches persistent UI language configuration |
+| **`acersense about`** | _None_ | Displays official repository links, author profile, and community trackers |
+| **`acersense restore`** | _None_ | Re-applies saved hardware configuration on system boot or suspend resume |
+| **`acersense --polybar`** | _Global flag_ | Emits compact, color-coded status line formatted for Polybar modules |
+| **`acersense --json`** | _Global flag_ | Dumps full sensor telemetry as structured JSON for automation scripts |
+
+---
+
+## 📊 Status Bars Integration (Polybar / Waybar / i3blocks)
+
+Pre-built modular configurations are located in [`assets/statusbars/`](assets/statusbars/).
+
+### 1. Polybar (`~/.config/polybar/config.ini`)
 ```ini
 [module/acersense]
 type = custom/script
 exec = acersense --polybar
 interval = 2
-click-left = acersense fan --toggle
-click-right = acersense-gui
+format-prefix = "󰚥 "
+format-prefix-foreground = #58A6FF
+format-background = #161B22
+format-foreground = #E6EDF3
+format-padding = 1
+format-underline = #58A6FF
+
+; Left click opens GUI Control Center
+click-left = acersense-gui &
+
+; Right click engages Turbo Max mode
+click-right = acersense profile --set turbo
+
+; Middle click restores Balanced mode
+click-middle = acersense profile --set balanced
+```
+
+### 2. Waybar (`~/.config/waybar/config.jsonc`)
+Add `"custom/acersense"` to your `modules-right` or `modules-center`:
+```jsonc
+"custom/acersense": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 2,
+    "exec": "acersense --json",
+    "on-click": "acersense-gui",
+    "on-click-right": "acersense fan --toggle",
+    "on-click-middle": "acersense profile --set balanced",
+    "tooltip": true
+}
+```
+
+Optional Waybar styling (`~/.config/waybar/style.css`):
+```css
+#custom-acersense {
+    background-color: #161B22;
+    color: #58A6FF;
+    border: 1px solid #30363D;
+    border-radius: 8px;
+    padding: 0 12px;
+    margin: 4px 6px;
+    font-family: monospace;
+    font-weight: bold;
+}
+#custom-acersense.warning { color: #D29922; border-color: #D29922; }
+#custom-acersense.critical { color: #F85149; border-color: #F85149; }
+```
+
+### 3. i3blocks (`~/.config/i3blocks/config`)
+```ini
+[acersense]
+command=acersense --polybar
+interval=2
+signal=8
 ```
 
 ---
 
-## 🐙 Community & Author
+## 🔧 Hardware Configuration & State Persistence
 
-* **Project Repository:** [github.com/rodrigo47363/acersense-linux](https://github.com/rodrigo47363/acersense-linux)
-* **Lead Developer:** Rodrigo ([@rodrigo47363](https://github.com/rodrigo47363))
-* **Issue Tracker & Bug Reports:** [Issues](https://github.com/rodrigo47363/acersense-linux/issues)
-* **Releases & Binary Packages:** [Releases](https://github.com/rodrigo47363/acersense-linux/releases)
+AcerSense Pro persists configuration in `~/.config/acersense/config.json` (user-specific) with automatic fallback to `/etc/acersense/config.json` (system-wide):
+
+```json
+{
+  "mode": "auto",
+  "profile": "balanced",
+  "coolboost": true,
+  "cpu_fan_target": 50,
+  "gpu_fan_target": 50,
+  "sync_fans": true,
+  "battery_health_80": false,
+  "winkey_locked": false,
+  "touchpad_locked": false,
+  "theme": "human",
+  "language": "es"
+}
+```
+
+### Automatic Systemd Boot & Suspend Resume Hooks
+* **`acersensed.service`**: Systemd unit that executes `acersense restore` on boot to restore fan curves, RGB backlight, and battery charge thresholds.
+* **`acersense-sleep`**: Systemd sleep hook located in `/usr/lib/systemd/system-sleep/acersense-sleep` that re-engages the hardware registers 1 second after resuming from suspend/hibernation, ensuring the BIOS doesn't overwrite your preferences.
+
+---
+
+## 🔍 Troubleshooting & Diagnostics
+
+| Symptom | Probable Cause | Technical Fix & Command |
+| :--- | :--- | :--- |
+| **Error: `/proc/acpi/call` does not exist** | Kernel module `acpi_call` is not loaded | Run `sudo modprobe acpi_call`. To make persistent: `echo "acpi_call" \| sudo tee /etc/modules-load.d/acpi_call.conf`. |
+| **Permission denied on `/proc/acpi/call`** | Incorrect permissions on ACPI device | Run `sudo chmod 666 /proc/acpi/call`. Handled automatically by `install.sh` via `/etc/tmpfiles.d/acersense.conf`. |
+| **GPU turbine stuck at ~2400 RPM during MAX mode** | SMM closed-loop thermal lock | Ensure `acpi_call` is active. AcerSense Pro unlocks SMM via WMBH Method 14 (`0x820009`) and Method 16 (`0x6404`). Test with `sudo acersense fan --mode max`. |
+| **Physical `[N]` key does not launch GUI** | udev/hwdb scancode not indexed | Update hardware database: `sudo systemd-hwdb update && sudo udevadm trigger -s input -c change`. |
+| **Discrete GPU telemetry says "PCIe D3cold / 0.0W"** | GPU is in dynamic Linux power saving | Normal behavior! Discrete NVIDIA GPU is powered down to save battery. Telemetry will automatically awaken as soon as a 3D application or CUDA workload starts. |
 
 ---
 
@@ -298,6 +562,15 @@ click-right = acersense-gui
 * **[Thermals & Fan Control Troubleshooting](docs/TROUBLESHOOTING_THERMALS_AND_FAN_CONTROL.md)**: Embedded Controller register mappings and 8-bit PWM duty cycle calibration.
 * **[Technical Failures & Solutions](docs/TECHNICAL_FAILURES_AND_SOLUTIONS.md)**: Comprehensive guide on resolving ACPI method conflicts and udev keyboard scancodes.
 * **[Engineering Audit Log](docs/ENGINEERING_AUDIT_LOG.md)**: Chronological hardware benchmarks and architecture milestones.
+
+---
+
+## 🐙 Community & Author
+
+* **Project Repository:** [github.com/rodrigo47363/acersense-linux](https://github.com/rodrigo47363/acersense-linux)
+* **Lead Developer:** Rodrigo ([@rodrigo47363](https://github.com/rodrigo47363))
+* **Issue Tracker & Bug Reports:** [Issues](https://github.com/rodrigo47363/acersense-linux/issues)
+* **Releases & Binary Packages:** [Releases](https://github.com/rodrigo47363/acersense-linux/releases)
 
 ---
 

@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "lowercase")]
 pub enum Language {
+    #[default]
     Es,
     En,
     De,
@@ -15,12 +16,7 @@ pub enum Language {
     Ko,
 }
 
-impl Default for Language {
-    fn default() -> Self {
-        Self::Es
-    }
-}
-
+#[allow(clippy::too_many_arguments)]
 #[inline(always)]
 pub fn tr(
     lang: Language,
@@ -49,6 +45,7 @@ pub fn tr(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 #[inline(always)]
 pub fn tr2(
     lang: Language,
@@ -329,7 +326,7 @@ impl Language {
             "消費電力放熱: {:.1} W",
             "소비 전력 방열: {:.1} W",
         );
-        format!("{}", fmt.replace("{:.1}", &format!("{:.1}", watts)))
+        fmt.replace("{:.1}", &format!("{:.1}", watts))
     }
 
     pub fn footer_shortcuts(&self) -> &'static str {
@@ -722,7 +719,10 @@ impl Language {
             "{} テレメトリ:\n• 現在温度: {:.1}°C\n• サーマルヘッドルーム: +{:.1}°C (限界: {:.0}°C)",
             "{} 텔레메트리:\n• 현재 온도: {:.1}°C\n• 여유 열 마진: +{:.1}°C 스로틀링 기준 (한계: {:.0}°C)",
         );
-        format!("{}", fmt.replace("{}", title).replace("{:.1}", &format!("{:.1}", temp)).replace("{:.1}", &format!("{:.1}", headroom)).replace("{:.0}", &format!("{:.0}", tjmax)))
+        fmt.replace("{}", title)
+            .replace("{:.1}", &format!("{:.1}", temp))
+            .replace("{:.1}", &format!("{:.1}", headroom))
+            .replace("{:.0}", &format!("{:.0}", tjmax))
     }
 
     pub fn minus_tooltip(&self) -> &'static str {

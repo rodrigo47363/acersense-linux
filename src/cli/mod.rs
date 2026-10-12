@@ -89,7 +89,7 @@ pub struct ProfileArgs {
     pub next: bool,
 
     /// Show current profile
-    #[arg(short, long)]
+    #[arg(long)]
     pub status: bool,
 }
 
