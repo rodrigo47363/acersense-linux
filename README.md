@@ -11,6 +11,10 @@
 [![Code Quality: Clippy 0 Warnings](https://img.shields.io/badge/Clippy-0%20Warnings-success.svg)](#4--high-performance-native-rust-core-acersense)
 [![Direct ACPI / SMM: Ring -2 Interconnect](https://img.shields.io/badge/Bus-ACPI%20%7C%20WSMI%20%7C%20EC-blueviolet.svg)](#-system-architecture--hardware-bus-pipeline)
 
+<p align="center">
+  <img src="assets/icons/acersense.png" alt="AcerSense Pro Logo" width="128">
+</p>
+
 **AcerSense Pro Linux** is an ultra-high performance, low-latency open-source hardware control suite and native Rust engine designed to completely replace proprietary Windows utilities (**Acer NitroSense**, **Acer PredatorSense**, and **Acer Care Center**) on Acer Nitro, Predator, and Aspire Gaming laptops.
 
 ```
@@ -257,7 +261,13 @@ AcerSense Pro features a curated suite of **25 visual ergonomics themes** engine
 | **🔺 Material Dark Red** | Dark | Darker `#212121` • Coral Red `#F07178` • Amber `#FFCB6B` | [📸 View](assets/screenshots/16_material_dark_red.png) | [Fans](assets/screenshots/by_theme/16_material_dark_red/fans.png) • [Monitor](assets/screenshots/by_theme/16_material_dark_red/monitoring.png) • [Power](assets/screenshots/by_theme/16_material_dark_red/power.png) • [RGB](assets/screenshots/by_theme/16_material_dark_red/rgb.png) • [Settings](assets/screenshots/by_theme/16_material_dark_red/settings.png) |
 | **☁️ Cinnamoroll Cloud** | Light | Ethereal White `#F5F8FC` • Vibrant Sky Blue `#2E8FD9` | [📸 View](assets/screenshots/17_cinnamoroll_cloud.png) | [Fans](assets/screenshots/by_theme/17_cinnamoroll_cloud/fans.png) • [Monitor](assets/screenshots/by_theme/17_cinnamoroll_cloud/monitoring.png) • [Power](assets/screenshots/by_theme/17_cinnamoroll_cloud/power.png) • [RGB](assets/screenshots/by_theme/17_cinnamoroll_cloud/rgb.png) • [Settings](assets/screenshots/by_theme/17_cinnamoroll_cloud/settings.png) |
 | **🌸 My Melody Soft** | Light | Soft Cream `#FFF8F0` • Melody Rose `#E85D75` • Apricot `#FFE8D6` | [📸 View](assets/screenshots/18_mymelody_soft.png) | [Fans](assets/screenshots/by_theme/18_mymelody_soft/fans.png) • [Monitor](assets/screenshots/by_theme/18_mymelody_soft/monitoring.png) • [Power](assets/screenshots/by_theme/18_mymelody_soft/power.png) • [RGB](assets/screenshots/by_theme/18_mymelody_soft/rgb.png) • [Settings](assets/screenshots/by_theme/18_mymelody_soft/settings.png) |
-| **🍮 Pompompurin Café** | Light | Warm Vanilla `#FFFBF0` • Purin Caramel `#C97A18` • Cocoa `#4A2E21` | [📸 View](assets/screenshots/19_pompompurin_cafe.png) | [Fans](assets/screenshots/by_theme/19_pompompurin_cafe/fans.png) • [Monitor](assets/screenshots/by_theme/19_pompompurin_cafe/monitoring.png) • [Power](assets/screenshots/by_theme/19_pompompurin_cafe/power.png) • [RGB](assets/screenshots/by_theme/19_pompompurin_cafe/rgb.png) • [Settings](assets/screenshots/by_theme/19_pompompurin_cafe/settings.png) |
+| **19. 🍮 Pompompurin Café** | Light | Warm Vanilla `#FFFBF0` • Purin Caramel `#C97A18` • Cocoa `#4A2E21` | [📸 View](assets/screenshots/19_pompompurin_cafe.png) | [Fans](assets/screenshots/by_theme/19_pompompurin_cafe/fans.png) • [Monitor](assets/screenshots/by_theme/19_pompompurin_cafe/monitoring.png) • [Power](assets/screenshots/by_theme/19_pompompurin_cafe/power.png) • [RGB](assets/screenshots/by_theme/19_pompompurin_cafe/rgb.png) • [Settings](assets/screenshots/by_theme/19_pompompurin_cafe/settings.png) |
+| **20. 🌹 Ado Blue Rose** | Dark | Midnight `#070A12` • Electric Cyan `#00D2FF` • Neon Rose `#FF2A6D` | [📸 View](assets/screenshots/20_ado_rose.png) | [Fans](assets/screenshots/by_theme/20_ado_rose/fans.png) • [Monitor](assets/screenshots/by_theme/20_ado_rose/monitoring.png) • [Power](assets/screenshots/by_theme/20_ado_rose/power.png) • [RGB](assets/screenshots/by_theme/20_ado_rose/rgb.png) • [Settings](assets/screenshots/by_theme/20_ado_rose/settings.png) |
+| **21. 🪟 Windows 10 Metro** | Dark | Dark Acrylic `#181818` • Metro Gray `#232323` • Metro Blue `#0078D7` | [📸 View](assets/screenshots/21_windows_10.png) | [Fans](assets/screenshots/by_theme/21_windows_10/fans.png) • [Monitor](assets/screenshots/by_theme/21_windows_10/monitoring.png) • [Power](assets/screenshots/by_theme/21_windows_10/power.png) • [RGB](assets/screenshots/by_theme/21_windows_10/rgb.png) • [Settings](assets/screenshots/by_theme/21_windows_10/settings.png) |
+| **22. 🪟 Windows 11 Fluent** | Dark | Sun Valley Mica `#1F1F1F` • Capsule `#2B2B2B` • Fluent Blue `#60CDFF` | [📸 View](assets/screenshots/22_windows_11.png) | [Fans](assets/screenshots/by_theme/22_windows_11/fans.png) • [Monitor](assets/screenshots/by_theme/22_windows_11/monitoring.png) • [Power](assets/screenshots/by_theme/22_windows_11/power.png) • [RGB](assets/screenshots/by_theme/22_windows_11/rgb.png) • [Settings](assets/screenshots/by_theme/22_windows_11/settings.png) |
+| **23. 🍎 macOS Spotlight Dark** | Dark | Dark Slate `#242424` • Glass Border `#363636` • Cupertino Blue `#0860F2` | [📸 View](assets/screenshots/23_spotlight_dark.png) | [Fans](assets/screenshots/by_theme/23_spotlight_dark/fans.png) • [Monitor](assets/screenshots/by_theme/23_spotlight_dark/monitoring.png) • [Power](assets/screenshots/by_theme/23_spotlight_dark/power.png) • [RGB](assets/screenshots/by_theme/23_spotlight_dark/rgb.png) • [Settings](assets/screenshots/by_theme/23_spotlight_dark/settings.png) |
+| **24. 🍎 macOS Spotlight Light** | Light | Pure White `#F5F5F5` • Charcoal `#242424` • Cupertino Blue `#0860F2` | [📸 View](assets/screenshots/24_spotlight_light.png) | [Fans](assets/screenshots/by_theme/24_spotlight_light/fans.png) • [Monitor](assets/screenshots/by_theme/24_spotlight_light/monitoring.png) • [Power](assets/screenshots/by_theme/24_spotlight_light/power.png) • [RGB](assets/screenshots/by_theme/24_spotlight_light/rgb.png) • [Settings](assets/screenshots/by_theme/24_spotlight_light/settings.png) |
+| **25. 🍉 Suika Recon** | Dark | Rind Green `#52B788` • Quartz Amber `#FFD166` • Pulp Red `#FF5C77` | [📸 View](assets/screenshots/25_suika_melon.png) | [Fans](assets/screenshots/by_theme/25_suika_melon/fans.png) • [Monitor](assets/screenshots/by_theme/25_suika_melon/monitoring.png) • [Power](assets/screenshots/by_theme/25_suika_melon/power.png) • [RGB](assets/screenshots/by_theme/25_suika_melon/rgb.png) • [Settings](assets/screenshots/by_theme/25_suika_melon/settings.png) |
 
 <details open>
 <summary><b>✨ Highlighted Signature Themes Gallery (Click to collapse/expand)</b></summary>
@@ -271,6 +281,11 @@ AcerSense Pro features a curated suite of **25 visual ergonomics themes** engine
   <img src="assets/screenshots/05_hacker_matrix.png" width="32%" alt="Hacker Matrix">
   <img src="assets/screenshots/03_neo_tokyo.png" width="32%" alt="Neo Tokyo">
   <img src="assets/screenshots/08_kuromi_goth.png" width="32%" alt="Kuromi Goth">
+</p>
+<p align="center">
+  <img src="assets/screenshots/20_ado_rose.png" width="32%" alt="Ado Blue Rose">
+  <img src="assets/screenshots/22_windows_11.png" width="32%" alt="Windows 11 Fluent">
+  <img src="assets/screenshots/25_suika_melon.png" width="32%" alt="Suika Recon (Dr. Stone)">
 </p>
 </details>
 
@@ -289,7 +304,10 @@ AcerSense Pro features a curated suite of **25 visual ergonomics themes** engine
 | **13. ⚡ Cyber Nitro** | <img src="assets/screenshots/13_cyber_nitro.png" width="360" alt="Cyber Nitro"> | **14. 🔷 Modern Blue** | <img src="assets/screenshots/14_modern_blue.png" width="360" alt="Modern Blue"> |
 | **15. 👔 Mantec Corporate** | <img src="assets/screenshots/15_mantec_corporate.png" width="360" alt="Mantec Corporate"> | **16. 🔺 Material Dark Red** | <img src="assets/screenshots/16_material_dark_red.png" width="360" alt="Material Dark Red"> |
 | **17. ☁️ Cinnamoroll Cloud** | <img src="assets/screenshots/17_cinnamoroll_cloud.png" width="360" alt="Cinnamoroll Cloud"> | **18. 🌸 My Melody Soft** | <img src="assets/screenshots/18_mymelody_soft.png" width="360" alt="My Melody Soft"> |
-| **19. 🍮 Pompompurin Café** | <img src="assets/screenshots/19_pompompurin_cafe.png" width="360" alt="Pompompurin Café"> | | |
+| **19. 🍮 Pompompurin Café** | <img src="assets/screenshots/19_pompompurin_cafe.png" width="360" alt="Pompompurin Café"> | **20. 🌹 Ado Blue Rose** | <img src="assets/screenshots/20_ado_rose.png" width="360" alt="Ado Blue Rose"> |
+| **21. 🪟 Windows 10 Metro** | <img src="assets/screenshots/21_windows_10.png" width="360" alt="Windows 10 Metro"> | **22. 🪟 Windows 11 Fluent** | <img src="assets/screenshots/22_windows_11.png" width="360" alt="Windows 11 Fluent"> |
+| **23. 🍎 macOS Spotlight Dark** | <img src="assets/screenshots/23_spotlight_dark.png" width="360" alt="macOS Spotlight Dark"> | **24. 🍎 macOS Spotlight Light** | <img src="assets/screenshots/24_spotlight_light.png" width="360" alt="macOS Spotlight Light"> |
+| **25. 🍉 Suika Recon (Dr. Stone)** | <img src="assets/screenshots/25_suika_melon.png" width="360" alt="Suika Recon"> | **00. 🏎️ AcerSense Main Dashboard** | <img src="assets/screenshots/acersense_gui_dashboard.png" width="360" alt="AcerSense Main Dashboard"> |
 
 </details>
 
