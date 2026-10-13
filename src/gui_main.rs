@@ -63,6 +63,8 @@ pub enum HardwareCommand {
     SetBatteryLimit(bool),
     SetLcdOverdrive(bool),
     SetCoolboost(bool),
+    SetWinKeyLock(bool),
+    SetTouchpadLock(bool),
 }
 
 #[derive(PartialEq, Clone, Copy, Debug)]
@@ -1092,6 +1094,12 @@ impl AcerSenseApp {
                                 let _ = telemetry_tx.try_send(data);
                                 last_poll = Instant::now();
                             }
+                            HardwareCommand::SetWinKeyLock(lock) => {
+                                let _ = gaming::set_winkey_lock(lock);
+                            }
+                            HardwareCommand::SetTouchpadLock(lock) => {
+                                let _ = gaming::set_touchpad_lock(lock);
+                            }
                         }
                     }
 
@@ -1764,31 +1772,22 @@ impl AcerSenseApp {
         // --- MAIN CARD: FAN SPEED CONTROL & MODE SELECTION ---
         self.nitro_card_frame().show(ui, |ui| {
             // 1. Header Row: Title, Mode Pill, Fan Sync, and CoolBoost Toggle
-            ui.horizontal(|ui| {
-                ui.heading(
-                    RichText::new(l.fan_title())
-                        .size(16.0_f32)
-                        .strong()
-                        .color(pal.text_primary),
-                );
-                ui.add_space(8.0_f32);
+            let (mode_text, mode_desc) = l.fan_mode_badge(if is_auto {
+                "auto"
+            } else if is_max {
+                "max"
+            } else {
+                "custom"
+            });
+            let mode_color = if is_auto {
+                pal.secondary
+            } else if is_max {
+                pal.primary
+            } else {
+                pal.warning
+            };
 
-                // Operational Mode Badge / Pill
-                let (mode_text, mode_desc) = l.fan_mode_badge(if is_auto {
-                    "auto"
-                } else if is_max {
-                    "max"
-                } else {
-                    "custom"
-                });
-                let mode_color = if is_auto {
-                    pal.secondary
-                } else if is_max {
-                    pal.primary
-                } else {
-                    pal.warning
-                };
-
+            let render_badge = |ui: &mut egui::Ui| {
                 let badge = egui::Frame::none()
                     .fill(Color32::from_rgba_unmultiplied(
                         mode_color.r(),
@@ -1819,10 +1818,12 @@ impl AcerSenseApp {
                     })
                     .response
                     .on_hover_text(mode_desc);
+            };
 
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            let render_toggles =
+                |ui: &mut egui::Ui, config: &mut AcerConfig, cmd_tx: &Sender<HardwareCommand>| {
                     // CoolBoost Pill Toggle
-                    let cb = self.config.coolboost;
+                    let cb = config.coolboost;
                     let cb_text = l.coolboost_text(cb);
                     let cb_color = if cb { pal.success } else { pal.text_muted };
                     let cb_bg = if cb {
@@ -1852,17 +1853,15 @@ impl AcerSenseApp {
                         .on_hover_text(l.coolboost_tooltip())
                         .clicked()
                     {
-                        self.config.coolboost = !cb;
-                        let _ = self
-                            .cmd_tx
-                            .send(HardwareCommand::SetCoolboost(self.config.coolboost));
-                        save_config(&self.config);
+                        config.coolboost = !cb;
+                        let _ = cmd_tx.send(HardwareCommand::SetCoolboost(config.coolboost));
+                        save_config(config);
                     }
 
-                    ui.add_space(10.0_f32);
+                    ui.add_space(8.0_f32);
 
                     // Fan Sync Toggle (Tactical Link / Decouple)
-                    let sync = self.config.sync_fans;
+                    let sync = config.sync_fans;
                     let sync_text = l.sync_fans_text(sync);
                     let sync_color = if sync { pal.secondary } else { pal.text_muted };
                     let sync_bg = if sync {
@@ -1892,29 +1891,61 @@ impl AcerSenseApp {
                         .on_hover_text(l.sync_fans_tooltip(sync))
                         .clicked()
                     {
-                        self.config.sync_fans = !sync;
-                        if self.config.sync_fans {
-                            self.config.gpu_fan_target = self.config.cpu_fan_target;
-                            let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
-                                cpu_pct: self.config.cpu_fan_target,
-                                gpu_pct: self.config.gpu_fan_target,
+                        config.sync_fans = !sync;
+                        if config.sync_fans {
+                            config.gpu_fan_target = config.cpu_fan_target;
+                            let _ = cmd_tx.send(HardwareCommand::SetCustomFans {
+                                cpu_pct: config.cpu_fan_target,
+                                gpu_pct: config.gpu_fan_target,
                             });
                         }
-                        save_config(&self.config);
+                        save_config(config);
                     }
+                };
+
+            if avail_w < 680.0_f32 {
+                ui.horizontal_wrapped(|ui| {
+                    ui.spacing_mut().item_spacing = Vec2::new(6.0_f32, 4.0_f32);
+                    ui.heading(
+                        RichText::new(l.fan_title())
+                            .size(if avail_w < 540.0 { 14.0_f32 } else { 15.5_f32 })
+                            .strong()
+                            .color(pal.text_primary),
+                    );
+                    render_badge(ui);
                 });
-            });
+                ui.add_space(6.0_f32);
+                ui.horizontal_wrapped(|ui| {
+                    ui.spacing_mut().item_spacing = Vec2::new(8.0_f32, 4.0_f32);
+                    render_toggles(ui, &mut self.config, &self.cmd_tx);
+                });
+            } else {
+                ui.horizontal(|ui| {
+                    ui.heading(
+                        RichText::new(l.fan_title())
+                            .size(16.0_f32)
+                            .strong()
+                            .color(pal.text_primary),
+                    );
+                    ui.add_space(8.0_f32);
+                    render_badge(ui);
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        render_toggles(ui, &mut self.config, &self.cmd_tx);
+                    });
+                });
+            }
 
             ui.add_space(4.0_f32);
             ui.separator();
             ui.add_space(8.0_f32);
 
             // 2. High-Visibility Mode Selectors (Auto, Max, Custom)
-            let btn_w = ((ui.available_width() - 16.0_f32) / 3.0_f32).max(85.0_f32);
+            let is_compact_btn = avail_w < 600.0_f32;
+            let btn_w = ((ui.available_width() - 16.0_f32) / 3.0_f32).max(75.0_f32);
 
             let btn_auto = egui::Button::new(
-                RichText::new(l.btn_auto_label(avail_w < 520.0))
-                    .size(11.5_f32)
+                RichText::new(l.btn_auto_label(is_compact_btn))
+                    .size(if is_compact_btn { 11.0_f32 } else { 11.5_f32 })
                     .strong()
                     .color(if is_auto {
                         pal.secondary
@@ -1939,8 +1970,8 @@ impl AcerSenseApp {
             .rounding(Rounding::same(6.0_f32));
 
             let btn_max = egui::Button::new(
-                RichText::new(l.btn_max_label(avail_w < 520.0))
-                    .size(11.5_f32)
+                RichText::new(l.btn_max_label(is_compact_btn))
+                    .size(if is_compact_btn { 11.0_f32 } else { 11.5_f32 })
                     .strong()
                     .color(if is_max { pal.primary } else { pal.text_muted }),
             )
@@ -1961,8 +1992,8 @@ impl AcerSenseApp {
             .rounding(Rounding::same(6.0_f32));
 
             let btn_custom = egui::Button::new(
-                RichText::new(l.btn_custom_label(avail_w < 520.0))
-                    .size(11.5_f32)
+                RichText::new(l.btn_custom_label(is_compact_btn))
+                    .size(if is_compact_btn { 11.0_f32 } else { 11.5_f32 })
                     .strong()
                     .color(if is_custom {
                         pal.warning
@@ -2006,7 +2037,8 @@ impl AcerSenseApp {
             ui.add_space(10.0_f32);
 
             // 3. Tactical Speed Presets (Quick 1-click duty overrides)
-            ui.horizontal(|ui| {
+            ui.horizontal_wrapped(|ui| {
+                ui.spacing_mut().item_spacing = Vec2::new(6.0_f32, 6.0_f32);
                 ui.label(
                     RichText::new(l.presets_title())
                         .size(11.0_f32)
@@ -2110,73 +2142,83 @@ impl AcerSenseApp {
                     ui.add_space(4.0_f32);
 
                     if is_custom {
-                        ui.horizontal(|ui| {
-                            let step_minus = egui::Button::new(
-                                RichText::new(" - ")
-                                    .size(11.0_f32)
-                                    .strong()
-                                    .color(pal.secondary),
-                            )
-                            .fill(pal.card)
-                            .stroke(Stroke::new(1.0_f32, pal.border))
-                            .rounding(Rounding::same(4.0_f32));
-                            if ui
-                                .add(step_minus)
-                                .on_hover_text(l.minus_tooltip())
-                                .clicked()
-                            {
-                                self.config.cpu_fan_target =
-                                    self.config.cpu_fan_target.saturating_sub(5);
-                                if self.config.sync_fans {
-                                    self.config.gpu_fan_target = self.config.cpu_fan_target;
+                        ui.vertical_centered(|ui| {
+                            ui.horizontal(|ui| {
+                                ui.spacing_mut().item_spacing.x = 4.0_f32;
+                                let slider_w = (col_w - 96.0_f32).clamp(50.0_f32, 115.0_f32);
+                                let pad = (col_w - (slider_w + 92.0_f32)).max(0.0_f32) / 2.0_f32;
+                                ui.add_space(pad);
+
+                                let step_minus = egui::Button::new(
+                                    RichText::new(" - ")
+                                        .size(11.0_f32)
+                                        .strong()
+                                        .color(pal.secondary),
+                                )
+                                .fill(pal.card)
+                                .stroke(Stroke::new(1.0_f32, pal.border))
+                                .rounding(Rounding::same(4.0_f32));
+                                if ui
+                                    .add(step_minus)
+                                    .on_hover_text(l.minus_tooltip())
+                                    .clicked()
+                                {
+                                    self.config.cpu_fan_target =
+                                        self.config.cpu_fan_target.saturating_sub(5);
+                                    if self.config.sync_fans {
+                                        self.config.gpu_fan_target = self.config.cpu_fan_target;
+                                    }
+                                    let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
+                                        cpu_pct: self.config.cpu_fan_target,
+                                        gpu_pct: self.config.gpu_fan_target,
+                                    });
+                                    save_config(&self.config);
                                 }
-                                let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
-                                    cpu_pct: self.config.cpu_fan_target,
-                                    gpu_pct: self.config.gpu_fan_target,
-                                });
-                                save_config(&self.config);
-                            }
-                            let mut c_tgt = self.config.cpu_fan_target;
-                            if ui
-                                .add(egui::Slider::new(&mut c_tgt, 0..=100).show_value(false))
-                                .changed()
-                            {
-                                self.config.cpu_fan_target = c_tgt;
-                                if self.config.sync_fans {
-                                    self.config.gpu_fan_target = c_tgt;
+                                let mut c_tgt = self.config.cpu_fan_target;
+                                if ui
+                                    .add_sized(
+                                        [slider_w, 20.0_f32],
+                                        egui::Slider::new(&mut c_tgt, 0..=100).show_value(false),
+                                    )
+                                    .changed()
+                                {
+                                    self.config.cpu_fan_target = c_tgt;
+                                    if self.config.sync_fans {
+                                        self.config.gpu_fan_target = c_tgt;
+                                    }
+                                    let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
+                                        cpu_pct: c_tgt,
+                                        gpu_pct: self.config.gpu_fan_target,
+                                    });
+                                    save_config(&self.config);
                                 }
-                                let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
-                                    cpu_pct: c_tgt,
-                                    gpu_pct: self.config.gpu_fan_target,
-                                });
-                                save_config(&self.config);
-                            }
-                            let step_plus = egui::Button::new(
-                                RichText::new(" + ")
-                                    .size(11.0_f32)
-                                    .strong()
-                                    .color(pal.secondary),
-                            )
-                            .fill(pal.card)
-                            .stroke(Stroke::new(1.0_f32, pal.border))
-                            .rounding(Rounding::same(4.0_f32));
-                            if ui.add(step_plus).on_hover_text(l.plus_tooltip()).clicked() {
-                                self.config.cpu_fan_target =
-                                    (self.config.cpu_fan_target + 5).min(100);
-                                if self.config.sync_fans {
-                                    self.config.gpu_fan_target = self.config.cpu_fan_target;
+                                let step_plus = egui::Button::new(
+                                    RichText::new(" + ")
+                                        .size(11.0_f32)
+                                        .strong()
+                                        .color(pal.secondary),
+                                )
+                                .fill(pal.card)
+                                .stroke(Stroke::new(1.0_f32, pal.border))
+                                .rounding(Rounding::same(4.0_f32));
+                                if ui.add(step_plus).on_hover_text(l.plus_tooltip()).clicked() {
+                                    self.config.cpu_fan_target =
+                                        (self.config.cpu_fan_target + 5).min(100);
+                                    if self.config.sync_fans {
+                                        self.config.gpu_fan_target = self.config.cpu_fan_target;
+                                    }
+                                    let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
+                                        cpu_pct: self.config.cpu_fan_target,
+                                        gpu_pct: self.config.gpu_fan_target,
+                                    });
+                                    save_config(&self.config);
                                 }
-                                let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
-                                    cpu_pct: self.config.cpu_fan_target,
-                                    gpu_pct: self.config.gpu_fan_target,
-                                });
-                                save_config(&self.config);
-                            }
-                            ui.label(
-                                RichText::new(format!("{}%", self.config.cpu_fan_target))
-                                    .color(pal.secondary)
-                                    .strong(),
-                            );
+                                ui.label(
+                                    RichText::new(format!("{}%", self.config.cpu_fan_target))
+                                        .color(pal.secondary)
+                                        .strong(),
+                                );
+                            });
                         });
                     } else {
                         let (badge_txt, badge_col, badge_hover) = if is_max {
@@ -2203,12 +2245,12 @@ impl AcerSenseApp {
                                 ),
                             ))
                             .rounding(Rounding::same(5.0_f32))
-                            .inner_margin(Margin::symmetric(8.0_f32, 4.0_f32))
+                            .inner_margin(Margin::symmetric(6.0_f32, 4.0_f32))
                             .show(ui, |ui| {
                                 ui.vertical_centered(|ui| {
                                     ui.label(
                                         RichText::new(badge_txt)
-                                            .size(10.5_f32)
+                                            .size(if col_w < 225.0 { 9.2_f32 } else { 10.5_f32 })
                                             .strong()
                                             .color(badge_col),
                                     );
@@ -2252,73 +2294,83 @@ impl AcerSenseApp {
                     ui.add_space(4.0_f32);
 
                     if is_custom {
-                        ui.horizontal(|ui| {
-                            let step_minus = egui::Button::new(
-                                RichText::new(" - ")
-                                    .size(11.0_f32)
-                                    .strong()
-                                    .color(pal.primary),
-                            )
-                            .fill(pal.card)
-                            .stroke(Stroke::new(1.0_f32, pal.border))
-                            .rounding(Rounding::same(4.0_f32));
-                            if ui
-                                .add(step_minus)
-                                .on_hover_text(l.minus_tooltip())
-                                .clicked()
-                            {
-                                self.config.gpu_fan_target =
-                                    self.config.gpu_fan_target.saturating_sub(5);
-                                if self.config.sync_fans {
-                                    self.config.cpu_fan_target = self.config.gpu_fan_target;
+                        ui.vertical_centered(|ui| {
+                            ui.horizontal(|ui| {
+                                ui.spacing_mut().item_spacing.x = 4.0_f32;
+                                let slider_w = (col_w - 96.0_f32).clamp(50.0_f32, 115.0_f32);
+                                let pad = (col_w - (slider_w + 92.0_f32)).max(0.0_f32) / 2.0_f32;
+                                ui.add_space(pad);
+
+                                let step_minus = egui::Button::new(
+                                    RichText::new(" - ")
+                                        .size(11.0_f32)
+                                        .strong()
+                                        .color(pal.primary),
+                                )
+                                .fill(pal.card)
+                                .stroke(Stroke::new(1.0_f32, pal.border))
+                                .rounding(Rounding::same(4.0_f32));
+                                if ui
+                                    .add(step_minus)
+                                    .on_hover_text(l.minus_tooltip())
+                                    .clicked()
+                                {
+                                    self.config.gpu_fan_target =
+                                        self.config.gpu_fan_target.saturating_sub(5);
+                                    if self.config.sync_fans {
+                                        self.config.cpu_fan_target = self.config.gpu_fan_target;
+                                    }
+                                    let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
+                                        cpu_pct: self.config.cpu_fan_target,
+                                        gpu_pct: self.config.gpu_fan_target,
+                                    });
+                                    save_config(&self.config);
                                 }
-                                let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
-                                    cpu_pct: self.config.cpu_fan_target,
-                                    gpu_pct: self.config.gpu_fan_target,
-                                });
-                                save_config(&self.config);
-                            }
-                            let mut g_tgt = self.config.gpu_fan_target;
-                            if ui
-                                .add(egui::Slider::new(&mut g_tgt, 0..=100).show_value(false))
-                                .changed()
-                            {
-                                self.config.gpu_fan_target = g_tgt;
-                                if self.config.sync_fans {
-                                    self.config.cpu_fan_target = g_tgt;
+                                let mut g_tgt = self.config.gpu_fan_target;
+                                if ui
+                                    .add_sized(
+                                        [slider_w, 20.0_f32],
+                                        egui::Slider::new(&mut g_tgt, 0..=100).show_value(false),
+                                    )
+                                    .changed()
+                                {
+                                    self.config.gpu_fan_target = g_tgt;
+                                    if self.config.sync_fans {
+                                        self.config.cpu_fan_target = g_tgt;
+                                    }
+                                    let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
+                                        cpu_pct: self.config.cpu_fan_target,
+                                        gpu_pct: g_tgt,
+                                    });
+                                    save_config(&self.config);
                                 }
-                                let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
-                                    cpu_pct: self.config.cpu_fan_target,
-                                    gpu_pct: g_tgt,
-                                });
-                                save_config(&self.config);
-                            }
-                            let step_plus = egui::Button::new(
-                                RichText::new(" + ")
-                                    .size(11.0_f32)
-                                    .strong()
-                                    .color(pal.primary),
-                            )
-                            .fill(pal.card)
-                            .stroke(Stroke::new(1.0_f32, pal.border))
-                            .rounding(Rounding::same(4.0_f32));
-                            if ui.add(step_plus).on_hover_text(l.plus_tooltip()).clicked() {
-                                self.config.gpu_fan_target =
-                                    (self.config.gpu_fan_target + 5).min(100);
-                                if self.config.sync_fans {
-                                    self.config.cpu_fan_target = self.config.gpu_fan_target;
+                                let step_plus = egui::Button::new(
+                                    RichText::new(" + ")
+                                        .size(11.0_f32)
+                                        .strong()
+                                        .color(pal.primary),
+                                )
+                                .fill(pal.card)
+                                .stroke(Stroke::new(1.0_f32, pal.border))
+                                .rounding(Rounding::same(4.0_f32));
+                                if ui.add(step_plus).on_hover_text(l.plus_tooltip()).clicked() {
+                                    self.config.gpu_fan_target =
+                                        (self.config.gpu_fan_target + 5).min(100);
+                                    if self.config.sync_fans {
+                                        self.config.cpu_fan_target = self.config.gpu_fan_target;
+                                    }
+                                    let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
+                                        cpu_pct: self.config.cpu_fan_target,
+                                        gpu_pct: self.config.gpu_fan_target,
+                                    });
+                                    save_config(&self.config);
                                 }
-                                let _ = self.cmd_tx.send(HardwareCommand::SetCustomFans {
-                                    cpu_pct: self.config.cpu_fan_target,
-                                    gpu_pct: self.config.gpu_fan_target,
-                                });
-                                save_config(&self.config);
-                            }
-                            ui.label(
-                                RichText::new(format!("{}%", self.config.gpu_fan_target))
-                                    .color(pal.primary)
-                                    .strong(),
-                            );
+                                ui.label(
+                                    RichText::new(format!("{}%", self.config.gpu_fan_target))
+                                        .color(pal.primary)
+                                        .strong(),
+                                );
+                            });
                         });
                     } else {
                         let (badge_txt, badge_col, badge_hover) = if is_max {
@@ -2345,12 +2397,12 @@ impl AcerSenseApp {
                                 ),
                             ))
                             .rounding(Rounding::same(5.0_f32))
-                            .inner_margin(Margin::symmetric(8.0_f32, 4.0_f32))
+                            .inner_margin(Margin::symmetric(6.0_f32, 4.0_f32))
                             .show(ui, |ui| {
                                 ui.vertical_centered(|ui| {
                                     ui.label(
                                         RichText::new(badge_txt)
-                                            .size(10.5_f32)
+                                            .size(if col_w < 225.0 { 9.2_f32 } else { 10.5_f32 })
                                             .strong()
                                             .color(badge_col),
                                     );
@@ -2387,33 +2439,70 @@ impl AcerSenseApp {
                 .rounding(Rounding::same(6.0_f32))
                 .inner_margin(Margin::symmetric(10.0_f32, 6.0_f32))
                 .show(ui, |ui| {
-                    ui.horizontal(|ui| {
-                        ui.label(
-                            RichText::new(l.acoustic_footprint_label())
-                                .size(11.0_f32)
-                                .color(pal.text_primary)
-                                .strong(),
-                        );
-                        ui.label(
-                            RichText::new(format!("~{} dBA", noise_dba))
-                                .size(11.5_f32)
-                                .strong()
-                                .color(noise_color),
-                        );
-                        ui.label(
-                            RichText::new(format!("• {}", noise_desc))
-                                .size(11.0_f32)
-                                .color(pal.text_muted),
-                        );
-                        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    if avail_w < 660.0_f32 {
+                        ui.vertical(|ui| {
+                            ui.horizontal_wrapped(|ui| {
+                                ui.spacing_mut().item_spacing.x = 4.0_f32;
+                                ui.label(
+                                    RichText::new(l.acoustic_footprint_label())
+                                        .size(11.0_f32)
+                                        .color(pal.text_primary)
+                                        .strong(),
+                                );
+                                ui.label(
+                                    RichText::new(format!("~{} dBA", noise_dba))
+                                        .size(11.5_f32)
+                                        .strong()
+                                        .color(noise_color),
+                                );
+                                ui.label(
+                                    RichText::new(format!("• {}", noise_desc))
+                                        .size(11.0_f32)
+                                        .color(pal.text_muted),
+                                );
+                            });
+                            ui.add_space(2.0_f32);
+                            ui.horizontal(|ui| {
+                                ui.label(
+                                    RichText::new(l.est_airflow_label(approx_cfm))
+                                        .size(11.0_f32)
+                                        .color(pal.secondary)
+                                        .monospace(),
+                                );
+                            });
+                        });
+                    } else {
+                        ui.horizontal(|ui| {
                             ui.label(
-                                RichText::new(l.est_airflow_label(approx_cfm))
+                                RichText::new(l.acoustic_footprint_label())
                                     .size(11.0_f32)
-                                    .color(pal.secondary)
-                                    .monospace(),
+                                    .color(pal.text_primary)
+                                    .strong(),
+                            );
+                            ui.label(
+                                RichText::new(format!("~{} dBA", noise_dba))
+                                    .size(11.5_f32)
+                                    .strong()
+                                    .color(noise_color),
+                            );
+                            ui.label(
+                                RichText::new(format!("• {}", noise_desc))
+                                    .size(11.0_f32)
+                                    .color(pal.text_muted),
+                            );
+                            ui.with_layout(
+                                egui::Layout::right_to_left(egui::Align::Center),
+                                |ui| {
+                                    ui.label(
+                                        RichText::new(l.est_airflow_label(approx_cfm))
+                                            .size(11.0_f32)
+                                            .color(pal.secondary)
+                                            .monospace(),
+                                    );
+                                },
                             );
                         });
-                    });
+                    }
                 });
         });
 
@@ -2421,24 +2510,18 @@ impl AcerSenseApp {
 
         // --- EMBEDDED REAL-TIME VENTILATION RESPONSE OSCILLOSCOPE ---
         self.nitro_card_frame().show(ui, |ui| {
-            ui.horizontal(|ui| {
-                ui.label(
-                    RichText::new(l.ventilation_dynamics_title())
-                        .size(13.5_f32)
-                        .strong()
-                        .color(pal.text_primary),
-                );
-                let avail = ui.available_width();
-                if avail > 340.0_f32 {
-                    ui.label(
-                        RichText::new(l.dual_turbine_label())
-                            .size(11.0_f32)
-                            .color(pal.text_muted),
-                    );
-                } else if avail > 220.0_f32 {
-                    ui.label(RichText::new("(60s)").size(11.0_f32).color(pal.text_muted));
-                }
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            if avail_w < 580.0_f32 {
+                ui.vertical(|ui| {
+                    ui.horizontal_wrapped(|ui| {
+                        ui.label(
+                            RichText::new(l.ventilation_dynamics_title())
+                                .size(13.0_f32)
+                                .strong()
+                                .color(pal.text_primary),
+                        );
+                        ui.label(RichText::new("(60s)").size(11.0_f32).color(pal.text_muted));
+                    });
+                    ui.add_space(2.0_f32);
                     ui.label(
                         RichText::new(format!(
                             "CPU: {} RPM | GPU: {} RPM",
@@ -2449,7 +2532,37 @@ impl AcerSenseApp {
                         .monospace(),
                     );
                 });
-            });
+            } else {
+                ui.horizontal(|ui| {
+                    ui.label(
+                        RichText::new(l.ventilation_dynamics_title())
+                            .size(13.5_f32)
+                            .strong()
+                            .color(pal.text_primary),
+                    );
+                    let avail = ui.available_width();
+                    if avail > 340.0_f32 {
+                        ui.label(
+                            RichText::new(l.dual_turbine_label())
+                                .size(11.0_f32)
+                                .color(pal.text_muted),
+                        );
+                    } else if avail > 220.0_f32 {
+                        ui.label(RichText::new("(60s)").size(11.0_f32).color(pal.text_muted));
+                    }
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        ui.label(
+                            RichText::new(format!(
+                                "CPU: {} RPM | GPU: {} RPM",
+                                self.telemetry.cpu_rpm, self.telemetry.gpu_rpm
+                            ))
+                            .size(11.0_f32)
+                            .color(pal.text_secondary)
+                            .monospace(),
+                        );
+                    });
+                });
+            }
             ui.add_space(4.0_f32);
             ui.separator();
             ui.add_space(4.0_f32);
@@ -2460,38 +2573,75 @@ impl AcerSenseApp {
 
         // --- BOTTOM ROW: TACTICAL TELEMETRY CARD ---
         self.nitro_card_frame().show(ui, |ui| {
-            ui.horizontal(|ui| {
-                ui.heading(
-                    RichText::new(l.telemetry_matrix_title())
-                        .size(15.0_f32)
-                        .strong()
-                        .color(pal.text_primary),
-                );
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    if ui
-                        .button(
-                            RichText::new(l.purge_turbo_btn())
-                                .color(pal.primary)
-                                .strong(),
-                        )
-                        .clicked()
-                    {
-                        self.config.mode = "max".into();
-                        let _ = self.cmd_tx.send(HardwareCommand::SetFanMode("max".into()));
-                    }
-                    if ui
-                        .button(
-                            RichText::new(l.reset_auto_btn())
-                                .color(pal.secondary)
-                                .strong(),
-                        )
-                        .clicked()
-                    {
-                        self.config.mode = "auto".into();
-                        let _ = self.cmd_tx.send(HardwareCommand::SetFanMode("auto".into()));
-                    }
+            if avail_w < 640.0_f32 {
+                ui.vertical(|ui| {
+                    ui.heading(
+                        RichText::new(l.telemetry_matrix_title())
+                            .size(14.0_f32)
+                            .strong()
+                            .color(pal.text_primary),
+                    );
+                    ui.add_space(4.0_f32);
+                    ui.horizontal_wrapped(|ui| {
+                        ui.spacing_mut().item_spacing = Vec2::new(8.0_f32, 4.0_f32);
+                        if ui
+                            .button(
+                                RichText::new(l.purge_turbo_btn())
+                                    .color(pal.primary)
+                                    .strong(),
+                            )
+                            .clicked()
+                        {
+                            self.config.mode = "max".into();
+                            let _ = self.cmd_tx.send(HardwareCommand::SetFanMode("max".into()));
+                        }
+                        if ui
+                            .button(
+                                RichText::new(l.reset_auto_btn())
+                                    .color(pal.secondary)
+                                    .strong(),
+                            )
+                            .clicked()
+                        {
+                            self.config.mode = "auto".into();
+                            let _ = self.cmd_tx.send(HardwareCommand::SetFanMode("auto".into()));
+                        }
+                    });
                 });
-            });
+            } else {
+                ui.horizontal(|ui| {
+                    ui.heading(
+                        RichText::new(l.telemetry_matrix_title())
+                            .size(15.0_f32)
+                            .strong()
+                            .color(pal.text_primary),
+                    );
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        if ui
+                            .button(
+                                RichText::new(l.purge_turbo_btn())
+                                    .color(pal.primary)
+                                    .strong(),
+                            )
+                            .clicked()
+                        {
+                            self.config.mode = "max".into();
+                            let _ = self.cmd_tx.send(HardwareCommand::SetFanMode("max".into()));
+                        }
+                        if ui
+                            .button(
+                                RichText::new(l.reset_auto_btn())
+                                    .color(pal.secondary)
+                                    .strong(),
+                            )
+                            .clicked()
+                        {
+                            self.config.mode = "auto".into();
+                            let _ = self.cmd_tx.send(HardwareCommand::SetFanMode("auto".into()));
+                        }
+                    });
+                });
+            }
             ui.add_space(4.0_f32);
             ui.separator();
             ui.add_space(6.0_f32);
@@ -2651,80 +2801,97 @@ impl AcerSenseApp {
         // 2. Real-time Telemetry Oscilloscope Card
         self.nitro_card_frame().show(ui, |ui| {
             // Row 1: Heading and Mode Selector
-            ui.horizontal(|ui| {
+            let render_mode_selectors = |ui: &mut egui::Ui, mode: &mut MonitoringGraphMode| {
+                let is_fans = *mode == MonitoringGraphMode::Turbines;
+                if ui
+                    .selectable_label(
+                        is_fans,
+                        RichText::new(l.graph_turbines())
+                            .color(if is_fans {
+                                pal.secondary
+                            } else {
+                                pal.text_muted
+                            })
+                            .strong(),
+                    )
+                    .clicked()
+                {
+                    *mode = MonitoringGraphMode::Turbines;
+                }
+                let is_pwr = *mode == MonitoringGraphMode::Power;
+                if ui
+                    .selectable_label(
+                        is_pwr,
+                        RichText::new(l.graph_power())
+                            .color(if is_pwr {
+                                pal.secondary
+                            } else {
+                                pal.text_muted
+                            })
+                            .strong(),
+                    )
+                    .clicked()
+                {
+                    *mode = MonitoringGraphMode::Power;
+                }
+                let is_work = *mode == MonitoringGraphMode::Workload;
+                if ui
+                    .selectable_label(
+                        is_work,
+                        RichText::new(l.graph_workload())
+                            .color(if is_work {
+                                pal.secondary
+                            } else {
+                                pal.text_muted
+                            })
+                            .strong(),
+                    )
+                    .clicked()
+                {
+                    *mode = MonitoringGraphMode::Workload;
+                }
+                let is_therm = *mode == MonitoringGraphMode::Thermals;
+                if ui
+                    .selectable_label(
+                        is_therm,
+                        RichText::new(l.graph_thermals())
+                            .color(if is_therm {
+                                pal.secondary
+                            } else {
+                                pal.text_muted
+                            })
+                            .strong(),
+                    )
+                    .clicked()
+                {
+                    *mode = MonitoringGraphMode::Thermals;
+                }
+            };
+
+            if avail_w < 650.0_f32 {
                 ui.heading(
                     RichText::new(l.oscilloscope_title())
-                        .size(15.5_f32)
+                        .size(14.5_f32)
                         .strong()
                         .color(pal.text_primary),
                 );
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    let is_fans = self.monitoring_graph_mode == MonitoringGraphMode::Turbines;
-                    if ui
-                        .selectable_label(
-                            is_fans,
-                            RichText::new(l.graph_turbines())
-                                .color(if is_fans {
-                                    pal.secondary
-                                } else {
-                                    pal.text_muted
-                                })
-                                .strong(),
-                        )
-                        .clicked()
-                    {
-                        self.monitoring_graph_mode = MonitoringGraphMode::Turbines;
-                    }
-                    let is_pwr = self.monitoring_graph_mode == MonitoringGraphMode::Power;
-                    if ui
-                        .selectable_label(
-                            is_pwr,
-                            RichText::new(l.graph_power())
-                                .color(if is_pwr {
-                                    pal.secondary
-                                } else {
-                                    pal.text_muted
-                                })
-                                .strong(),
-                        )
-                        .clicked()
-                    {
-                        self.monitoring_graph_mode = MonitoringGraphMode::Power;
-                    }
-                    let is_work = self.monitoring_graph_mode == MonitoringGraphMode::Workload;
-                    if ui
-                        .selectable_label(
-                            is_work,
-                            RichText::new(l.graph_workload())
-                                .color(if is_work {
-                                    pal.secondary
-                                } else {
-                                    pal.text_muted
-                                })
-                                .strong(),
-                        )
-                        .clicked()
-                    {
-                        self.monitoring_graph_mode = MonitoringGraphMode::Workload;
-                    }
-                    let is_therm = self.monitoring_graph_mode == MonitoringGraphMode::Thermals;
-                    if ui
-                        .selectable_label(
-                            is_therm,
-                            RichText::new(l.graph_thermals())
-                                .color(if is_therm {
-                                    pal.secondary
-                                } else {
-                                    pal.text_muted
-                                })
-                                .strong(),
-                        )
-                        .clicked()
-                    {
-                        self.monitoring_graph_mode = MonitoringGraphMode::Thermals;
-                    }
+                ui.add_space(4.0_f32);
+                ui.horizontal_wrapped(|ui| {
+                    render_mode_selectors(ui, &mut self.monitoring_graph_mode);
                 });
-            });
+            } else {
+                ui.horizontal(|ui| {
+                    ui.heading(
+                        RichText::new(l.oscilloscope_title())
+                            .size(15.5_f32)
+                            .strong()
+                            .color(pal.text_primary),
+                    );
+                    ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        render_mode_selectors(ui, &mut self.monitoring_graph_mode);
+                    });
+                });
+            }
             ui.add_space(4.0_f32);
 
             // Row 2: Timeline controls & live indicator
@@ -3804,14 +3971,29 @@ impl AcerSenseApp {
                 );
 
                 ui.vertical(|ui| {
-                    ui.horizontal(|ui| {
-                        ui.label(RichText::new("R:").color(pal.primary).strong());
-                        ui.add(egui::Slider::new(&mut self.rgb_custom_r, 0..=255));
-                        ui.label(RichText::new("G:").color(pal.success).strong());
-                        ui.add(egui::Slider::new(&mut self.rgb_custom_g, 0..=255));
-                        ui.label(RichText::new("B:").color(pal.secondary).strong());
-                        ui.add(egui::Slider::new(&mut self.rgb_custom_b, 0..=255));
-                    });
+                    if ui.available_width() < 380.0_f32 {
+                        ui.horizontal(|ui| {
+                            ui.label(RichText::new("R:").color(pal.primary).strong());
+                            ui.add(egui::Slider::new(&mut self.rgb_custom_r, 0..=255));
+                        });
+                        ui.horizontal(|ui| {
+                            ui.label(RichText::new("G:").color(pal.success).strong());
+                            ui.add(egui::Slider::new(&mut self.rgb_custom_g, 0..=255));
+                        });
+                        ui.horizontal(|ui| {
+                            ui.label(RichText::new("B:").color(pal.secondary).strong());
+                            ui.add(egui::Slider::new(&mut self.rgb_custom_b, 0..=255));
+                        });
+                    } else {
+                        ui.horizontal(|ui| {
+                            ui.label(RichText::new("R:").color(pal.primary).strong());
+                            ui.add(egui::Slider::new(&mut self.rgb_custom_r, 0..=255));
+                            ui.label(RichText::new("G:").color(pal.success).strong());
+                            ui.add(egui::Slider::new(&mut self.rgb_custom_g, 0..=255));
+                            ui.label(RichText::new("B:").color(pal.secondary).strong());
+                            ui.add(egui::Slider::new(&mut self.rgb_custom_b, 0..=255));
+                        });
+                    }
                     ui.add_space(2.0_f32);
                     let push_btn = egui::Button::new(
                         RichText::new(l.push_color_btn())
@@ -4172,7 +4354,7 @@ impl AcerSenseApp {
                 .changed()
             {
                 self.config.winkey_locked = win_lock;
-                let _ = gaming::set_winkey_lock(win_lock);
+                let _ = self.cmd_tx.send(HardwareCommand::SetWinKeyLock(win_lock));
                 save_config(&self.config);
             }
             ui.label(
@@ -4194,7 +4376,7 @@ impl AcerSenseApp {
                 .changed()
             {
                 self.config.touchpad_locked = tp_lock;
-                let _ = gaming::set_touchpad_lock(tp_lock);
+                let _ = self.cmd_tx.send(HardwareCommand::SetTouchpadLock(tp_lock));
                 save_config(&self.config);
             }
             ui.label(
@@ -4470,14 +4652,19 @@ impl eframe::App for AcerSenseApp {
                 self.peak_gpu_power = data.gpu_power;
             }
             self.telemetry = data;
+            ctx.request_repaint();
         }
 
-        // 2. Physics Animation at 60 FPS
-        let speed_cpu = (self.telemetry.cpu_rpm as f32 / 5660.0_f32) * 0.20_f32 + 0.02_f32;
-        let speed_gpu = (self.telemetry.gpu_rpm as f32 / 6000.0_f32) * 0.20_f32 + 0.02_f32;
-        self.turbine_cpu_angle = (self.turbine_cpu_angle + speed_cpu) % std::f32::consts::TAU;
-        self.turbine_gpu_angle = (self.turbine_gpu_angle + speed_gpu) % std::f32::consts::TAU;
-        ctx.request_repaint();
+        // 2. Physics Animation (adaptive frame pacing)
+        if self.current_tab == Tab::FanControl {
+            let speed_cpu = (self.telemetry.cpu_rpm as f32 / 5660.0_f32) * 0.20_f32 + 0.02_f32;
+            let speed_gpu = (self.telemetry.gpu_rpm as f32 / 6000.0_f32) * 0.20_f32 + 0.02_f32;
+            self.turbine_cpu_angle = (self.turbine_cpu_angle + speed_cpu) % std::f32::consts::TAU;
+            self.turbine_gpu_angle = (self.turbine_gpu_angle + speed_gpu) % std::f32::consts::TAU;
+            ctx.request_repaint();
+        } else {
+            ctx.request_repaint_after(std::time::Duration::from_millis(500));
+        }
 
         // 3. Hotkeys
         ctx.input(|i| {
@@ -4540,7 +4727,7 @@ impl eframe::App for AcerSenseApp {
                         RichText::new("ACERSENSE")
                             .color(pal.primary)
                             .strong()
-                            .size(19.0_f32),
+                            .size(if avail_w < 560.0 { 16.0_f32 } else { 19.0_f32 }),
                     );
 
                     let badge = Frame::none()
@@ -4562,8 +4749,13 @@ impl eframe::App for AcerSenseApp {
                         .rounding(Rounding::same(4.0_f32))
                         .inner_margin(Margin::symmetric(5.0_f32, 2.0_f32));
                     badge.show(ui, |ui| {
+                        let badge_txt = if avail_w < 580.0 {
+                            "v2.1"
+                        } else {
+                            "PRO LINUX v2.1"
+                        };
                         ui.label(
-                            RichText::new("PRO LINUX v2.1")
+                            RichText::new(badge_txt)
                                 .color(pal.success)
                                 .size(10.0_f32)
                                 .strong(),
@@ -4592,8 +4784,16 @@ impl eframe::App for AcerSenseApp {
 
                         ui.add_space(4.0_f32);
 
-                        // Quick theme cycle pill button
-                        let theme_text = format!("🎨 {}", self.theme_mode.name());
+                        // Quick theme cycle pill button (adapt label length to avoid collision)
+                        let theme_text = if avail_w < 580.0 {
+                            "🎨".to_string()
+                        } else if avail_w < 720.0 {
+                            let short_name: String =
+                                self.theme_mode.name().chars().take(11).collect();
+                            format!("🎨 {}", short_name)
+                        } else {
+                            format!("🎨 {}", self.theme_mode.name())
+                        };
                         let theme_btn = egui::Button::new(
                             RichText::new(theme_text)
                                 .size(11.0_f32)
@@ -4613,29 +4813,35 @@ impl eframe::App for AcerSenseApp {
                             self.set_theme(ctx, next);
                         }
 
-                        ui.add_space(4.0_f32);
-
-                        // Quick GitHub project link button
-                        let gh_btn = egui::Button::new(
-                            RichText::new("🐙 GitHub")
-                                .size(11.0_f32)
-                                .strong()
-                                .color(pal.text_primary),
-                        )
-                        .fill(pal.card)
-                        .stroke(Stroke::new(1.0_f32, pal.border))
-                        .rounding(Rounding::same(6.0_f32));
-
-                        if ui
-                            .add(gh_btn)
-                            .on_hover_text(
-                                "GitHub: https://github.com/rodrigo47363/acersense-linux",
+                        // Quick GitHub project link button (hidden on narrow widths)
+                        if avail_w >= 600.0_f32 {
+                            ui.add_space(4.0_f32);
+                            let gh_text = if avail_w < 700.0 {
+                                "🐙"
+                            } else {
+                                "🐙 GitHub"
+                            };
+                            let gh_btn = egui::Button::new(
+                                RichText::new(gh_text)
+                                    .size(11.0_f32)
+                                    .strong()
+                                    .color(pal.text_primary),
                             )
-                            .clicked()
-                        {
-                            ctx.open_url(egui::OpenUrl::new_tab(
-                                "https://github.com/rodrigo47363/acersense-linux",
-                            ));
+                            .fill(pal.card)
+                            .stroke(Stroke::new(1.0_f32, pal.border))
+                            .rounding(Rounding::same(6.0_f32));
+
+                            if ui
+                                .add(gh_btn)
+                                .on_hover_text(
+                                    "GitHub: https://github.com/rodrigo47363/acersense-linux",
+                                )
+                                .clicked()
+                            {
+                                ctx.open_url(egui::OpenUrl::new_tab(
+                                    "https://github.com/rodrigo47363/acersense-linux",
+                                ));
+                            }
                         }
                     });
                 });
@@ -4678,7 +4884,13 @@ impl eframe::App for AcerSenseApp {
                             Stroke::new(1.0_f32, pal.border)
                         };
                         let tab_text = RichText::new(*label)
-                            .size(if avail_w < 680.0 { 10.0_f32 } else { 11.2_f32 })
+                            .size(if avail_w < 580.0 {
+                                9.2_f32
+                            } else if avail_w < 680.0 {
+                                10.0_f32
+                            } else {
+                                11.2_f32
+                            })
                             .color(if active {
                                 pal.primary
                             } else {
@@ -4714,7 +4926,7 @@ impl eframe::App for AcerSenseApp {
                     };
                 let avail_w = ui.available_width();
 
-                ui.horizontal(|ui| {
+                ui.horizontal_wrapped(|ui| {
                     let render_chip = |ui: &mut egui::Ui, text: &str, col: Color32| {
                         Frame::none()
                             .fill(Color32::from_rgba_unmultiplied(
@@ -4728,9 +4940,17 @@ impl eframe::App for AcerSenseApp {
                                 Color32::from_rgba_unmultiplied(col.r(), col.g(), col.b(), 90),
                             ))
                             .rounding(Rounding::same(4.0_f32))
-                            .inner_margin(Margin::symmetric(6.0_f32, 2.0_f32))
+                            .inner_margin(Margin::symmetric(
+                                if avail_w < 600.0 { 4.0_f32 } else { 6.0_f32 },
+                                2.0_f32,
+                            ))
                             .show(ui, |ui| {
-                                ui.label(RichText::new(text).color(col).strong().size(10.5_f32));
+                                ui.label(
+                                    RichText::new(text)
+                                        .color(col)
+                                        .strong()
+                                        .size(if avail_w < 600.0 { 9.5_f32 } else { 10.5_f32 }),
+                                );
                             });
                     };
 
@@ -4744,26 +4964,31 @@ impl eframe::App for AcerSenseApp {
                         );
                     }
 
-                    ui.add_space(4.0_f32);
+                    ui.add_space(3.0_f32);
                     render_chip(
                         ui,
                         &self.language.footer_fan(&self.config.mode),
                         pal.secondary,
                     );
 
-                    ui.add_space(4.0_f32);
+                    ui.add_space(3.0_f32);
                     render_chip(
                         ui,
                         &self.language.footer_profile(&self.config.profile),
                         pal.primary,
                     );
 
-                    ui.add_space(6.0_f32);
+                    ui.add_space(4.0_f32);
+                    let diss_text = if avail_w < 580.0 {
+                        format!("⚡ {:.1}W", total_w)
+                    } else {
+                        self.language.footer_dissipation(total_w)
+                    };
                     ui.label(
-                        RichText::new(self.language.footer_dissipation(total_w))
+                        RichText::new(diss_text)
                             .color(pal.text_primary)
                             .monospace()
-                            .size(10.5_f32),
+                            .size(if avail_w < 600.0 { 9.5_f32 } else { 10.5_f32 }),
                     );
 
                     if avail_w >= 720.0_f32 {

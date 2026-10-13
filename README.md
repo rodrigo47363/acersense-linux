@@ -9,6 +9,7 @@
 [![Hardware: Acer Nitro & Predator](https://img.shields.io/badge/Hardware-Acer%20Nitro%20%7C%20Predator%20%7C%20Aspire-orange.svg)](#-supported-laptop-hardware)
 [![Platform: Linux](https://img.shields.io/badge/Platform-Parrot%20%7C%20Debian%20%7C%20Arch%20%7C%20Fedora%20%7C%20Ubuntu-brightgreen.svg)](#-quick-installation--deployment)
 [![Code Quality: Clippy 0 Warnings](https://img.shields.io/badge/Clippy-0%20Warnings-success.svg)](#4--high-performance-native-rust-core-acersense)
+[![Responsiveness: Tiling & Ultra-Compact](https://img.shields.io/badge/Responsiveness-BSPWM%20%7C%20i3%20%7C%20Sway-neon.svg?color=10B981)](#5--hardware-accelerated-vector-gui-acersense-gui--60-fps)
 [![Direct ACPI / SMM: Ring -2 Interconnect](https://img.shields.io/badge/Bus-ACPI%20%7C%20WSMI%20%7C%20EC-blueviolet.svg)](#-system-architecture--hardware-bus-pipeline)
 
 <p align="center">
@@ -59,8 +60,11 @@
 
 ### 5. 🎛️ Hardware-Accelerated Vector GUI (`acersense-gui` @ 60+ FPS)
 * **Native egui / eframe Engine:** High refresh rate, immediate-mode GUI rendered with OpenGL and X11 backends.
+* **Ultra-Responsive Adaptive Layout (Tiling WMs):** Architected for tiling window managers (**BSPWM**, **i3**, **Sway**, **Hyprland**) down to **540×440** resolution. Dynamic multi-breakpoint wrapping prevents clipping, text collision, or overlapping across fan dials, sliders, badges, navigation headers, and tactical buttons.
+* **Smart Frame Pacing & Battery Conservation:** Continuous rendering loop (`request_repaint()`) is isolated to active animation tabs (Turbine Physics in Fan Control), shifting to event-driven updates on static monitoring and settings views to drastically reduce CPU/GPU draw on battery.
+* **Decoupled Asynchronous Hardware Worker:** Non-blocking hardware channel handles peripheral locks (Windows key, Touchpad, LCD Overdrive) in a dedicated background thread, eliminating UI micro-stutters.
 * **Zero UI Latency:** Asynchronous telemetry polling decoupled from the main rendering loop via lock-free channels.
-* **Physics-Based Gauges:** Dynamic speedometer dials with live RPM calculations and temperature monitoring.
+* **Physics-Based Gauges:** Dynamic speedometer dials with live RPM calculations, duty cycle calculations, and temperature monitoring.
 * **4-Zone RGB Lighting Visualizer:** Live interactive preview with preset configurations and custom color picker.
 
 ### 6. 🌍 Native Multilingual Engine (10 Locales)
