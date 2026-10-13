@@ -175,7 +175,8 @@ impl Language {
 
     // --- NAVIGATION TABS ---
     pub fn tab_fans(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🌀 VENTILADORES (1)",
             "🌀 FAN CONTROL (1)",
             "🌀 LÜFTERSTEUERUNG (1)",
@@ -190,7 +191,8 @@ impl Language {
     }
 
     pub fn tab_monitoring(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "📊 MONITOREO (2)",
             "📊 MONITORING (2)",
             "📊 ÜBERWACHUNG (2)",
@@ -205,7 +207,8 @@ impl Language {
     }
 
     pub fn tab_power(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "⚡ ESCENARIOS (3)",
             "⚡ POWER MODES (3)",
             "⚡ LEISTUNGSMODI (3)",
@@ -220,7 +223,8 @@ impl Language {
     }
 
     pub fn tab_rgb(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🌈 ILUMINACIÓN (4)",
             "🌈 LIGHTING (4)",
             "🌈 BELEUCHTUNG (4)",
@@ -235,7 +239,8 @@ impl Language {
     }
 
     pub fn tab_settings(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "⚙ AJUSTES (5)",
             "⚙ SETTINGS (5)",
             "⚙ EINSTELLUNGEN (5)",
@@ -251,7 +256,8 @@ impl Language {
 
     // --- FOOTER & QUICK BAR ---
     pub fn footer_ac(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "⚡ RED AC (135W)",
             "⚡ AC MAINS (135W)",
             "⚡ NETZSTROM (135W)",
@@ -266,7 +272,8 @@ impl Language {
     }
 
     pub fn footer_battery(&self, pct: u8) -> String {
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "🔋 BATERÍA ({}%)",
             "🔋 BATTERY ({}%)",
             "🔋 AKKU ({}%)",
@@ -282,7 +289,8 @@ impl Language {
     }
 
     pub fn footer_fan(&self, mode: &str) -> String {
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "🌀 MODO: {}",
             "🌀 FAN: {}",
             "🌀 LÜFTER: {}",
@@ -298,7 +306,8 @@ impl Language {
     }
 
     pub fn footer_profile(&self, profile: &str) -> String {
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "⚡ PERFIL: {}",
             "⚡ PROFILE: {}",
             "⚡ PROFIL: {}",
@@ -314,7 +323,8 @@ impl Language {
     }
 
     pub fn footer_dissipation(&self, watts: f32) -> String {
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "DISIPACIÓN: {:.1} W",
             "DISSIPATION: {:.1} W",
             "VERLUSTLEISTUNG: {:.1} W",
@@ -330,7 +340,8 @@ impl Language {
     }
 
     pub fn footer_shortcuts(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "[1-5] Pestañas  [T] Tema  [L] Idioma  [A/M/C] Modo  [Ctrl+Q] Salir",
             "[1-5] Tabs  [T] Theme  [L] Language  [A/M/C] Mode  [Ctrl+Q] Exit",
             "[1-5] Tabs  [T] Thema  [L] Sprache  [A/M/C] Modus  [Strg+Q] Beenden",
@@ -345,7 +356,8 @@ impl Language {
     }
 
     pub fn theme_tooltip(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "Clic o presiona [T] para alternar entre paletas ergonómicas",
             "Click or press [T] to cycle visual ergonomics themes",
             "Klicken oder [T] drücken, um Farbthemen zu wechseln",
@@ -360,7 +372,8 @@ impl Language {
     }
 
     pub fn lang_tooltip(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "Clic o presiona [L] para cambiar de idioma",
             "Click or press [L] to change language",
             "Klicken oder [L] drücken, um Sprache zu ändern",
@@ -376,7 +389,8 @@ impl Language {
 
     // --- FANS TAB ---
     pub fn fan_title(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "Control de Velocidad de Ventiladores",
             "Fan Speed Control",
             "Lüftergeschwindigkeitssteuerung",
@@ -433,7 +447,8 @@ impl Language {
 
     pub fn coolboost_text(&self, active: bool) -> &'static str {
         if active {
-            tr(*self,
+            tr(
+                *self,
                 "❄ CoolBoost™ ACTIVO",
                 "❄ CoolBoost™ ON",
                 "❄ CoolBoost™ AKTIV",
@@ -446,7 +461,8 @@ impl Language {
                 "❄ CoolBoost™ 활성",
             )
         } else {
-            tr(*self,
+            tr(
+                *self,
                 "❄ CoolBoost™ OFF",
                 "❄ CoolBoost™ OFF",
                 "❄ CoolBoost™ AUS",
@@ -478,7 +494,8 @@ impl Language {
 
     pub fn sync_fans_text(&self, sync: bool) -> &'static str {
         if sync {
-            tr(*self,
+            tr(
+                *self,
                 "🔗 Turbinas Vinculadas",
                 "🔗 Fans Linked",
                 "🔗 Lüfter Gekoppelt",
@@ -491,7 +508,8 @@ impl Language {
                 "🔗 팬 동기화 연동",
             )
         } else {
-            tr(*self,
+            tr(
+                *self,
                 "⚡ Independientes",
                 "⚡ Independent",
                 "⚡ Unabhängig",
@@ -508,7 +526,8 @@ impl Language {
 
     pub fn sync_fans_tooltip(&self, sync: bool) -> &'static str {
         if sync {
-            tr(*self,
+            tr(
+                *self,
                 "Ventiladores VINCULADOS: CPU y GPU se mueven en sincronía. Clic para desacoplar.",
                 "Fans are LINKED: CPU and GPU target speeds move synchronously. Click to decouple.",
                 "Lüfter GEKOPPELT: CPU- und GPU-Drehzahlen synchron. Klicken zum Entkoppeln.",
@@ -540,7 +559,8 @@ impl Language {
         if compact {
             "AUTO (A)"
         } else {
-            tr(*self,
+            tr(
+                *self,
                 "AUTO (A)\nCurva BIOS",
                 "AUTO (A)\nBIOS Closed Loop",
                 "AUTO (A)\nBIOS-Kurve",
@@ -557,9 +577,22 @@ impl Language {
 
     pub fn btn_max_label(&self, compact: bool) -> &'static str {
         if compact {
-            tr(*self, "MÁX (M)", "MAX (M)", "MAX (M)", "MAX (M)", "MÁX (M)", "MAX (M)", "МАКС (M)", "最大 (M)", "最大 (M)", "최대 (M)")
+            tr(
+                *self,
+                "MÁX (M)",
+                "MAX (M)",
+                "MAX (M)",
+                "MAX (M)",
+                "MÁX (M)",
+                "MAX (M)",
+                "МАКС (M)",
+                "最大 (M)",
+                "最大 (M)",
+                "최대 (M)",
+            )
         } else {
-            tr(*self,
+            tr(
+                *self,
                 "MÁXIMO (M)\n100% Turbo",
                 "MAX (M)\n100% Turbo",
                 "MAXIMAL (M)\n100% Turbo",
@@ -576,9 +609,22 @@ impl Language {
 
     pub fn btn_custom_label(&self, compact: bool) -> &'static str {
         if compact {
-            tr(*self, "MANUAL (C)", "CUSTOM (C)", "MANUELL (C)", "MANUEL (C)", "MANUAL (C)", "MANUALE (C)", "РУЧНОЙ (C)", "自定义 (C)", "カスタム (C)", "수동 (C)")
+            tr(
+                *self,
+                "MANUAL (C)",
+                "CUSTOM (C)",
+                "MANUELL (C)",
+                "MANUEL (C)",
+                "MANUAL (C)",
+                "MANUALE (C)",
+                "РУЧНОЙ (C)",
+                "自定义 (C)",
+                "カスタム (C)",
+                "수동 (C)",
+            )
         } else {
-            tr(*self,
+            tr(
+                *self,
                 "MANUAL (C)\nObjetivo Fijo",
                 "CUSTOM (C)\nManual Target",
                 "BENUTZER (C)\nFeste Vorgabe",
@@ -594,7 +640,8 @@ impl Language {
     }
 
     pub fn presets_title(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "Ajustes rápidos:",
             "Presets:",
             "Schnellwahl:",
@@ -611,102 +658,305 @@ impl Language {
     pub fn fan_presets(&self) -> [(&'static str, u8, &'static str); 4] {
         match self {
             Self::Es => [
-                ("20% Silencioso", 20, "20% Objetivo (~2100 RPM) • Mínima huella acústica"),
-                ("45% Equilibrado", 45, "45% Objetivo (~3200 RPM) • Navegación y programación"),
-                ("75% Alto Flujo", 75, "75% Objetivo (~4500 RPM) • Compilación y gaming sostenido"),
-                ("100% Máximo", 100, "100% Objetivo (RPM máx.) • Prevención de estrangulamiento térmico"),
+                (
+                    "20% Silencioso",
+                    20,
+                    "20% Objetivo (~2100 RPM) • Mínima huella acústica",
+                ),
+                (
+                    "45% Equilibrado",
+                    45,
+                    "45% Objetivo (~3200 RPM) • Navegación y programación",
+                ),
+                (
+                    "75% Alto Flujo",
+                    75,
+                    "75% Objetivo (~4500 RPM) • Compilación y gaming sostenido",
+                ),
+                (
+                    "100% Máximo",
+                    100,
+                    "100% Objetivo (RPM máx.) • Prevención de estrangulamiento térmico",
+                ),
             ],
             Self::En => [
-                ("20% Quiet", 20, "20% Target (~2100 RPM) • Low acoustic footprint"),
-                ("45% Balanced", 45, "45% Target (~3200 RPM) • Daily browsing & dev"),
-                ("75% High Flow", 75, "75% Target (~4500 RPM) • Sustained compile & gaming"),
-                ("100% Max", 100, "100% Target (Max RPM) • Thermal throttling prevention"),
+                (
+                    "20% Quiet",
+                    20,
+                    "20% Target (~2100 RPM) • Low acoustic footprint",
+                ),
+                (
+                    "45% Balanced",
+                    45,
+                    "45% Target (~3200 RPM) • Daily browsing & dev",
+                ),
+                (
+                    "75% High Flow",
+                    75,
+                    "75% Target (~4500 RPM) • Sustained compile & gaming",
+                ),
+                (
+                    "100% Max",
+                    100,
+                    "100% Target (Max RPM) • Thermal throttling prevention",
+                ),
             ],
             Self::De => [
-                ("20% Leise", 20, "20% Ziel (~2100 U/min) • Kaum hörbar für Office"),
-                ("45% Ausgewogen", 45, "45% Ziel (~3200 U/min) • Browsen & Entwicklung"),
-                ("75% Hoher Durchsatz", 75, "75% Ziel (~4500 U/min) • Kompilieren & Gaming"),
-                ("100% Maximum", 100, "100% Ziel (Volle Drehzahl) • Throttling-Schutz"),
+                (
+                    "20% Leise",
+                    20,
+                    "20% Ziel (~2100 U/min) • Kaum hörbar für Office",
+                ),
+                (
+                    "45% Ausgewogen",
+                    45,
+                    "45% Ziel (~3200 U/min) • Browsen & Entwicklung",
+                ),
+                (
+                    "75% Hoher Durchsatz",
+                    75,
+                    "75% Ziel (~4500 U/min) • Kompilieren & Gaming",
+                ),
+                (
+                    "100% Maximum",
+                    100,
+                    "100% Ziel (Volle Drehzahl) • Throttling-Schutz",
+                ),
             ],
             Self::Fr => [
-                ("20% Silencieux", 20, "Cible 20% (~2100 tr/min) • Empreinte sonore minime"),
-                ("45% Équilibré", 45, "Cible 45% (~3200 tr/min) • Navigation & dev"),
-                ("75% Haut Débit", 75, "Cible 75% (~4500 tr/min) • Compilation & gaming"),
-                ("100% Maximum", 100, "Cible 100% (Vitesse max) • Prévention thermique"),
+                (
+                    "20% Silencieux",
+                    20,
+                    "Cible 20% (~2100 tr/min) • Empreinte sonore minime",
+                ),
+                (
+                    "45% Équilibré",
+                    45,
+                    "Cible 45% (~3200 tr/min) • Navigation & dev",
+                ),
+                (
+                    "75% Haut Débit",
+                    75,
+                    "Cible 75% (~4500 tr/min) • Compilation & gaming",
+                ),
+                (
+                    "100% Maximum",
+                    100,
+                    "Cible 100% (Vitesse max) • Prévention thermique",
+                ),
             ],
             Self::Pt => [
-                ("20% Silencioso", 20, "Alvo 20% (~2100 RPM) • Pegada acústica mínima"),
-                ("45% Equilibrado", 45, "Alvo 45% (~3200 RPM) • Navegação e desenvolvimento"),
-                ("75% Alto Fluxo", 75, "Alvo 75% (~4500 RPM) • Compilação e jogos pesados"),
-                ("100% Máximo", 100, "Alvo 100% (RPM máx.) • Prevenção de estrangulamento"),
+                (
+                    "20% Silencioso",
+                    20,
+                    "Alvo 20% (~2100 RPM) • Pegada acústica mínima",
+                ),
+                (
+                    "45% Equilibrado",
+                    45,
+                    "Alvo 45% (~3200 RPM) • Navegação e desenvolvimento",
+                ),
+                (
+                    "75% Alto Fluxo",
+                    75,
+                    "Alvo 75% (~4500 RPM) • Compilação e jogos pesados",
+                ),
+                (
+                    "100% Máximo",
+                    100,
+                    "Alvo 100% (RPM máx.) • Prevenção de estrangulamento",
+                ),
             ],
             Self::It => [
-                ("20% Silenzioso", 20, "Target 20% (~2100 RPM) • Minima rumorosità"),
-                ("45% Bilanciato", 45, "Target 45% (~3200 RPM) • Navigazione e dev"),
-                ("75% Alto Flusso", 75, "Target 75% (~4500 RPM) • Compilazione e gaming"),
-                ("100% Massimo", 100, "Target 100% (RPM max) • Prevenzione throttling"),
+                (
+                    "20% Silenzioso",
+                    20,
+                    "Target 20% (~2100 RPM) • Minima rumorosità",
+                ),
+                (
+                    "45% Bilanciato",
+                    45,
+                    "Target 45% (~3200 RPM) • Navigazione e dev",
+                ),
+                (
+                    "75% Alto Flusso",
+                    75,
+                    "Target 75% (~4500 RPM) • Compilazione e gaming",
+                ),
+                (
+                    "100% Massimo",
+                    100,
+                    "Target 100% (RPM max) • Prevenzione throttling",
+                ),
             ],
             Self::Ru => [
-                ("20% Тихий", 20, "20% (~2100 об/мин) • Минимальный уровень шума"),
-                ("45% Базовый", 45, "45% (~3200 об/мин) • Работа в браузере и кодинг"),
+                (
+                    "20% Тихий",
+                    20,
+                    "20% (~2100 об/мин) • Минимальный уровень шума",
+                ),
+                (
+                    "45% Базовый",
+                    45,
+                    "45% (~3200 об/мин) • Работа в браузере и кодинг",
+                ),
                 ("75% Высокий", 75, "75% (~4500 об/мин) • Компиляция и игры"),
-                ("100% Максимум", 100, "100% (Макс. об/мин) • Защита от троттлинга"),
+                (
+                    "100% Максимум",
+                    100,
+                    "100% (Макс. об/мин) • Защита от троттлинга",
+                ),
             ],
             Self::Zh => [
-                ("20% 静音节能", 20, "20% 目标 (~2100 RPM) • 极低风噪，轻度办公"),
-                ("45% 均衡日常", 45, "45% 目标 (~3200 RPM) • 日常浏览与工程开发"),
-                ("75% 高风量输出", 75, "75% 目标 (~4500 RPM) • 代码重度编译与竞技游戏"),
-                ("100% 极速狂暴", 100, "100% 目标 (最高转速) • 压制热节流降频"),
+                (
+                    "20% 静音节能",
+                    20,
+                    "20% 目标 (~2100 RPM) • 极低风噪，轻度办公",
+                ),
+                (
+                    "45% 均衡日常",
+                    45,
+                    "45% 目标 (~3200 RPM) • 日常浏览与工程开发",
+                ),
+                (
+                    "75% 高风量输出",
+                    75,
+                    "75% 目标 (~4500 RPM) • 代码重度编译与竞技游戏",
+                ),
+                (
+                    "100% 极速狂暴",
+                    100,
+                    "100% 目标 (最高转速) • 压制热节流降频",
+                ),
             ],
             Self::Ja => [
                 ("20% 静音", 20, "20% 目標 (~2100 RPM) • 最小動作音・事務用"),
-                ("45% バランス", 45, "45% 目標 (~3200 RPM) • 通常作業＆プログラミング"),
-                ("75% 高風量", 75, "75% 目標 (~4500 RPM) • 高負荷処理＆ゲーミング"),
-                ("100% フルパワー", 100, "100% 目標 (最大回転) • サーマルスロットリング防止"),
+                (
+                    "45% バランス",
+                    45,
+                    "45% 目標 (~3200 RPM) • 通常作業＆プログラミング",
+                ),
+                (
+                    "75% 高風量",
+                    75,
+                    "75% 目標 (~4500 RPM) • 高負荷処理＆ゲーミング",
+                ),
+                (
+                    "100% フルパワー",
+                    100,
+                    "100% 目標 (最大回転) • サーマルスロットリング防止",
+                ),
             ],
             Self::Ko => [
-                ("20% 저소음", 20, "20% 목표 (~2100 RPM) • 최저 소음 및 사무용"),
-                ("45% 밸런스", 45, "45% 목표 (~3200 RPM) • 웹 서핑 및 개발 환경"),
-                ("75% 고유량", 75, "75% 목표 (~4500 RPM) • 컴파일 및 게이밍 모드"),
-                ("100% 풀 파워", 100, "100% 목표 (최대 RPM) • 스로틀링 방지 극대화"),
+                (
+                    "20% 저소음",
+                    20,
+                    "20% 목표 (~2100 RPM) • 최저 소음 및 사무용",
+                ),
+                (
+                    "45% 밸런스",
+                    45,
+                    "45% 목표 (~3200 RPM) • 웹 서핑 및 개발 환경",
+                ),
+                (
+                    "75% 고유량",
+                    75,
+                    "75% 목표 (~4500 RPM) • 컴파일 및 게이밍 모드",
+                ),
+                (
+                    "100% 풀 파워",
+                    100,
+                    "100% 목표 (최대 RPM) • 스로틀링 방지 극대화",
+                ),
             ],
         }
     }
 
     pub fn cpu_fan_name(&self) -> &'static str {
-        tr(*self,
-            "VENTILADOR CPU", "CPU FAN", "CPU-LÜFTER", "VENTILATEUR CPU", "VENTOINHA CPU",
-            "VENTOLA CPU", "КУЛЕР CPU", "CPU 风扇", "CPU ファン", "CPU 팬",
+        tr(
+            *self,
+            "VENTILADOR CPU",
+            "CPU FAN",
+            "CPU-LÜFTER",
+            "VENTILATEUR CPU",
+            "VENTOINHA CPU",
+            "VENTOLA CPU",
+            "КУЛЕР CPU",
+            "CPU 风扇",
+            "CPU ファン",
+            "CPU 팬",
         )
     }
 
     pub fn gpu_fan_name(&self) -> &'static str {
-        tr(*self,
-            "VENTILADOR GPU", "GPU FAN", "GPU-LÜFTER", "VENTILATEUR GPU", "VENTOINHA GPU",
-            "VENTOLA GPU", "КУЛЕР GPU", "GPU 风扇", "GPU ファン", "GPU 팬",
+        tr(
+            *self,
+            "VENTILADOR GPU",
+            "GPU FAN",
+            "GPU-LÜFTER",
+            "VENTILATEUR GPU",
+            "VENTOINHA GPU",
+            "VENTOLA GPU",
+            "КУЛЕР GPU",
+            "GPU 风扇",
+            "GPU ファン",
+            "GPU 팬",
         )
     }
 
     pub fn delta_trend_str(&self, delta: i32) -> &'static str {
         if delta > 35 {
-            tr(*self,
-                "Acelerando ▲", "Spinning Up ▲", "Beschleunigt ▲", "Accélération ▲", "Acelerando ▲",
-                "Accelerando ▲", "Разгон ▲", "加速中 ▲", "加速中 ▲", "가속 중 ▲",
+            tr(
+                *self,
+                "Acelerando ▲",
+                "Spinning Up ▲",
+                "Beschleunigt ▲",
+                "Accélération ▲",
+                "Acelerando ▲",
+                "Accelerando ▲",
+                "Разгон ▲",
+                "加速中 ▲",
+                "加速中 ▲",
+                "가속 중 ▲",
             )
         } else if delta < -35 {
-            tr(*self,
-                "Desacelerando ▼", "Slowing Down ▼", "Verlangsamt ▼", "Ralentissement ▼", "Desacelerando ▼",
-                "Rallentando ▼", "Замедление ▼", "减速中 ▼", "減速中 ▼", "감속 중 ▼",
+            tr(
+                *self,
+                "Desacelerando ▼",
+                "Slowing Down ▼",
+                "Verlangsamt ▼",
+                "Ralentissement ▼",
+                "Desacelerando ▼",
+                "Rallentando ▼",
+                "Замедление ▼",
+                "减速中 ▼",
+                "減速中 ▼",
+                "감속 중 ▼",
             )
         } else {
-            tr(*self,
-                "Estable •", "Steady •", "Stabil •", "Stable •", "Estável •",
-                "Stabile •", "Стабильно •", "转速稳定 •", "安定 •", "안정적 •",
+            tr(
+                *self,
+                "Estable •",
+                "Steady •",
+                "Stabil •",
+                "Stable •",
+                "Estável •",
+                "Stabile •",
+                "Стабильно •",
+                "转速稳定 •",
+                "安定 •",
+                "안정적 •",
             )
         }
     }
 
-    pub fn dial_telemetry_hover(&self, title: &str, temp: f32, headroom: f32, tjmax: f32) -> String {
+    pub fn dial_telemetry_hover(
+        &self,
+        title: &str,
+        temp: f32,
+        headroom: f32,
+        tjmax: f32,
+    ) -> String {
         let fmt = tr(*self,
             "{} Telemetría:\n• Temp actual: {:.1}°C\n• Margen térmico: +{:.1}°C antes de Throttling (Tope: {:.0}°C)",
             "{} Telemetry:\n• Current temp: {:.1}°C\n• Thermal headroom: +{:.1}°C before Throttling (Limit: {:.0}°C)",
@@ -726,140 +976,254 @@ impl Language {
     }
 
     pub fn minus_tooltip(&self) -> &'static str {
-        tr(*self,
-            "Reducir -5%", "Decrease -5%", "Verringern -5%", "Diminuer -5%", "Reduzir -5%",
-            "Riduci -5%", "Уменьшить -5%", "降低 -5%", "5% 減少", "5% 감소",
+        tr(
+            *self,
+            "Reducir -5%",
+            "Decrease -5%",
+            "Verringern -5%",
+            "Diminuer -5%",
+            "Reduzir -5%",
+            "Riduci -5%",
+            "Уменьшить -5%",
+            "降低 -5%",
+            "5% 減少",
+            "5% 감소",
         )
     }
 
     pub fn plus_tooltip(&self) -> &'static str {
-        tr(*self,
-            "Aumentar +5%", "Increase +5%", "Erhöhen +5%", "Augmenter +5%", "Aumentar +5%",
-            "Aumenta +5%", "Увеличить +5%", "提高 +5%", "5% 増加", "5% 증가",
+        tr(
+            *self,
+            "Aumentar +5%",
+            "Increase +5%",
+            "Erhöhen +5%",
+            "Augmenter +5%",
+            "Aumentar +5%",
+            "Aumenta +5%",
+            "Увеличить +5%",
+            "提高 +5%",
+            "5% 増加",
+            "5% 증가",
         )
     }
 
     pub fn turbo_smm_badge(&self) -> (&'static str, &'static str) {
-        tr2(*self,
-            ("⚡ Overdrive Turbo (100% SMM)", "SMM Turbo activo forzando raíles a máxima potencia de disipación."),
-            ("⚡ Turbo Overdrive (100% SMM)", "SMM Turbo active forcing fan rails to maximum cooling power."),
-            ("⚡ Turbo-Overdrive (100% SMM)", "SMM-Turbo aktiv. Lüfterschienen auf maximale Kühlleistung erzwungen."),
-            ("⚡ Overdrive Turbo (100% SMM)", "Turbo SMM actif forçant la puissance de refroidissement maximale."),
-            ("⚡ Overdrive Turbo (100% SMM)", "Turbo SMM ativo forçando trilhos à máxima potência de dissipação."),
-            ("⚡ Overdrive Turbo (100% SMM)", "SMM Turbo attivo per la massima potenza di dissipazione termica."),
-            ("⚡ Турбо-овердрайв (100% SMM)", "SMM Turbo активен: максимальная мощность охлаждения."),
-            ("⚡ 狂暴 Turbo 超频 (100% SMM)", "SMM 硬件直控满血输出，风扇供电轨全开至极致散热状态。"),
-            ("⚡ ターボオーバードライブ (100% SMM)", "SMM ターボ有効。ファンを最大放熱能力で強制駆動。"),
-            ("⚡ 터보 오버드라이브 (100% SMM)", "SMM 터보 활성화: 팬 레일 최대 방열 출력 고정."),
+        tr2(
+            *self,
+            (
+                "⚡ Overdrive Turbo (100% SMM)",
+                "SMM Turbo activo forzando raíles a máxima potencia de disipación.",
+            ),
+            (
+                "⚡ Turbo Overdrive (100% SMM)",
+                "SMM Turbo active forcing fan rails to maximum cooling power.",
+            ),
+            (
+                "⚡ Turbo-Overdrive (100% SMM)",
+                "SMM-Turbo aktiv. Lüfterschienen auf maximale Kühlleistung erzwungen.",
+            ),
+            (
+                "⚡ Overdrive Turbo (100% SMM)",
+                "Turbo SMM actif forçant la puissance de refroidissement maximale.",
+            ),
+            (
+                "⚡ Overdrive Turbo (100% SMM)",
+                "Turbo SMM ativo forçando trilhos à máxima potência de dissipação.",
+            ),
+            (
+                "⚡ Overdrive Turbo (100% SMM)",
+                "SMM Turbo attivo per la massima potenza di dissipazione termica.",
+            ),
+            (
+                "⚡ Турбо-овердрайв (100% SMM)",
+                "SMM Turbo активен: максимальная мощность охлаждения.",
+            ),
+            (
+                "⚡ 狂暴 Turbo 超频 (100% SMM)",
+                "SMM 硬件直控满血输出，风扇供电轨全开至极致散热状态。",
+            ),
+            (
+                "⚡ ターボオーバードライブ (100% SMM)",
+                "SMM ターボ有効。ファンを最大放熱能力で強制駆動。",
+            ),
+            (
+                "⚡ 터보 오버드라이브 (100% SMM)",
+                "SMM 터보 활성화: 팬 레일 최대 방열 출력 고정.",
+            ),
         )
     }
 
     pub fn bios_curve_badge(&self) -> (&'static str, &'static str) {
-        tr2(*self,
-            ("🔒 Curva Térmica BIOS Autónoma", "Compal EC gestiona dinámicamente el ciclo PWM según la curva térmica."),
-            ("🔒 Autonomous BIOS Thermal Curve", "Compal EC dynamically manages PWM duty based on thermal curve."),
-            ("🔒 Autonome BIOS-Thermokurve", "Compal EC regelt PWM dynamisch anhand der internen Temperaturkurve."),
-            ("🔒 Courbe thermique BIOS autonome", "Le contrôleur Compal EC gère dynamiquement le PWM selon la courbe."),
-            ("🔒 Curva Térmica BIOS Autônoma", "Compal EC gerencia dinamicamente o PWM segundo a curva térmica."),
-            ("🔒 Curva termica BIOS autonoma", "Compal EC gestisce dinamicamente il PWM in base alla curva termica."),
-            ("🔒 Автономная термокривая BIOS", "Контроллер Compal EC управляет ШИМ по заводской кривой нагрева."),
-            ("🔒 BIOS 自律热控动态曲线", "Compal EC 固件接管硬件温控，依据温度阶梯平滑动态调节占空比。"),
-            ("🔒 自律的 BIOS サーマルプロファイル", "Compal EC が温度カーブに基づき PWM を自律的に管理します。"),
-            ("🔒 BIOS 자율 열 관리 커브", "Compal EC가 발열 커브에 맞춰 PWM을 동적으로 자동 제어합니다."),
+        tr2(
+            *self,
+            (
+                "🔒 Curva Térmica BIOS Autónoma",
+                "Compal EC gestiona dinámicamente el ciclo PWM según la curva térmica.",
+            ),
+            (
+                "🔒 Autonomous BIOS Thermal Curve",
+                "Compal EC dynamically manages PWM duty based on thermal curve.",
+            ),
+            (
+                "🔒 Autonome BIOS-Thermokurve",
+                "Compal EC regelt PWM dynamisch anhand der internen Temperaturkurve.",
+            ),
+            (
+                "🔒 Courbe thermique BIOS autonome",
+                "Le contrôleur Compal EC gère dynamiquement le PWM selon la courbe.",
+            ),
+            (
+                "🔒 Curva Térmica BIOS Autônoma",
+                "Compal EC gerencia dinamicamente o PWM segundo a curva térmica.",
+            ),
+            (
+                "🔒 Curva termica BIOS autonoma",
+                "Compal EC gestisce dinamicamente il PWM in base alla curva termica.",
+            ),
+            (
+                "🔒 Автономная термокривая BIOS",
+                "Контроллер Compal EC управляет ШИМ по заводской кривой нагрева.",
+            ),
+            (
+                "🔒 BIOS 自律热控动态曲线",
+                "Compal EC 固件接管硬件温控，依据温度阶梯平滑动态调节占空比。",
+            ),
+            (
+                "🔒 自律的 BIOS サーマルプロファイル",
+                "Compal EC が温度カーブに基づき PWM を自律的に管理します。",
+            ),
+            (
+                "🔒 BIOS 자율 열 관리 커브",
+                "Compal EC가 발열 커브에 맞춰 PWM을 동적으로 자동 제어합니다.",
+            ),
         )
     }
 
     pub fn acoustic_footprint_label(&self) -> &'static str {
-        tr(*self,
-            "Huella Acústica:", "Acoustic Footprint:", "Akustischer Pegel:", "Niveau sonore :", "Pegada Acústica:",
-            "Impronta acustica:", "Акустический шум:", "声学噪声估算:", "騒音レベル目安:", "소음 수준:",
+        tr(
+            *self,
+            "Huella Acústica:",
+            "Acoustic Footprint:",
+            "Akustischer Pegel:",
+            "Niveau sonore :",
+            "Pegada Acústica:",
+            "Impronta acustica:",
+            "Акустический шум:",
+            "声学噪声估算:",
+            "騒音レベル目安:",
+            "소음 수준:",
         )
     }
 
     pub fn acoustic_state(&self, max_rpm: u32) -> (u32, &'static str) {
         if max_rpm == 0 {
-            (18, tr(*self,
-                "0 RPM • Convección pasiva / Silencio total",
-                "0 RPM • Passive Convection / Pure Silence",
-                "0 U/min • Passive Konvektion / Völlige Stille",
-                "0 tr/min • Convection passive / Silence complet",
-                "0 RPM • Convecção passiva / Silêncio total",
-                "0 RPM • Convezione passiva / Silenzio totale",
-                "0 об/мин • Пассивный режим / Полная тишина",
-                "0 RPM • 纯被动对流散热 / 零分贝绝对静音",
-                "0 RPM • パッシブ冷却 / 完全静音稼働",
-                "0 RPM • 패시브 대류 방열 / 무소음",
-            ))
+            (
+                18,
+                tr(
+                    *self,
+                    "0 RPM • Convección pasiva / Silencio total",
+                    "0 RPM • Passive Convection / Pure Silence",
+                    "0 U/min • Passive Konvektion / Völlige Stille",
+                    "0 tr/min • Convection passive / Silence complet",
+                    "0 RPM • Convecção passiva / Silêncio total",
+                    "0 RPM • Convezione passiva / Silenzio totale",
+                    "0 об/мин • Пассивный режим / Полная тишина",
+                    "0 RPM • 纯被动对流散热 / 零分贝绝对静音",
+                    "0 RPM • パッシブ冷却 / 完全静音稼働",
+                    "0 RPM • 패시브 대류 방열 / 무소음",
+                ),
+            )
         } else if max_rpm < 2200 {
-            (24, tr(*self,
-                "Flujo susurro • Casi inaudible / Oficina y dev",
-                "Whisper Flow • Near Inaudible / Office & Dev",
-                "Flüsterleise • Kaum hörbar / Büro & Entwicklung",
-                "Flux silencieux • Pratiquement inaudible / Bureau",
-                "Fluxo sussurro • Quase inaudível / Escritório",
-                "Flusso silenzioso • Quasi impercettibile / Ufficio",
-                "Шелест • Почти неслышно / Офис и разработка",
-                "微风轻语 • 几近无声 / 沉浸办公与日常开发",
-                "微風フロー • ほぼ無音 / オフィス作業・開発",
-                "초저소음 • 거의 무음 / 사무 및 프로그래밍",
-            ))
+            (
+                24,
+                tr(
+                    *self,
+                    "Flujo susurro • Casi inaudible / Oficina y dev",
+                    "Whisper Flow • Near Inaudible / Office & Dev",
+                    "Flüsterleise • Kaum hörbar / Büro & Entwicklung",
+                    "Flux silencieux • Pratiquement inaudible / Bureau",
+                    "Fluxo sussurro • Quase inaudível / Escritório",
+                    "Flusso silenzioso • Quasi impercettibile / Ufficio",
+                    "Шелест • Почти неслышно / Офис и разработка",
+                    "微风轻语 • 几近无声 / 沉浸办公与日常开发",
+                    "微風フロー • ほぼ無音 / オフィス作業・開発",
+                    "초저소음 • 거의 무음 / 사무 및 프로그래밍",
+                ),
+            )
         } else if max_rpm < 3400 {
-            (33, tr(*self,
-                "Brisa suave • Ligero zumbido ambiente",
-                "Gentle Draft • Mild Ambient Whir",
-                "Sanfter Luftstrom • Leises Raumsummen",
-                "Brise douce • Léger ronronnement ambiant",
-                "Brisa suave • Leve zumbido ambiente",
-                "Brezza leggera • Ronzio ambientale lieve",
-                "Мягкий поток • Легкий фоновый шелест",
-                "柔和散热 • 温和气流 / 均衡日常运算",
-                "穏やかな気流 • わずかな動作音 / 通常作業",
-                "부드러운 미풍 • 가벼운 배경 동작음",
-            ))
+            (
+                33,
+                tr(
+                    *self,
+                    "Brisa suave • Ligero zumbido ambiente",
+                    "Gentle Draft • Mild Ambient Whir",
+                    "Sanfter Luftstrom • Leises Raumsummen",
+                    "Brise douce • Léger ronronnement ambiant",
+                    "Brisa suave • Leve zumbido ambiente",
+                    "Brezza leggera • Ronzio ambientale lieve",
+                    "Мягкий поток • Легкий фоновый шелест",
+                    "柔和散热 • 温和气流 / 均衡日常运算",
+                    "穏やかな気流 • わずかな動作音 / 通常作業",
+                    "부드러운 미풍 • 가벼운 배경 동작음",
+                ),
+            )
         } else if max_rpm < 4500 {
-            (43, tr(*self,
-                "Inducción forzada • Gaming equilibrado audible",
-                "Forced Induction • Audible Balanced Gaming",
-                "Forcierte Kühlung • Hörbares Gaming",
-                "Induction forcée • Gaming audible équilibré",
-                "Indução forçada • Jogos equilibrados audíveis",
-                "Induzione forzata • Gaming bilanciato udibile",
-                "Умеренный наддув • Сбалансированный игровой режим",
-                "强制定向风压 • 竞技游戏温控平稳输出",
-                "強制冷却 • バランス型ゲーミング",
-                "강제 흡기 • 밸런스드 게이밍 및 렌더링",
-            ))
+            (
+                43,
+                tr(
+                    *self,
+                    "Inducción forzada • Gaming equilibrado audible",
+                    "Forced Induction • Audible Balanced Gaming",
+                    "Forcierte Kühlung • Hörbares Gaming",
+                    "Induction forcée • Gaming audible équilibré",
+                    "Indução forçada • Jogos equilibrados audíveis",
+                    "Induzione forzata • Gaming bilanciato udibile",
+                    "Умеренный наддув • Сбалансированный игровой режим",
+                    "强制定向风压 • 竞技游戏温控平稳输出",
+                    "強制冷却 • バランス型ゲーミング",
+                    "강제 흡기 • 밸런스드 게이밍 및 렌더링",
+                ),
+            )
         } else if max_rpm < 5400 {
-            (51, tr(*self,
-                "Alto flujo turbina • Fuerte disipación térmica",
-                "High Turbine Flow • Heavy Thermal Dissipation",
-                "Hoher Turbinenstrom • Starke Wärmeableitung",
-                "Flux élevé • Forte dissipation thermique",
-                "Alto fluxo turbina • Forte dissipação térmica",
-                "Alto flusso turbine • Forte dissipazione termica",
-                "Высокий поток • Мощный отвод тепла",
-                "高风压双涡轮 • 强力导流散热应对重度负载",
-                "高風量タービン • 強力な熱放散駆動",
-                "고유량 터빈 • 강력한 발열 해소 출력",
-            ))
+            (
+                51,
+                tr(
+                    *self,
+                    "Alto flujo turbina • Fuerte disipación térmica",
+                    "High Turbine Flow • Heavy Thermal Dissipation",
+                    "Hoher Turbinenstrom • Starke Wärmeableitung",
+                    "Flux élevé • Forte dissipation thermique",
+                    "Alto fluxo turbina • Forte dissipação térmica",
+                    "Alto flusso turbine • Forte dissipazione termica",
+                    "Высокий поток • Мощный отвод тепла",
+                    "高风压双涡轮 • 强力导流散热应对重度负载",
+                    "高風量タービン • 強力な熱放散駆動",
+                    "고유량 터빈 • 강력한 발열 해소 출력",
+                ),
+            )
         } else {
-            (56, tr(*self,
-                "Inducción jet máxima • Turbo overdrive 12V total",
-                "Max Jet Induction • Full 12V Turbo Overdrive",
-                "Maximale Jet-Kühlung • Volle 12V Turbo-Power",
-                "Induction jet maximale • Turbo overdrive 12V total",
-                "Indução máxima jato • Turbo overdrive 12V total",
-                "Induzione massima jet • Turbo overdrive 12V totale",
-                "Реактивный наддув • Полный 12V овердрайв",
-                "全速喷射气流 • 12V 满血狂暴涡轮压制极值",
-                "最大ジェット噴流 • フル12V ターボ過給駆動",
-                "최대 제트 기류 • 풀 12V 터보 오버드라이브",
-            ))
+            (
+                56,
+                tr(
+                    *self,
+                    "Inducción jet máxima • Turbo overdrive 12V total",
+                    "Max Jet Induction • Full 12V Turbo Overdrive",
+                    "Maximale Jet-Kühlung • Volle 12V Turbo-Power",
+                    "Induction jet maximale • Turbo overdrive 12V total",
+                    "Indução máxima jato • Turbo overdrive 12V total",
+                    "Induzione massima jet • Turbo overdrive 12V totale",
+                    "Реактивный наддув • Полный 12V овердрайв",
+                    "全速喷射气流 • 12V 满血狂暴涡轮压制极值",
+                    "最大ジェット噴流 • フル12V ターボ過給駆動",
+                    "최대 제트 기류 • 풀 12V 터보 오버드라이브",
+                ),
+            )
         }
     }
 
     pub fn est_airflow_label(&self, cfm: f32) -> String {
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "Flujo est.: {:.1} CFM",
             "Est. Airflow: {:.1} CFM",
             "Geschätzter Luftstrom: {:.1} CFM",
@@ -875,7 +1239,8 @@ impl Language {
     }
 
     pub fn ventilation_dynamics_title(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "Curva de Dinámica de Ventilación",
             "Ventilation Dynamics Curve",
             "Lüftungsdynamik-Kurve",
@@ -890,7 +1255,8 @@ impl Language {
     }
 
     pub fn dual_turbine_label(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "• Respuesta Turbinas Duales (60s)",
             "• Dual-Turbine Response (60s)",
             "• Dual-Turbinen-Reaktion (60s)",
@@ -905,7 +1271,8 @@ impl Language {
     }
 
     pub fn telemetry_matrix_title(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "Matriz de Telemetría del Sistema en Vivo",
             "Live System Telemetry Matrix",
             "Live-System-Telemetriematrix",
@@ -921,14 +1288,24 @@ impl Language {
 
     // --- MONITORING TAB ---
     pub fn kpi_thermal_headroom(&self) -> &'static str {
-        tr(*self,
-            "MARGEN TÉRMICO", "THERMAL HEADROOM", "THERMISCHER SPIELRAUM", "MARGE THERMIQUE", "MARGEM TÉRMICA",
-            "MARGINE TERMICO", "ТЕПЛОВОЙ ЗАПАС", "散热安全余量", "サーマルヘッドルーム", "열 마진 여유도",
+        tr(
+            *self,
+            "MARGEN TÉRMICO",
+            "THERMAL HEADROOM",
+            "THERMISCHER SPIELRAUM",
+            "MARGE THERMIQUE",
+            "MARGEM TÉRMICA",
+            "MARGINE TERMICO",
+            "ТЕПЛОВОЙ ЗАПАС",
+            "散热安全余量",
+            "サーマルヘッドルーム",
+            "열 마진 여유도",
         )
     }
 
     pub fn kpi_peak_temps(&self, cpu: f32, gpu: f32) -> String {
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "Pico: {:.0}°C CPU / {:.0}°C GPU",
             "Peak: {:.0}°C CPU / {:.0}°C GPU",
             "Spitze: {:.0}°C CPU / {:.0}°C GPU",
@@ -945,142 +1322,314 @@ impl Language {
     }
 
     pub fn kpi_combined_power(&self) -> &'static str {
-        tr(*self,
-            "POTENCIA COMBINADA", "COMBINED POWER", "GESAMTLEISTUNG", "PUISSANCE COMBINÉE", "POTÊNCIA COMBINADA",
-            "POTENZA COMBINATA", "СУММАРНАЯ МОЩНОСТЬ", "整机综合功耗", "合計消費電力", "통합 소비 전력",
+        tr(
+            *self,
+            "POTENCIA COMBINADA",
+            "COMBINED POWER",
+            "GESAMTLEISTUNG",
+            "PUISSANCE COMBINÉE",
+            "POTÊNCIA COMBINADA",
+            "POTENZA COMBINATA",
+            "СУММАРНАЯ МОЩНОСТЬ",
+            "整机综合功耗",
+            "合計消費電力",
+            "통합 소비 전력",
         )
     }
 
     pub fn kpi_peak_power(&self, p: f32) -> String {
-        let fmt = tr(*self,
-            "Pico: {:.1} W", "Peak: {:.1} W", "Spitze: {:.1} W", "Pic : {:.1} W", "Pico: {:.1} W",
-            "Picco: {:.1} W", "Пик: {:.1} W", "峰值功耗: {:.1} W", "最大電力: {:.1} W", "최대 전력: {:.1} W",
+        let fmt = tr(
+            *self,
+            "Pico: {:.1} W",
+            "Peak: {:.1} W",
+            "Spitze: {:.1} W",
+            "Pic : {:.1} W",
+            "Pico: {:.1} W",
+            "Picco: {:.1} W",
+            "Пик: {:.1} W",
+            "峰值功耗: {:.1} W",
+            "最大電力: {:.1} W",
+            "최대 전력: {:.1} W",
         );
         fmt.replace("{:.1}", &format!("{:.1}", p))
     }
 
     pub fn kpi_peak_core(&self) -> &'static str {
-        tr(*self,
-            "TEMP MÁX NÚCLEO", "PEAK CORE TEMP", "MAX KERNTEMPERATUR", "TEMP MAX CŒUR", "TEMP MÁX NÚCLEO",
-            "TEMP MAX CORE", "МАКС ТЕМП ЯДРА", "核心最高峰值温度", "最大コア温度", "최대 코어 온도",
+        tr(
+            *self,
+            "TEMP MÁX NÚCLEO",
+            "PEAK CORE TEMP",
+            "MAX KERNTEMPERATUR",
+            "TEMP MAX CŒUR",
+            "TEMP MÁX NÚCLEO",
+            "TEMP MAX CORE",
+            "МАКС ТЕМП ЯДРА",
+            "核心最高峰值温度",
+            "最大コア温度",
+            "최대 코어 온도",
         )
     }
 
     pub fn kpi_tjmax(&self) -> &'static str {
-        tr(*self,
-            "Referencia TjMax: 100°C", "TjMax Reference: 100°C", "TjMax-Referenz: 100°C", "Référence TjMax : 100°C", "Referência TjMax: 100°C",
-            "Riferimento TjMax: 100°C", "Ориентир TjMax: 100°C", "TjMax 额定参考阈值: 100°C", "TjMax 基準値: 100°C", "TjMax 기준치: 100°C",
+        tr(
+            *self,
+            "Referencia TjMax: 100°C",
+            "TjMax Reference: 100°C",
+            "TjMax-Referenz: 100°C",
+            "Référence TjMax : 100°C",
+            "Referência TjMax: 100°C",
+            "Riferimento TjMax: 100°C",
+            "Ориентир TjMax: 100°C",
+            "TjMax 额定参考阈值: 100°C",
+            "TjMax 基準値: 100°C",
+            "TjMax 기준치: 100°C",
         )
     }
 
     pub fn kpi_turbine_utilization(&self) -> &'static str {
-        tr(*self,
-            "USO DE TURBINAS", "TURBINE UTILIZATION", "TURBINEN-AUSLASTUNG", "UTILISATION TURBINES", "USO DE TURBINAS",
-            "UTILIZZO TURBINE", "НАГРУЗКА ТУРБИН", "涡轮风扇总转速负荷", "ファン稼働率", "터빈 팬 가동률",
+        tr(
+            *self,
+            "USO DE TURBINAS",
+            "TURBINE UTILIZATION",
+            "TURBINEN-AUSLASTUNG",
+            "UTILISATION TURBINES",
+            "USO DE TURBINAS",
+            "UTILIZZO TURBINE",
+            "НАГРУЗКА ТУРБИН",
+            "涡轮风扇总转速负荷",
+            "ファン稼働率",
+            "터빈 팬 가동률",
         )
     }
 
     pub fn kpi_dynamic_saturation(&self) -> &'static str {
-        tr(*self,
-            "Saturación dinámica", "Dynamic Saturation", "Dynamische Sättigung", "Saturation dynamique", "Saturação dinâmica",
-            "Saturazione dinamica", "Динамическое насыщение", "动态饱和度", "動的飽和率", "동적 포화도",
+        tr(
+            *self,
+            "Saturación dinámica",
+            "Dynamic Saturation",
+            "Dynamische Sättigung",
+            "Saturation dynamique",
+            "Saturação dinâmica",
+            "Saturazione dinamica",
+            "Динамическое насыщение",
+            "动态饱和度",
+            "動的飽和率",
+            "동적 포화도",
         )
     }
 
     pub fn graph_thermals(&self) -> &'static str {
-        tr(*self,
-            "🌡 Térmicas", "🌡 Thermals", "🌡 Temperaturen", "🌡 Températures", "🌡 Térmicas",
-            "🌡 Termiche", "🌡 Температуры", "🌡 温度曲线", "🌡 温度", "🌡 온도",
+        tr(
+            *self,
+            "🌡 Térmicas",
+            "🌡 Thermals",
+            "🌡 Temperaturen",
+            "🌡 Températures",
+            "🌡 Térmicas",
+            "🌡 Termiche",
+            "🌡 Температуры",
+            "🌡 温度曲线",
+            "🌡 温度",
+            "🌡 온도",
         )
     }
 
     pub fn graph_workload(&self) -> &'static str {
-        tr(*self,
-            "📈 Carga", "📈 Workload", "📈 Auslastung", "📈 Charge", "📈 Carga",
-            "📈 Carico", "📈 Нагрузка", "📈 硬件负载", "📈 負荷率", "📈 부하율",
+        tr(
+            *self,
+            "📈 Carga",
+            "📈 Workload",
+            "📈 Auslastung",
+            "📈 Charge",
+            "📈 Carga",
+            "📈 Carico",
+            "📈 Нагрузка",
+            "📈 硬件负载",
+            "📈 負荷率",
+            "📈 부하율",
         )
     }
 
     pub fn graph_power(&self) -> &'static str {
-        tr(*self,
-            "⚡ Potencia", "⚡ Power", "⚡ Leistung", "⚡ Puissance", "⚡ Potência",
-            "⚡ Potenza", "⚡ Мощность", "⚡ 动态功耗", "⚡ 電力", "⚡ 전력",
+        tr(
+            *self,
+            "⚡ Potencia",
+            "⚡ Power",
+            "⚡ Leistung",
+            "⚡ Puissance",
+            "⚡ Potência",
+            "⚡ Potenza",
+            "⚡ Мощность",
+            "⚡ 动态功耗",
+            "⚡ 電力",
+            "⚡ 전력",
         )
     }
 
     pub fn graph_turbines(&self) -> &'static str {
-        tr(*self,
-            "🌀 Turbinas", "🌀 Turbines", "🌀 Turbinen", "🌀 Turbines", "🌀 Turbinas",
-            "🌀 Turbine", "🌀 Турбины", "🌀 涡轮转速", "🌀 ファン回転", "🌀 터빈",
+        tr(
+            *self,
+            "🌀 Turbinas",
+            "🌀 Turbines",
+            "🌀 Turbinen",
+            "🌀 Turbines",
+            "🌀 Turbinas",
+            "🌀 Turbine",
+            "🌀 Турбины",
+            "🌀 涡轮转速",
+            "🌀 ファン回転",
+            "🌀 터빈",
         )
     }
 
     pub fn graph_pause(&self) -> &'static str {
-        tr(*self,
-            "⏸ Pausar", "⏸ Pause", "⏸ Anhalten", "⏸ Pause", "⏸ Pausar",
-            "⏸ Pausa", "⏸ Пауза", "⏸ 冻结采样", "⏸ 一時停止", "⏸ 일시정지",
+        tr(
+            *self,
+            "⏸ Pausar",
+            "⏸ Pause",
+            "⏸ Anhalten",
+            "⏸ Pause",
+            "⏸ Pausar",
+            "⏸ Pausa",
+            "⏸ Пауза",
+            "⏸ 冻结采样",
+            "⏸ 一時停止",
+            "⏸ 일시정지",
         )
     }
 
     pub fn graph_resume(&self) -> &'static str {
-        tr(*self,
-            "▶ Reanudar", "▶ Resume", "▶ Fortsetzen", "▶ Reprendre", "▶ Retomar",
-            "▶ Riprendi", "▶ Продолжить", "▶ 恢复捕获", "▶ 再開", "▶ 재개",
+        tr(
+            *self,
+            "▶ Reanudar",
+            "▶ Resume",
+            "▶ Fortsetzen",
+            "▶ Reprendre",
+            "▶ Retomar",
+            "▶ Riprendi",
+            "▶ Продолжить",
+            "▶ 恢复捕获",
+            "▶ 再開",
+            "▶ 재개",
         )
     }
 
     pub fn graph_clear(&self) -> &'static str {
-        tr(*self,
-            "🗑 Limpiar", "🗑 Clear", "🗑 Leeren", "🗑 Effacer", "🗑 Limpar",
-            "🗑 Cancella", "🗑 Очистить", "🗑 清空历史", "🗑 消去", "🗑 지우기",
+        tr(
+            *self,
+            "🗑 Limpiar",
+            "🗑 Clear",
+            "🗑 Leeren",
+            "🗑 Effacer",
+            "🗑 Limpar",
+            "🗑 Cancella",
+            "🗑 Очистить",
+            "🗑 清空历史",
+            "🗑 消去",
+            "🗑 지우기",
         )
     }
 
     pub fn card_cpu_title(&self) -> &'static str {
-        tr(*self,
-            "PAQUETE CPU", "CPU PACKAGE", "CPU-PAKET", "PROCESSEUR CPU", "PACOTE CPU",
-            "PACCHETTO CPU", "ПРОЦЕССОР (CPU)", "中央处理器 (CPU)", "CPU パッケージ", "CPU 패키지",
+        tr(
+            *self,
+            "PAQUETE CPU",
+            "CPU PACKAGE",
+            "CPU-PAKET",
+            "PROCESSEUR CPU",
+            "PACOTE CPU",
+            "PACCHETTO CPU",
+            "ПРОЦЕССОР (CPU)",
+            "中央处理器 (CPU)",
+            "CPU パッケージ",
+            "CPU 패키지",
         )
     }
 
     pub fn card_gpu_title(&self) -> &'static str {
-        tr(*self,
-            "PROCESADOR GRÁFICO (GPU)", "GRAPHICS PROCESSING UNIT (GPU)", "GRAFIKPROZESSOR (GPU)", "PROCESSEUR GRAPHIQUE (GPU)", "UNIDADE GRÁFICA (GPU)",
-            "PROCESSORE GRAFICO (GPU)", "ГРАФИЧЕСКИЙ ЧИП (GPU)", "图形处理器 (GPU)", "グラフィックス (GPU)", "그래픽 프로세서 (GPU)",
+        tr(
+            *self,
+            "PROCESADOR GRÁFICO (GPU)",
+            "GRAPHICS PROCESSING UNIT (GPU)",
+            "GRAFIKPROZESSOR (GPU)",
+            "PROCESSEUR GRAPHIQUE (GPU)",
+            "UNIDADE GRÁFICA (GPU)",
+            "PROCESSORE GRAFICO (GPU)",
+            "ГРАФИЧЕСКИЙ ЧИП (GPU)",
+            "图形处理器 (GPU)",
+            "グラフィックス (GPU)",
+            "그래픽 프로세서 (GPU)",
         )
     }
 
     pub fn card_memory_title(&self) -> &'static str {
-        tr(*self,
-            "MEMORIA DEL SISTEMA (RAM)", "SYSTEM MEMORY (RAM)", "ARBEITSSPEICHER (RAM)", "MÉMOIRE SYSTÈME (RAM)", "MEMÓRIA DO SISTEMA (RAM)",
-            "MEMORIA DI SISTEMA (RAM)", "ОПЕРАТИВНАЯ ПАМЯТЬ (RAM)", "系统物理内存 (RAM)", "システムメモリ (RAM)", "시스템 메모리 (RAM)",
+        tr(
+            *self,
+            "MEMORIA DEL SISTEMA (RAM)",
+            "SYSTEM MEMORY (RAM)",
+            "ARBEITSSPEICHER (RAM)",
+            "MÉMOIRE SYSTÈME (RAM)",
+            "MEMÓRIA DO SISTEMA (RAM)",
+            "MEMORIA DI SISTEMA (RAM)",
+            "ОПЕРАТИВНАЯ ПАМЯТЬ (RAM)",
+            "系统物理内存 (RAM)",
+            "システムメモリ (RAM)",
+            "시스템 메모리 (RAM)",
         )
     }
 
     pub fn card_storage_title(&self) -> &'static str {
-        tr(*self,
-            "ALMACENAMIENTO NVME", "NVME SOLID STATE STORAGE", "NVME-FESTPLATTE", "STOCKAGE SSD NVME", "ARMAZENAMENTO NVME",
-            "ARCHIVIAZIONE SSD NVME", "НАКОПИТЕЛЬ NVME SSD", "NVME 固态硬盘存储", "NVME 高速ストレージ", "NVME SSD 스토리지",
+        tr(
+            *self,
+            "ALMACENAMIENTO NVME",
+            "NVME SOLID STATE STORAGE",
+            "NVME-FESTPLATTE",
+            "STOCKAGE SSD NVME",
+            "ARMAZENAMENTO NVME",
+            "ARCHIVIAZIONE SSD NVME",
+            "НАКОПИТЕЛЬ NVME SSD",
+            "NVME 固态硬盘存储",
+            "NVME 高速ストレージ",
+            "NVME SSD 스토리지",
         )
     }
 
     pub fn card_power_title(&self) -> &'static str {
-        tr(*self,
-            "ALIMENTACIÓN Y BATERÍA", "POWER DELIVERY & CHARGING", "STROMVERSORGUNG & AKKU", "ALIMENTATION ET BATTERIE", "ALIMENTAÇÃO E BATERIA",
-            "ALIMENTAZIONE E BATTERIA", "ПИТАНИЕ И БАТАРЕЯ", "电源适配器与电池管理", "電源供給＆バッテリー", "전원 공급 및 배터리",
+        tr(
+            *self,
+            "ALIMENTACIÓN Y BATERÍA",
+            "POWER DELIVERY & CHARGING",
+            "STROMVERSORGUNG & AKKU",
+            "ALIMENTATION ET BATTERIE",
+            "ALIMENTAÇÃO E BATERIA",
+            "ALIMENTAZIONE E BATTERIA",
+            "ПИТАНИЕ И БАТАРЕЯ",
+            "电源适配器与电池管理",
+            "電源供給＆バッテリー",
+            "전원 공급 및 배터리",
         )
     }
 
     pub fn card_turbines_title(&self) -> &'static str {
-        tr(*self,
-            "TURBINAS AERODINÁMICAS", "AERODYNAMIC TURBINES", "AERODYNAMISCHE TURBINEN", "TURBINES AÉRODYNAMIQUES", "TURBINAS AERODINÂMICAS",
-            "TURBINE AERODINAMICHE", "АЭРОДИНАМИЧЕСКИЕ ТУРБИНЫ", "AEROBLADE 3D 动力学涡轮", "空力タービンブレード", "공기역학 터빈 블레이드",
+        tr(
+            *self,
+            "TURBINAS AERODINÁMICAS",
+            "AERODYNAMIC TURBINES",
+            "AERODYNAMISCHE TURBINEN",
+            "TURBINES AÉRODYNAMIQUES",
+            "TURBINAS AERODINÂMICAS",
+            "TURBINE AERODINAMICHE",
+            "АЭРОДИНАМИЧЕСКИЕ ТУРБИНЫ",
+            "AEROBLADE 3D 动力学涡轮",
+            "空力タービンブレード",
+            "공기역학 터빈 블레이드",
         )
     }
 
     // --- SCENARIOS (POWER MODES) TAB ---
     pub fn scenarios_header(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "⚡ Escenarios Operativos y Perfiles de Potencia",
             "⚡ Operating Scenarios & Power Envelopes",
             "⚡ Betriebsszenarien & Leistungsprofile",
@@ -1095,9 +1644,18 @@ impl Language {
     }
 
     pub fn current_badge(&self, current: &str) -> String {
-        let fmt = tr(*self,
-            "ACTIVO: {}", "CURRENT: {}", "AKTIV: {}", "ACTIF : {}", "ATIVO: {}",
-            "ATTIVO: {}", "АКТИВЕН: {}", "当前生效: {}", "現在有効: {}", "현재 적용: {}",
+        let fmt = tr(
+            *self,
+            "ACTIVO: {}",
+            "CURRENT: {}",
+            "AKTIV: {}",
+            "ACTIF : {}",
+            "ATIVO: {}",
+            "ATTIVO: {}",
+            "АКТИВЕН: {}",
+            "当前生效: {}",
+            "現在有効: {}",
+            "현재 적용: {}",
         );
         fmt.replace("{}", &current.to_uppercase())
     }
@@ -1168,22 +1726,41 @@ impl Language {
     }
 
     pub fn active_indicator(&self) -> &'static str {
-        tr(*self,
-            "● ACTIVO", "● ACTIVE", "● AKTIV", "● ACTIF", "● ATIVO",
-            "● ATTIVO", "● АКТИВЕН", "● 当前激活", "● 有効", "● 활성",
+        tr(
+            *self,
+            "● ACTIVO",
+            "● ACTIVE",
+            "● AKTIV",
+            "● ACTIF",
+            "● ATIVO",
+            "● ATTIVO",
+            "● АКТИВЕН",
+            "● 当前激活",
+            "● 有効",
+            "● 활성",
         )
     }
 
     pub fn engage_button(&self) -> &'static str {
-        tr(*self,
-            "Activar", "Engage", "Aktivieren", "Activer", "Ativar",
-            "Attiva", "Применить", "应用生效", "適用", "적용",
+        tr(
+            *self,
+            "Activar",
+            "Engage",
+            "Aktivieren",
+            "Activer",
+            "Ativar",
+            "Attiva",
+            "Применить",
+            "应用生效",
+            "適用",
+            "적용",
         )
     }
 
     // --- KEYBOARD RGB TAB ---
     pub fn rgb_header(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🌈 Estudio de Iluminación de Teclado Pulsar 4-Zonas",
             "🌈 4-Zone Pulsar Keyboard Lighting Studio",
             "🌈 4-Zonen-Pulsar-Tastaturbeleuchtungsstudio",
@@ -1198,7 +1775,8 @@ impl Language {
     }
 
     pub fn select_zone_label(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "Selecciona la Zona del Teclado:",
             "Select Target Keyboard Zone:",
             "Tastaturzone auswählen:",
@@ -1288,7 +1866,8 @@ impl Language {
     }
 
     pub fn static_color_title(&self, target_desc: &str) -> String {
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "Color Estático para {}:",
             "Static Color for {}:",
             "Statische Farbe für {}:",
@@ -1304,16 +1883,34 @@ impl Language {
     }
 
     pub fn apply_zone_color(&self) -> &'static str {
-        tr(*self,
-            "Aplicar Color a Zona", "Apply Zone Color", "Farbe auf Zone anwenden", "Appliquer à la zone", "Aplicar Cor à Zona",
-            "Applica colore alla zona", "Применить к зоне", "写入所选分区", "ゾーンに色を適用", "구역에 색상 적용",
+        tr(
+            *self,
+            "Aplicar Color a Zona",
+            "Apply Zone Color",
+            "Farbe auf Zone anwenden",
+            "Appliquer à la zone",
+            "Aplicar Cor à Zona",
+            "Applica colore alla zona",
+            "Применить к зоне",
+            "写入所选分区",
+            "ゾーンに色を適用",
+            "구역에 색상 적용",
         )
     }
 
     pub fn dynamic_effects_title(&self) -> &'static str {
-        tr(*self,
-            "Efectos Dinámicos y Presets:", "Dynamic Lighting Effects & Presets:", "Dynamische Effekte & Profile:", "Effets dynamiques et préréglages :", "Efeitos Dinâmicos e Predefinições:",
-            "Effetti dinamici e preset:", "Динамические эффекты и пресеты:", "动态流光灯效与专属预设:", "ダイナミック発光エフェクト＆プリセット:", "동적 조명 효과 및 프리셋:",
+        tr(
+            *self,
+            "Efectos Dinámicos y Presets:",
+            "Dynamic Lighting Effects & Presets:",
+            "Dynamische Effekte & Profile:",
+            "Effets dynamiques et préréglages :",
+            "Efeitos Dinâmicos e Predefinições:",
+            "Effetti dinamici e preset:",
+            "Динамические эффекты и пресеты:",
+            "动态流光灯效与专属预设:",
+            "ダイナミック発光エフェクト＆プリセット:",
+            "동적 조명 효과 및 프리셋:",
         )
     }
 
@@ -1403,15 +2000,25 @@ impl Language {
     }
 
     pub fn brightness_label(&self) -> &'static str {
-        tr(*self,
-            "Brillo:", "Brightness:", "Helligkeit:", "Luminosité :", "Brilho:",
-            "Luminosità:", "Яркость:", "背光亮度调节:", "輝度:", "밝기:",
+        tr(
+            *self,
+            "Brillo:",
+            "Brightness:",
+            "Helligkeit:",
+            "Luminosité :",
+            "Brilho:",
+            "Luminosità:",
+            "Яркость:",
+            "背光亮度调节:",
+            "輝度:",
+            "밝기:",
         )
     }
 
     // --- SETTINGS TAB ---
     pub fn settings_lang_header(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🌐 Idioma de la Interfaz / Interface Language",
             "🌐 Interface Language / Idioma de la Interfaz",
             "🌐 Sprache der Benutzeroberfläche",
@@ -1441,7 +2048,8 @@ impl Language {
     }
 
     pub fn settings_theme_header(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🎨 Paleta de Color & Ergonomía Visual",
             "🎨 Color Palette & Visual Ergonomics",
             "🎨 Farbpalette & Visuelle Ergonomie",
@@ -1471,21 +2079,40 @@ impl Language {
     }
 
     pub fn select_button(&self) -> &'static str {
-        tr(*self,
-            "Seleccionar", "Select", "Auswählen", "Sélectionner", "Selecionar",
-            "Seleziona", "Выбрать", "选用此主题", "選択", "선택",
+        tr(
+            *self,
+            "Seleccionar",
+            "Select",
+            "Auswählen",
+            "Sélectionner",
+            "Selecionar",
+            "Seleziona",
+            "Выбрать",
+            "选用此主题",
+            "選択",
+            "선택",
         )
     }
 
     pub fn active_theme_badge(&self) -> &'static str {
-        tr(*self,
-            "✔ ACTIVO", "✔ ACTIVE", "✔ AKTIV", "✔ ACTIF", "✔ ATIVO",
-            "✔ ATTIVO", "✔ АКТИВНО", "✔ 已生效", "✔ 有効", "✔ 적용됨",
+        tr(
+            *self,
+            "✔ ACTIVO",
+            "✔ ACTIVE",
+            "✔ AKTIV",
+            "✔ ACTIF",
+            "✔ ATIVO",
+            "✔ ATTIVO",
+            "✔ АКТИВНО",
+            "✔ 已生效",
+            "✔ 有効",
+            "✔ 적용됨",
         )
     }
 
     pub fn battery_care_header(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🔋 Cuidado de Batería y Sistema de Litio",
             "🔋 Battery & Lithium Care System",
             "🔋 Akkupflege & Lithium-Schutz",
@@ -1500,7 +2127,8 @@ impl Language {
     }
 
     pub fn battery_limiter_checkbox(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "Limitador de Protección de Salud de Batería al 80%",
             "80% Battery Health Protection Limiter",
             "80% Akku-Ladeschutzgrenze",
@@ -1530,7 +2158,8 @@ impl Language {
     }
 
     pub fn battery_specs_line(&self, model: &str, cycles: u32, health: f32) -> String {
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "Modelo Celda: {} • Ciclos: {} • Salud Química: {:.0}%",
             "Cell Model: {} • Cycles: {} • Chemistry Health: {:.0}%",
             "Zellmodell: {} • Zyklen: {} • Akkuzustand: {:.0}%",
@@ -1548,7 +2177,8 @@ impl Language {
     }
 
     pub fn gaming_locks_header(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🎮 Bloqueos Tácticos para Gaming y Pantalla",
             "🎮 Tactical Gaming Locks & Hardware Features",
             "🎮 Taktische Gaming-Sperren & Hardware-Features",
@@ -1563,7 +2193,8 @@ impl Language {
     }
 
     pub fn winkey_lock_label(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🔒 Bloquear tecla Windows / Super durante Gaming",
             "🔒 Lock Windows / Super Key during Gaming",
             "🔒 Windows- / Super-Taste im Spiel sperren",
@@ -1593,7 +2224,8 @@ impl Language {
     }
 
     pub fn touchpad_lock_label(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🚫 Desactivar Touchpad Interno",
             "🚫 Disable Internal Touchpad",
             "🚫 Internes Touchpad deaktivieren",
@@ -1623,7 +2255,8 @@ impl Language {
     }
 
     pub fn lcd_overdrive_button(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🚀 Activar Overdrive de Respuesta LCD 3ms",
             "🚀 Trigger LCD 3ms Response Overdrive",
             "🚀 LCD 3ms Reaktions-Overdrive aktivieren",
@@ -1653,7 +2286,8 @@ impl Language {
     }
 
     pub fn diagnostics_header(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🐧 Diagnóstico de Buses de Hardware y Kernel Linux",
             "🐧 Linux Kernel & Hardware Bus Diagnostics",
             "🐧 Linux-Kernel & Hardwarebus-Diagnose",
@@ -1668,7 +2302,8 @@ impl Language {
     }
 
     pub fn run_diagnostics_btn(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🩺 Ejecutar Auto-Prueba de Hardware",
             "🩺 Run Hardware Self-Test",
             "🩺 Hardware-Selbsttest starten",
@@ -1703,7 +2338,8 @@ impl Language {
 
     // --- ABOUT & GITHUB COMMUNITY ---
     pub fn about_github_header(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "5. Proyecto AcerSense & Comunidad GitHub",
             "5. AcerSense Project & GitHub Community",
             "5. AcerSense-Projekt & GitHub-Community",
@@ -1733,7 +2369,8 @@ impl Language {
     }
 
     pub fn btn_project_repo(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🐙 Repositorio del Proyecto",
             "🐙 Project Repository",
             "🐙 Projekt-Repository",
@@ -1748,7 +2385,8 @@ impl Language {
     }
 
     pub fn btn_author_profile(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "👤 Perfil del Autor (@rodrigo47363)",
             "👤 Author Profile (@rodrigo47363)",
             "👤 Entwicklerprofil (@rodrigo47363)",
@@ -1763,7 +2401,8 @@ impl Language {
     }
 
     pub fn btn_report_issue(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🐞 Reportar Fallo / Issues",
             "🐞 Report Issue / Bug Tracker",
             "🐞 Fehler melden / Issues",
@@ -1778,7 +2417,8 @@ impl Language {
     }
 
     pub fn btn_releases(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "⭐ Releases & Actualizaciones",
             "⭐ Releases & Changelog",
             "⭐ Releases & Aktualisierungen",
@@ -1793,7 +2433,8 @@ impl Language {
     }
 
     pub fn about_meta_info(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "Versión: v2.1.0 (Rust Edition) • Licencia: GPL-3.0 • Desarrollado por Rodrigo",
             "Version: v2.1.0 (Rust Edition) • License: GPL-3.0 • Developed by Rodrigo",
             "Version: v2.1.0 (Rust Edition) • Lizenz: GPL-3.0 • Entwickelt von Rodrigo",
@@ -1809,21 +2450,40 @@ impl Language {
 
     // --- OSCILLOSCOPE & MONITORING HELPERS ---
     pub fn purge_turbo_btn(&self) -> &'static str {
-        tr(*self,
-            "PURGAR TURBO", "PURGE TURBO", "TURBO LÖSCHEN", "PURGER TURBO", "PURGAR TURBO",
-            "PURGA TURBO", "СБРОС ТУРБО", "重置狂暴模式", "ターボ解除", "터보 해제",
+        tr(
+            *self,
+            "PURGAR TURBO",
+            "PURGE TURBO",
+            "TURBO LÖSCHEN",
+            "PURGER TURBO",
+            "PURGAR TURBO",
+            "PURGA TURBO",
+            "СБРОС ТУРБО",
+            "重置狂暴模式",
+            "ターボ解除",
+            "터보 해제",
         )
     }
 
     pub fn reset_auto_btn(&self) -> &'static str {
-        tr(*self,
-            "REINICIO AUTO", "RESET AUTO", "AUTO RESET", "RÉINIT AUTO", "REINÍCIO AUTO",
-            "RESET AUTO", "АВТО-СБРОС", "恢复自动调度", "自動リセット", "자동 복구",
+        tr(
+            *self,
+            "REINICIO AUTO",
+            "RESET AUTO",
+            "AUTO RESET",
+            "RÉINIT AUTO",
+            "REINÍCIO AUTO",
+            "RESET AUTO",
+            "АВТО-СБРОС",
+            "恢复自动调度",
+            "自動リセット",
+            "자동 복구",
         )
     }
 
     pub fn oscilloscope_title(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "📊 Osciloscopio de Hardware en Vivo",
             "📊 Live Hardware Oscilloscope",
             "📊 Live-Hardware-Oszilloskop",
@@ -1838,85 +2498,185 @@ impl Language {
     }
 
     pub fn window_label(&self) -> &'static str {
-        tr(*self,
-            "Ventana:", "Window:", "Zeitfenster:", "Fenêtre :", "Janela:",
-            "Finestra:", "Окно:", "观察时间窗:", "時間窓:", "시간 창:",
+        tr(
+            *self,
+            "Ventana:",
+            "Window:",
+            "Zeitfenster:",
+            "Fenêtre :",
+            "Janela:",
+            "Finestra:",
+            "Окно:",
+            "观察时间窗:",
+            "時間窓:",
+            "시간 창:",
         )
     }
 
     pub fn status_frozen(&self) -> &'static str {
-        tr(*self,
-            "⏸ PAUSADO", "⏸ FROZEN", "⏸ ANGEHALTEN", "⏸ FIGÉ", "⏸ PAUSADO",
-            "⏸ SOSPESO", "⏸ ПАУЗА", "⏸ 已冻结捕获", "⏸ 停止中", "⏸ 일시정지됨",
+        tr(
+            *self,
+            "⏸ PAUSADO",
+            "⏸ FROZEN",
+            "⏸ ANGEHALTEN",
+            "⏸ FIGÉ",
+            "⏸ PAUSADO",
+            "⏸ SOSPESO",
+            "⏸ ПАУЗА",
+            "⏸ 已冻结捕获",
+            "⏸ 停止中",
+            "⏸ 일시정지됨",
         )
     }
 
     pub fn status_live(&self) -> &'static str {
-        tr(*self,
-            "🟢 EN VIVO 60 FPS", "🟢 LIVE 60 FPS", "🟢 LIVE 60 FPS", "🟢 EN DIRECT 60 FPS", "🟢 EM TEMPO REAL 60 FPS",
-            "🟢 IN DIRETTA 60 FPS", "🟢 ПРЯМОЙ ЭФИР 60 FPS", "🟢 60 FPS 极速采样中", "🟢 リアルタイム 60 FPS", "🟢 실시간 60 FPS",
+        tr(
+            *self,
+            "🟢 EN VIVO 60 FPS",
+            "🟢 LIVE 60 FPS",
+            "🟢 LIVE 60 FPS",
+            "🟢 EN DIRECT 60 FPS",
+            "🟢 EM TEMPO REAL 60 FPS",
+            "🟢 IN DIRETTA 60 FPS",
+            "🟢 ПРЯМОЙ ЭФИР 60 FPS",
+            "🟢 60 FPS 极速采样中",
+            "🟢 リアルタイム 60 FPS",
+            "🟢 실시간 60 FPS",
         )
     }
 
     pub fn legend_cpu_package(&self) -> &'static str {
-        tr(*self,
-            "● Paquete CPU:", "● CPU Package:", "● CPU-Paket:", "● Package CPU :", "● Pacote CPU:",
-            "● Pacchetto CPU:", "● ЦП (CPU):", "● CPU 封装核心:", "● CPU パッケージ:", "● CPU 패키지:",
+        tr(
+            *self,
+            "● Paquete CPU:",
+            "● CPU Package:",
+            "● CPU-Paket:",
+            "● Package CPU :",
+            "● Pacote CPU:",
+            "● Pacchetto CPU:",
+            "● ЦП (CPU):",
+            "● CPU 封装核心:",
+            "● CPU パッケージ:",
+            "● CPU 패키지:",
         )
     }
 
     pub fn legend_discrete_gpu(&self) -> &'static str {
-        tr(*self,
-            "● GPU Dedicada:", "● Discrete GPU:", "● Dedizierte GPU:", "● GPU Dédiée :", "● GPU Dedicada:",
-            "● GPU Dedicata:", "● ГП (GPU):", "● 独立 GPU 核心:", "● 独立 GPU:", "● 외장 GPU:",
+        tr(
+            *self,
+            "● GPU Dedicada:",
+            "● Discrete GPU:",
+            "● Dedizierte GPU:",
+            "● GPU Dédiée :",
+            "● GPU Dedicada:",
+            "● GPU Dedicata:",
+            "● ГП (GPU):",
+            "● 独立 GPU 核心:",
+            "● 独立 GPU:",
+            "● 외장 GPU:",
         )
     }
 
     pub fn legend_nvme(&self) -> &'static str {
-        tr(*self,
-            "● SSD NVMe:", "● NVMe SSD:", "● NVMe-SSD:", "● SSD NVMe :", "● SSD NVMe:",
-            "● SSD NVMe:", "● NVMe SSD:", "● NVMe 固态主控:", "● NVMe SSD:", "● NVMe SSD:",
+        tr(
+            *self,
+            "● SSD NVMe:",
+            "● NVMe SSD:",
+            "● NVMe-SSD:",
+            "● SSD NVMe :",
+            "● SSD NVMe:",
+            "● SSD NVMe:",
+            "● NVMe SSD:",
+            "● NVMe 固态主控:",
+            "● NVMe SSD:",
+            "● NVMe SSD:",
         )
     }
 
     pub fn legend_cpu_load(&self) -> &'static str {
-        tr(*self,
-            "● Carga CPU:", "● CPU Load:", "● CPU-Last:", "● Charge CPU :", "● Carga CPU:",
-            "● Carico CPU:", "● Загрузка CPU:", "● CPU 综合负载:", "● CPU 負荷:", "● CPU 부하:",
+        tr(
+            *self,
+            "● Carga CPU:",
+            "● CPU Load:",
+            "● CPU-Last:",
+            "● Charge CPU :",
+            "● Carga CPU:",
+            "● Carico CPU:",
+            "● Загрузка CPU:",
+            "● CPU 综合负载:",
+            "● CPU 負荷:",
+            "● CPU 부하:",
         )
     }
 
     pub fn legend_gpu_load(&self) -> &'static str {
-        tr(*self,
-            "● Carga Núcleo GPU:", "● GPU Core Load:", "● GPU-Kernlast:", "● Charge cœur GPU :", "● Carga Núcleo GPU:",
-            "● Carico core GPU:", "● Загрузка ядра GPU:", "● GPU 渲染核心负载:", "● GPU コア負荷:", "● GPU 코어 부하:",
+        tr(
+            *self,
+            "● Carga Núcleo GPU:",
+            "● GPU Core Load:",
+            "● GPU-Kernlast:",
+            "● Charge cœur GPU :",
+            "● Carga Núcleo GPU:",
+            "● Carico core GPU:",
+            "● Загрузка ядра GPU:",
+            "● GPU 渲染核心负载:",
+            "● GPU コア負荷:",
+            "● GPU 코어 부하:",
         )
     }
 
     pub fn legend_combined(&self) -> &'static str {
-        tr(*self,
-            "● Combinada:", "● Combined:", "● Kombiniert:", "● Combinée :", "● Combinada:",
-            "● Combinata:", "● Суммарная:", "● 综合功耗:", "● 合計:", "● 통합:",
+        tr(
+            *self,
+            "● Combinada:",
+            "● Combined:",
+            "● Kombiniert:",
+            "● Combinée :",
+            "● Combinada:",
+            "● Combinata:",
+            "● Суммарная:",
+            "● 综合功耗:",
+            "● 合計:",
+            "● 통합:",
         )
     }
 
     pub fn legend_cpu_fan(&self) -> &'static str {
-        tr(*self,
-            "● Ventilador CPU:", "● CPU Fan:", "● CPU-Lüfter:", "● Ventilateur CPU :", "● Ventoinha CPU:",
-            "● Ventola CPU:", "● Куллер CPU:", "● CPU 涡轮转速:", "● CPU ファン:", "● CPU 팬:",
+        tr(
+            *self,
+            "● Ventilador CPU:",
+            "● CPU Fan:",
+            "● CPU-Lüfter:",
+            "● Ventilateur CPU :",
+            "● Ventoinha CPU:",
+            "● Ventola CPU:",
+            "● Куллер CPU:",
+            "● CPU 涡轮转速:",
+            "● CPU ファン:",
+            "● CPU 팬:",
         )
     }
 
     pub fn legend_gpu_fan(&self) -> &'static str {
-        tr(*self,
-            "● Ventilador GPU:", "● GPU Fan:", "● GPU-Lüfter:", "● Ventilateur GPU :", "● Ventoinha GPU:",
-            "● Ventola GPU:", "● Куллер GPU:", "● GPU 涡轮转速:", "● GPU ファン:", "● GPU 팬:",
+        tr(
+            *self,
+            "● Ventilador GPU:",
+            "● GPU Fan:",
+            "● GPU-Lüfter:",
+            "● Ventilateur GPU :",
+            "● Ventoinha GPU:",
+            "● Ventola GPU:",
+            "● Куллер GPU:",
+            "● GPU 涡轮转速:",
+            "● GPU ファン:",
+            "● GPU 팬:",
         )
     }
 
     // --- HARDWARE COMPONENT CARDS ---
     pub fn cpu_arch_title(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🖥 Arquitectura de Silicio CPU",
             "🖥 CPU Silicon Architecture",
             "🖥 CPU-Silizium-Architektur",
@@ -1931,21 +2691,40 @@ impl Language {
     }
 
     pub fn instant_load_label(&self) -> &'static str {
-        tr(*self,
-            "Carga Instantánea:", "Instant Load:", "Momentanlast:", "Charge instantanée :", "Carga Instantânea:",
-            "Carico istantaneo:", "Тек. нагрузка:", "瞬时使用率:", "瞬間負荷:", "순간 부하율:",
+        tr(
+            *self,
+            "Carga Instantánea:",
+            "Instant Load:",
+            "Momentanlast:",
+            "Charge instantanée :",
+            "Carga Instantânea:",
+            "Carico istantaneo:",
+            "Тек. нагрузка:",
+            "瞬时使用率:",
+            "瞬間負荷:",
+            "순간 부하율:",
         )
     }
 
     pub fn dynamic_boost_label(&self) -> &'static str {
-        tr(*self,
-            "Frecuencia Boost Dinámica:", "Dynamic Boost Frequency:", "Dynamischer Boost-Takt:", "Fréquence Boost dynamique :", "Frequência Boost Dinâmica:",
-            "Frequenza boost dinamica:", "Частота динамического буста:", "动态加速最高睿频:", "動的ブースト周波数:", "동적 부스트 주파수:",
+        tr(
+            *self,
+            "Frecuencia Boost Dinámica:",
+            "Dynamic Boost Frequency:",
+            "Dynamischer Boost-Takt:",
+            "Fréquence Boost dynamique :",
+            "Frequência Boost Dinâmica:",
+            "Frequenza boost dinamica:",
+            "Частота динамического буста:",
+            "动态加速最高睿频:",
+            "動的ブースト周波数:",
+            "동적 부스트 주파수:",
         )
     }
 
     pub fn gpu_discrete_title(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🎮 Gráficos Dedicados NVIDIA",
             "🎮 Discrete NVIDIA Graphics",
             "🎮 Dedizierte NVIDIA-Grafik",
@@ -1960,23 +2739,50 @@ impl Language {
     }
 
     pub fn gpu_standby_badge(&self) -> &'static str {
-        tr(*self,
-            "PCIe D3cold EN ESPERA", "PCIe D3cold STANDBY", "PCIe D3cold STANDBY", "PCIe D3cold EN VEILLE", "PCIe D3cold EM ESPERA",
-            "PCIe D3cold IN STANDBY", "PCIe D3cold ОЖИДАНИЕ", "PCIe D3cold 深度节能休眠", "PCIe D3cold スタンバイ", "PCIe D3cold 대기 모드",
+        tr(
+            *self,
+            "PCIe D3cold EN ESPERA",
+            "PCIe D3cold STANDBY",
+            "PCIe D3cold STANDBY",
+            "PCIe D3cold EN VEILLE",
+            "PCIe D3cold EM ESPERA",
+            "PCIe D3cold IN STANDBY",
+            "PCIe D3cold ОЖИДАНИЕ",
+            "PCIe D3cold 深度节能休眠",
+            "PCIe D3cold スタンバイ",
+            "PCIe D3cold 대기 모드",
         )
     }
 
     pub fn silicon_utilization(&self) -> &'static str {
-        tr(*self,
-            "Uso de Silicio:", "Silicon Utilization:", "Chipaustastung:", "Utilisation du silicium :", "Uso de Silício:",
-            "Utilizzo silicio:", "Использование чипа:", "核心硬件利用率:", "コア使用率:", "실리콘 사용률:",
+        tr(
+            *self,
+            "Uso de Silicio:",
+            "Silicon Utilization:",
+            "Chipaustastung:",
+            "Utilisation du silicium :",
+            "Uso de Silício:",
+            "Utilizzo silicio:",
+            "Использование чипа:",
+            "核心硬件利用率:",
+            "コア使用率:",
+            "실리콘 사용률:",
         )
     }
 
     pub fn dedicated_vram(&self) -> &'static str {
-        tr(*self,
-            "VRAM Dedicada:", "Dedicated VRAM:", "Dedizierter VRAM:", "VRAM Dédiée :", "VRAM Dedicada:",
-            "VRAM Dedicata:", "Выделенная VRAM:", "独立显存占用:", "専用 VRAM:", "전용 VRAM:",
+        tr(
+            *self,
+            "VRAM Dedicada:",
+            "Dedicated VRAM:",
+            "Dedizierter VRAM:",
+            "VRAM Dédiée :",
+            "VRAM Dedicada:",
+            "VRAM Dedicata:",
+            "Выделенная VRAM:",
+            "独立显存占用:",
+            "専用 VRAM:",
+            "전용 VRAM:",
         )
     }
 
@@ -1996,86 +2802,186 @@ impl Language {
     }
 
     pub fn memory_subsystem_title(&self) -> &'static str {
-        tr(*self,
-            "💾 Subsistema de Memoria", "💾 Memory Subsystem", "💾 Speicher-Subsystem", "💾 Sous-système mémoire", "💾 Subsistema de Memória",
-            "💾 Sottosistema memoria", "💾 Подсистема памяти", "💾 物理与虚拟内存子系统", "💾 メモリー サブシステム", "💾 메모리 서브시스템",
+        tr(
+            *self,
+            "💾 Subsistema de Memoria",
+            "💾 Memory Subsystem",
+            "💾 Speicher-Subsystem",
+            "💾 Sous-système mémoire",
+            "💾 Subsistema de Memória",
+            "💾 Sottosistema memoria",
+            "💾 Подсистема памяти",
+            "💾 物理与虚拟内存子系统",
+            "💾 メモリー サブシステム",
+            "💾 메모리 서브시스템",
         )
     }
 
     pub fn physical_ram(&self) -> &'static str {
-        tr(*self,
-            "RAM Física:", "Physical RAM:", "Physischer RAM:", "RAM Physique :", "RAM Física:",
-            "RAM Fisica:", "Физ. память:", "物理 RAM 内存:", "物理 RAM:", "물리 RAM:",
+        tr(
+            *self,
+            "RAM Física:",
+            "Physical RAM:",
+            "Physischer RAM:",
+            "RAM Physique :",
+            "RAM Física:",
+            "RAM Fisica:",
+            "Физ. память:",
+            "物理 RAM 内存:",
+            "物理 RAM:",
+            "물리 RAM:",
         )
     }
 
     pub fn virtual_swap(&self) -> &'static str {
-        tr(*self,
-            "Swap Virtual:", "Virtual Swap:", "Virtueller Swap:", "Swap Virtuel :", "Swap Virtual:",
-            "Swap Virtuale:", "Вирт. Swap:", "虚拟 Swap 交换分区:", "仮想 Swap:", "가상 Swap:",
+        tr(
+            *self,
+            "Swap Virtual:",
+            "Virtual Swap:",
+            "Virtueller Swap:",
+            "Swap Virtuel :",
+            "Swap Virtual:",
+            "Swap Virtuale:",
+            "Вирт. Swap:",
+            "虚拟 Swap 交换分区:",
+            "仮想 Swap:",
+            "가상 Swap:",
         )
     }
 
     pub fn nvme_storage_title(&self) -> &'static str {
-        tr(*self,
-            "💽 Unidad de Estado Sólido NVMe", "💽 NVMe Solid State Drive", "💽 NVMe-Solid-State-Laufwerk", "💽 Disque SSD NVMe", "💽 Unidade de Estado Sólido NVMe",
-            "💽 Unità a stato solido NVMe", "💽 Твердотельный накопитель NVMe", "💽 NVMe 高速固态硬盘", "💽 NVMe ソリッドステート ドライブ", "💽 NVMe 솔리드 스테이트 드라이브",
+        tr(
+            *self,
+            "💽 Unidad de Estado Sólido NVMe",
+            "💽 NVMe Solid State Drive",
+            "💽 NVMe-Solid-State-Laufwerk",
+            "💽 Disque SSD NVMe",
+            "💽 Unidade de Estado Sólido NVMe",
+            "💽 Unità a stato solido NVMe",
+            "💽 Твердотельный накопитель NVMe",
+            "💽 NVMe 高速固态硬盘",
+            "💽 NVMe ソリッドステート ドライブ",
+            "💽 NVMe 솔리드 스테이트 드라이브",
         )
     }
 
     pub fn controller_state_label(&self) -> &'static str {
-        tr(*self,
-            "Estado del Controlador:", "Controller State:", "Controller-Status:", "État du contrôleur :", "Estado do Controlador:",
-            "Stato controller:", "Состояние контроллера:", "固件主控状态:", "コントローラ状態:", "컨트롤러 상태:",
+        tr(
+            *self,
+            "Estado del Controlador:",
+            "Controller State:",
+            "Controller-Status:",
+            "État du contrôleur :",
+            "Estado do Controlador:",
+            "Stato controller:",
+            "Состояние контроллера:",
+            "固件主控状态:",
+            "コントローラ状態:",
+            "컨트롤러 상태:",
         )
     }
 
     pub fn controller_state_val(&self) -> &'static str {
-        tr(*self,
-            "En Línea / Óptimo", "Online / Optimal", "Online / Optimal", "En ligne / Optimal", "Online / Ideal",
-            "Online / Ottimale", "В сети / Норма", "在线 / 最佳工况", "稼働中 / 正常", "온라인 / 최적 상태",
+        tr(
+            *self,
+            "En Línea / Óptimo",
+            "Online / Optimal",
+            "Online / Optimal",
+            "En ligne / Optimal",
+            "Online / Ideal",
+            "Online / Ottimale",
+            "В сети / Норма",
+            "在线 / 最佳工况",
+            "稼働中 / 正常",
+            "온라인 / 최적 상태",
         )
     }
 
     pub fn life_integrity(&self, pct: u8) -> String {
-        let fmt = tr(*self,
-            "Integridad de Vida: {}%", "Life Integrity: {}%", "Lebensdauer-Integrität: {}%", "Intégrité de vie : {}%", "Integridade de Vida: {}%",
-            "Integrità operativa: {}%", "Остаточный ресурс: {}%", "颗粒剩余寿命健康度: {}%", "寿命健全性: {}%", "수명 잔여 무결성: {}%",
+        let fmt = tr(
+            *self,
+            "Integridad de Vida: {}%",
+            "Life Integrity: {}%",
+            "Lebensdauer-Integrität: {}%",
+            "Intégrité de vie : {}%",
+            "Integridade de Vida: {}%",
+            "Integrità operativa: {}%",
+            "Остаточный ресурс: {}%",
+            "颗粒剩余寿命健康度: {}%",
+            "寿命健全性: {}%",
+            "수명 잔여 무결성: {}%",
         );
         fmt.replace("{}", &pct.to_string())
     }
 
     pub fn power_delivery_title(&self) -> &'static str {
-        tr(*self,
-            "⚡ Alimentación y Batería", "⚡ Power Delivery & Battery", "⚡ Stromversorgung & Akku", "⚡ Alimentation et batterie", "⚡ Alimentação e Bateria",
-            "⚡ Alimentazione e batteria", "⚡ Питание и аккумулятор", "⚡ 电源供电拓扑与电池", "⚡ 電源供給＆バッテリー", "⚡ 전원 공급 및 배터리",
+        tr(
+            *self,
+            "⚡ Alimentación y Batería",
+            "⚡ Power Delivery & Battery",
+            "⚡ Stromversorgung & Akku",
+            "⚡ Alimentation et batterie",
+            "⚡ Alimentação e Bateria",
+            "⚡ Alimentazione e batteria",
+            "⚡ Питание и аккумулятор",
+            "⚡ 电源供电拓扑与电池",
+            "⚡ 電源供給＆バッテリー",
+            "⚡ 전원 공급 및 배터리",
         )
     }
 
     pub fn aeroblade_turbines_title(&self) -> &'static str {
-        tr(*self,
-            "🌀 Turbinas AeroBlade", "🌀 AeroBlade Turbines", "🌀 AeroBlade-Turbinen", "🌀 Turbines AeroBlade", "🌀 Turbinas AeroBlade",
-            "🌀 Turbine AeroBlade", "🌀 Турбины AeroBlade", "🌀 AeroBlade 3D 金属涡轮", "🌀 AeroBlade タービン", "🌀 AeroBlade 터빈 팬",
+        tr(
+            *self,
+            "🌀 Turbinas AeroBlade",
+            "🌀 AeroBlade Turbines",
+            "🌀 AeroBlade-Turbinen",
+            "🌀 Turbines AeroBlade",
+            "🌀 Turbinas AeroBlade",
+            "🌀 Turbine AeroBlade",
+            "🌀 Турбины AeroBlade",
+            "🌀 AeroBlade 3D 金属涡轮",
+            "🌀 AeroBlade タービン",
+            "🌀 AeroBlade 터빈 팬",
         )
     }
 
     pub fn cpu_turbine_label(&self) -> &'static str {
-        tr(*self,
-            "Turbina CPU:", "CPU Turbine:", "CPU-Turbine:", "Turbine CPU :", "Turbina CPU:",
-            "Turbina CPU:", "Турбина CPU:", "CPU 散热涡轮:", "CPU タービン:", "CPU 터빈:",
+        tr(
+            *self,
+            "Turbina CPU:",
+            "CPU Turbine:",
+            "CPU-Turbine:",
+            "Turbine CPU :",
+            "Turbina CPU:",
+            "Turbina CPU:",
+            "Турбина CPU:",
+            "CPU 散热涡轮:",
+            "CPU タービン:",
+            "CPU 터빈:",
         )
     }
 
     pub fn gpu_turbine_label(&self) -> &'static str {
-        tr(*self,
-            "Turbina GPU:", "GPU Turbine:", "GPU-Turbine:", "Turbine GPU :", "Turbina GPU:",
-            "Turbina GPU:", "Турбина GPU:", "GPU 散热涡轮:", "GPU タービン:", "GPU 터빈:",
+        tr(
+            *self,
+            "Turbina GPU:",
+            "GPU Turbine:",
+            "GPU-Turbine:",
+            "Turbine GPU :",
+            "Turbina GPU:",
+            "Turbina GPU:",
+            "Турбина GPU:",
+            "GPU 散热涡轮:",
+            "GPU タービン:",
+            "GPU 터빈:",
         )
     }
 
     // --- SCENARIOS (POWER MODES) HELPERS ---
     pub fn energy_governance_title(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "🔌 Gobernanza Energética y Estado de Potencia Linux",
             "🔌 Energy Governance & Linux Power State",
             "🔌 Energieverwaltung & Linux-Power-Status",
@@ -2090,14 +2996,24 @@ impl Language {
     }
 
     pub fn realtime_dissipation_label(&self) -> &'static str {
-        tr(*self,
-            "Disipación en Tiempo Real:", "Real-Time Dissipation:", "Echtzeit-Verlustleistung:", "Dissipation en temps réel :", "Dissipação em Tempo Real:",
-            "Dissipazione in tempo reale:", "Тепловыделение:", "实时硬件总功耗放热:", "リアルタイム消費電力放熱:", "실시간 소비 전력 방열:",
+        tr(
+            *self,
+            "Disipación en Tiempo Real:",
+            "Real-Time Dissipation:",
+            "Echtzeit-Verlustleistung:",
+            "Dissipation en temps réel :",
+            "Dissipação em Tempo Real:",
+            "Dissipazione in tempo reale:",
+            "Тепловыделение:",
+            "实时硬件总功耗放热:",
+            "リアルタイム消費電力放熱:",
+            "실시간 소비 전력 방열:",
         )
     }
 
     pub fn active_governor_label(&self, gov: &str, epp: &str) -> String {
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "Gobernador Activo: {} | EPP: {}",
             "Active Governor: {} | EPP: {}",
             "Aktiver Governor: {} | EPP: {}",
@@ -2115,21 +3031,40 @@ impl Language {
 
     // --- KEYBOARD RGB HELPERS ---
     pub fn quick_palette_title(&self) -> &'static str {
-        tr(*self,
-            "Paleta Táctica Rápida:", "Quick Tactical Palette:", "Taktische Schnellfarben:", "Palette tactique rapide :", "Paleta Tática Rápida:",
-            "Palette tattica rapida:", "Быстрая тактическая палитра:", "电竞战术快捷色板:", "クイック タクティカル パレット:", "빠른 택티컬 팔레트:",
+        tr(
+            *self,
+            "Paleta Táctica Rápida:",
+            "Quick Tactical Palette:",
+            "Taktische Schnellfarben:",
+            "Palette tactique rapide :",
+            "Paleta Tática Rápida:",
+            "Palette tattica rapida:",
+            "Быстрая тактическая палитра:",
+            "电竞战术快捷色板:",
+            "クイック タクティカル パレット:",
+            "빠른 택티컬 팔레트:",
         )
     }
 
     pub fn custom_mixer_title(&self) -> &'static str {
-        tr(*self,
-            "Mezclador de Color Personalizado:", "Custom Color Mixer:", "Individueller Farbmischer:", "Mélangeur de couleurs personnalisé :", "Misturador de Cores Personalizado:",
-            "Mixer colore personalizzato:", "Пользовательский микшер цвета:", "自定义精准 RGB 混色器:", "カスタム カラー ミキサー:", "사용자 지정 컬러 믹서:",
+        tr(
+            *self,
+            "Mezclador de Color Personalizado:",
+            "Custom Color Mixer:",
+            "Individueller Farbmischer:",
+            "Mélangeur de couleurs personnalisé :",
+            "Misturador de Cores Personalizado:",
+            "Mixer colore personalizzato:",
+            "Пользовательский микшер цвета:",
+            "自定义精准 RGB 混色器:",
+            "カスタム カラー ミキサー:",
+            "사용자 지정 컬러 믹서:",
         )
     }
 
     pub fn push_color_btn(&self) -> &'static str {
-        tr(*self,
+        tr(
+            *self,
             "⚡ Enviar Color a Zona Seleccionada",
             "⚡ Push Color to Selected Zone",
             "⚡ Farbe an gewählte Zone senden",
@@ -2144,14 +3079,24 @@ impl Language {
     }
 
     pub fn master_presets_title(&self) -> &'static str {
-        tr(*self,
-            "Presets Multizona Acer Nitro:", "Acer Nitro Multi-Zone Presets:", "Acer Nitro Mehrzonen-Profile:", "Préréglages multizones Acer Nitro :", "Predefinições Multizona Acer Nitro:",
-            "Preset multizona Acer Nitro:", "Многозонные пресеты Acer Nitro:", "Acer Nitro 出厂多区背光联动预设:", "Acer Nitro マルチゾーン プリセット:", "Acer Nitro 멀티 구역 프리셋:",
+        tr(
+            *self,
+            "Presets Multizona Acer Nitro:",
+            "Acer Nitro Multi-Zone Presets:",
+            "Acer Nitro Mehrzonen-Profile:",
+            "Préréglages multizones Acer Nitro :",
+            "Predefinições Multizona Acer Nitro:",
+            "Preset multizona Acer Nitro:",
+            "Многозонные пресеты Acer Nitro:",
+            "Acer Nitro 出厂多区背光联动预设:",
+            "Acer Nitro マルチゾーン プリセット:",
+            "Acer Nitro 멀티 구역 프리셋:",
         )
     }
 
     pub fn applied_to_all_zones(&self, name: &str) -> String {
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "Aplicado {} a Todas las Zonas",
             "Applied {} to All Zones",
             "{} auf alle Zonen angewendet",
@@ -2167,7 +3112,8 @@ impl Language {
     }
 
     pub fn applied_to_zone(&self, name: &str, zone: u8) -> String {
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "Aplicado {} a Zona {}",
             "Applied {} to Zone {}",
             "{} auf Zone {} angewendet",
@@ -2185,7 +3131,8 @@ impl Language {
 
     pub fn pushed_to_all_zones(&self, r: u8, g: u8, b: u8) -> String {
         let hex = format!("#{:02X}{:02X}{:02X}", r, g, b);
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "Enviado {} a Todas las Zonas",
             "Pushed {} to All Zones",
             "{} an alle Zonen gesendet",
@@ -2202,7 +3149,8 @@ impl Language {
 
     pub fn pushed_to_zone(&self, r: u8, g: u8, b: u8, zone: u8) -> String {
         let hex = format!("#{:02X}{:02X}{:02X}", r, g, b);
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "Enviado {} a Zona {}",
             "Pushed {} to Zone {}",
             "{} an Zone {} gesendet",
@@ -2219,7 +3167,8 @@ impl Language {
     }
 
     pub fn applied_preset(&self, label: &str) -> String {
-        let fmt = tr(*self,
+        let fmt = tr(
+            *self,
             "Preset aplicado: {}",
             "Applied preset: {}",
             "Profil angewendet: {}",

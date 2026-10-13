@@ -450,19 +450,55 @@ fn main() -> Result<()> {
                     lang.badge(),
                     lang.code().cyan()
                 );
-                println!("Available options: {}", core::i18n::Language::available_str());
+                println!(
+                    "Available options: {}",
+                    core::i18n::Language::available_str()
+                );
             }
         }
         Some(Commands::About) => {
-            println!("{}", "═══════════════════════════════════════════════════════════════════".cyan().bold());
-            println!("  {}", "AcerSense Pro Linux — Hardware Control Suite".bold().white());
-            println!("  {}", "Version: v2.1.0 (Rust Edition) • License: GPL-3.0 • Author: Rodrigo".dimmed());
-            println!("{}", "═══════════════════════════════════════════════════════════════════".cyan().bold());
-            println!("  {} https://github.com/rodrigo47363/acersense-linux", "🐙 Project Repository:".green().bold());
-            println!("  {} https://github.com/rodrigo47363", "👤 Developer Profile: ".yellow().bold());
-            println!("  {} https://github.com/rodrigo47363/acersense-linux/issues", "🐞 Issue Tracker:     ".red().bold());
-            println!("  {} https://github.com/rodrigo47363/acersense-linux/releases", "⭐ Releases & Tags:   ".magenta().bold());
-            println!("{}", "───────────────────────────────────────────────────────────────────".dimmed());
+            println!(
+                "{}",
+                "═══════════════════════════════════════════════════════════════════"
+                    .cyan()
+                    .bold()
+            );
+            println!(
+                "  {}",
+                "AcerSense Pro Linux — Hardware Control Suite"
+                    .bold()
+                    .white()
+            );
+            println!(
+                "  {}",
+                "Version: v2.1.0 (Rust Edition) • License: GPL-3.0 • Author: Rodrigo".dimmed()
+            );
+            println!(
+                "{}",
+                "═══════════════════════════════════════════════════════════════════"
+                    .cyan()
+                    .bold()
+            );
+            println!(
+                "  {} https://github.com/rodrigo47363/acersense-linux",
+                "🐙 Project Repository:".green().bold()
+            );
+            println!(
+                "  {} https://github.com/rodrigo47363",
+                "👤 Developer Profile: ".yellow().bold()
+            );
+            println!(
+                "  {} https://github.com/rodrigo47363/acersense-linux/issues",
+                "🐞 Issue Tracker:     ".red().bold()
+            );
+            println!(
+                "  {} https://github.com/rodrigo47363/acersense-linux/releases",
+                "⭐ Releases & Tags:   ".magenta().bold()
+            );
+            println!(
+                "{}",
+                "───────────────────────────────────────────────────────────────────".dimmed()
+            );
         }
     }
 

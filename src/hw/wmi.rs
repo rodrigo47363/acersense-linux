@@ -151,7 +151,9 @@ pub fn set_fans_custom(cpu_pct: u8, gpu_pct: u8) -> Result<()> {
 
 /// Sets CPU Energy Performance Preference (EPP) across all processor cores
 pub fn set_cpu_epp(epp: &str) -> Result<()> {
-    if let Ok(entries) = glob::glob("/sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference") {
+    if let Ok(entries) =
+        glob::glob("/sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference")
+    {
         for entry in entries.flatten() {
             let _ = std::fs::write(&entry, epp);
         }
